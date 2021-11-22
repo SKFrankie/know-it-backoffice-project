@@ -4,9 +4,8 @@ import express from 'express'
 import neo4j from 'neo4j-driver'
 import { Neo4jGraphQL } from '@neo4j/graphql'
 import dotenv from 'dotenv'
-
-import jwt from 'jsonwebtoken'
-import { compareSync, hashSync } from 'bcrypt'
+import users from './resolvers/users'
+import superUsers from './resolvers/superUsers'
 
 // set environment variables from .env
 dotenv.config()
@@ -29,62 +28,7 @@ const driver = neo4j.driver(
 // resolvers
 
 const resolvers = {
-  Mutation: {
-    signup: (obj, args, context) => {
-      args.password = hashSync(args.password, 10)
-      const session = context.driver.session()
-
-      return session
-        .run(
-          `
-        CREATE (u:User) SET u += $args, u.userId = randomUUID()
-        RETURN u`,
-          { args }
-        )
-        .then((res) => {
-          session.close()
-          const { userId, mail } = res.records[0].get('u').properties
-
-          return {
-            token: jwt.sign({ userId, mail }, process.env.JWT_SECRET, {
-              expiresIn: '30d',
-            }),
-          }
-        })
-        .catch((err) => {
-          session.close()
-          const error_message = err.message.includes('mail')
-            ? 'Email already in use'
-            : 'Username already in use'
-          throw new Error(error_message)
-        })
-    },
-    login: (obj, args, context) => {
-      const session = context.driver.session()
-
-      return session
-        .run(
-          `
-        MATCH (u:User {mail: $mail})
-        RETURN u LIMIT 1 
-        `,
-          { mail: args.mail }
-        )
-        .then((res) => {
-          session.close()
-          const { userId, mail, password } = res.records[0].get('u').properties
-          if (!compareSync(args.password, password)) {
-            // is this the same password ?
-            throw new Error('Authorization Error')
-          }
-          return {
-            token: jwt.sign({ userId, mail }, process.env.JWT_SECRET, {
-              expiresIn: '30d',
-            }),
-          }
-        })
-    },
-  },
+  Mutation: { ...superUsers.Mutation, ...users.Mutation },
 }
 
 /*

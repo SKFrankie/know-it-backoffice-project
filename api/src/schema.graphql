@@ -3,6 +3,13 @@ enum Rate {
   THUMBS_DOWN
 }
 
+enum Right {
+  ADMIN # Can do everything
+  EDITOR # Can edit content
+  READER # Can read content
+}
+
+# Regular users (players)
 type User {
   userId: ID!
   username: String!
@@ -25,20 +32,54 @@ type User {
   createdAt: DateTime!
 }
 
+# Admin users, who can add/remove/manage content
+type SuperUser {
+  userId: ID!
+  mail: String!
+  password: String @private
+  firstname: String
+  lastname: String
+  rights: Right!
+
+  createdAt: DateTime!
+}
 type AuthToken {
   token: String!
 }
 
 type Mutation {
+  # regular users
   signup(mail: String!, username: String!, password: String!): AuthToken
   login(mail: String!, password: String!): AuthToken
+
+  # super users
+  superSignup(
+    mail: String!
+    firstname: String
+    lastname: String
+    password: String!
+  ): AuthToken
+  superLogin(mail: String!, password: String!): AuthToken
+
+  # returns authentication url
+  inviteSuperUser(mail: String!, rights: Right!): String
 }
 
 type Query {
+  # regular users
   currentUser: User
     @cypher(
       statement: """
       MATCH (u:User {userId: $auth.jwt.userId})
+      RETURN u
+      """
+    )
+
+  # super users
+  superCurrentUser: SuperUser
+    @cypher(
+      statement: """
+      MATCH (u:SuperUser {userId: $auth.jwt.userId})
       RETURN u
       """
     )
