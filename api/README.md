@@ -38,7 +38,6 @@ Note that grand-stack-starter does not currently bundle a distribution of Neo4j.
 
 Please read this [write-up](auth0-howto.md) for more information on configuring `Auth0` for GRANDStack - GraphQL.
 
-
 ## Deployment
 
 You can deploy to any service that hosts Node.js apps, but [Vercel](https://vercel.com/home) is a great easy to use service for hosting your app that has an easy to use free plan for small projects.
