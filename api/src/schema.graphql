@@ -9,6 +9,12 @@ enum Right {
   READER # Can read content
 }
 
+type AuthToken {
+  token: String!
+}
+
+## Users
+
 # Regular users (players)
 type User {
   userId: ID!
@@ -18,6 +24,7 @@ type User {
   coins: Int!
   tickets: Int!
   # invetory: [Avatar!]!
+  # scores: [score]
   # currentAvatar: Avatar!
   stars: Int!
   daysInArow: Int!
@@ -43,9 +50,29 @@ type SuperUser {
 
   createdAt: DateTime!
 }
-type AuthToken {
-  token: String!
+
+## Avatars
+
+type Avatar {
+  avatarId: ID! @id
+  name: String! @unique
+  picture: String!
+  coinPrice: Int!
+  collections: [AvatarCollection]
+    @relationship(type: "AVATAR_COLLECTION_AVATAR", direction: IN)
 }
+
+type AvatarCollection {
+  avatarCollectionId: ID! @id
+  name: String! @unique
+  startDate: DateTime
+  endDate: DateTime
+  avatars: [Avatar]!
+    @relationship(type: "AVATAR_COLLECTION_AVATAR", direction: OUT)
+}
+
+extend type Avatar
+  @auth(rules: [{ operations: [CREATE, UPDATE], isAuthenticated: true }])
 
 type Mutation {
   # regular users
@@ -64,6 +91,33 @@ type Mutation {
 
   # returns authentication url
   inviteSuperUser(mail: String!, rights: Right!): String
+
+  ##avatars add avatar to collection##
+  #   addAvatarToCollection(
+  #     avatarId: ID!
+  #     avatarCollectionId: ID!
+  #   ): AvatarCollection
+  #   {
+  #   updateAvatars(
+  #     where: { avatarId: $avatarId }
+  #     update: {
+  #       collections: {
+  #         connect: {
+  #           where: {
+  #             node: { avatarCollectionId: "9c4fadea-d701-478a-8f23-c137438b7ff4" }
+  #           }
+  #         }
+  #       }
+  #     }
+  #   ) {
+  #     avatars {
+  #       name
+  #       collections {
+  #         name
+  #       }
+  #     }
+  #   }
+  # }
 }
 
 type Query {
