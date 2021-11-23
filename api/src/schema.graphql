@@ -54,11 +54,12 @@ type Mutation {
 
   # super users
   superSignup(
-    mail: String!
+    token: String!
     firstname: String
     lastname: String
     password: String!
   ): AuthToken
+
   superLogin(mail: String!, password: String!): AuthToken
 
   # returns authentication url
