@@ -4,6 +4,9 @@ import { compareSync, hashSync } from 'bcrypt'
 
 const superUsers = {
   Mutation: {
+    forbiddenSuperSignup: (obj, args, context, info) => {
+      return signup(obj, args, context, 'SuperUser')
+    },
     superSignup: (obj, args, context) => {
       args.password = hashSync(args.password, 10)
       const session = context.driver.session()
@@ -24,12 +27,15 @@ const superUsers = {
         )
         .then((res) => {
           session.close()
-          const { userId, mail } = res.records[0].get('u').properties
-
+          const { userId, mail, rights } = res.records[0].get('u').properties
           return {
-            token: jwt.sign({ userId, mail }, process.env.JWT_SECRET, {
-              expiresIn: '30d',
-            }),
+            token: jwt.sign(
+              { userId, mail, roles: [rights] },
+              process.env.JWT_SECRET,
+              {
+                expiresIn: '30d',
+              }
+            ),
           }
         })
         .catch((err) => {
@@ -56,9 +62,13 @@ const superUsers = {
         .then((res) => {
           session.close()
           const { userId, mail } = res.records[0].get('i').properties
-          const token = jwt.sign({ userId, mail }, process.env.JWT_SECRET, {
-            expiresIn: '3d',
-          })
+          const token = jwt.sign(
+            { userId, mail, roles: [rights] },
+            process.env.JWT_SECRET,
+            {
+              expiresIn: '3d',
+            }
+          )
           const url = process.env.ENDPOINT + '/super/invite/' + token
           return url
         })

@@ -53,7 +53,17 @@ type SuperUser {
 
 ## Avatars
 
-type Avatar {
+type Avatar
+  @auth(
+    rules: [
+      {
+        operations: [CREATE, UPDATE, DELETE, CONNECT, DISCONNECT]
+        isAuthenticated: true
+        roles: [ADMIN, EDITOR]
+      }
+      { operations: [READ], isAuthenticated: true }
+    ]
+  ) {
   avatarId: ID! @id
   name: String! @unique
   picture: String!
@@ -71,15 +81,20 @@ type AvatarCollection {
     @relationship(type: "AVATAR_COLLECTION_AVATAR", direction: OUT)
 }
 
-extend type Avatar
-  @auth(rules: [{ operations: [CREATE, UPDATE], isAuthenticated: true }])
-
 type Mutation {
   # regular users
   signup(mail: String!, username: String!, password: String!): AuthToken
   login(mail: String!, password: String!): AuthToken
 
   # super users
+  forbiddenSuperSignup(
+    mail: String!
+    firstname: String
+    lastname: String
+    password: String!
+    rights: Right
+  ): AuthToken
+
   superSignup(
     token: String!
     firstname: String

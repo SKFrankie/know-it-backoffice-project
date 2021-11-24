@@ -14,12 +14,16 @@ const signup = (obj, args, context, type = 'User') => {
     )
     .then((res) => {
       session.close()
-      const { userId, mail } = res.records[0].get('u').properties
+      const { userId, mail, rights } = res.records[0].get('u').properties
 
       return {
-        token: jwt.sign({ userId, mail }, process.env.JWT_SECRET, {
-          expiresIn: '30d',
-        }),
+        token: jwt.sign(
+          { userId, mail, roles: [rights] },
+          process.env.JWT_SECRET,
+          {
+            expiresIn: '30d',
+          }
+        ),
       }
     })
     .catch((err) => {
@@ -44,13 +48,18 @@ const login = (obj, args, context, type = 'User') => {
     )
     .then((res) => {
       session.close()
-      const { userId, mail, password } = res.records[0].get('u').properties
+      const {
+        userId,
+        mail,
+        roles: [rights],
+        password,
+      } = res.records[0].get('u').properties
       if (!compareSync(args.password, password)) {
         // is this the same password ?
         throw new Error('Authorization Error')
       }
       return {
-        token: jwt.sign({ userId, mail }, process.env.JWT_SECRET, {
+        token: jwt.sign({ userId, mail, rights }, process.env.JWT_SECRET, {
           expiresIn: '30d',
         }),
       }
