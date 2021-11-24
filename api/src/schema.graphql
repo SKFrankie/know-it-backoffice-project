@@ -107,7 +107,7 @@ type Avatar
   picture: String!
   coinPrice: Int!
   collections: [AvatarCollection]
-    @relationship(type: "AVATAR_COLLECTION_AVATAR", direction: IN)
+    @relationship(type: "AVATAR_COLLECTION_AVATAR", direction: OUT)
 }
 
 type AvatarCollection
@@ -126,7 +126,7 @@ type AvatarCollection
   startDate: DateTime
   endDate: DateTime
   avatars: [Avatar]!
-    @relationship(type: "AVATAR_COLLECTION_AVATAR", direction: OUT)
+    @relationship(type: "AVATAR_COLLECTION_AVATAR", direction: IN)
 }
 
 ## Games
@@ -191,31 +191,18 @@ type Mutation {
   inviteSuperUser(mail: String!, rights: Right!): String
 
   ##avatars add avatar to collection##
-  #   addAvatarToCollection(
-  #     avatarId: ID!
-  #     avatarCollectionId: ID!
-  #   ): AvatarCollection
-  #   {
-  #   updateAvatars(
-  #     where: { avatarId: $avatarId }
-  #     update: {
-  #       collections: {
-  #         connect: {
-  #           where: {
-  #             node: { avatarCollectionId: "9c4fadea-d701-478a-8f23-c137438b7ff4" }
-  #           }
-  #         }
-  #       }
-  #     }
-  #   ) {
-  #     avatars {
-  #       name
-  #       collections {
-  #         name
-  #       }
-  #     }
-  #   }
-  # }
+  addAvatarToCollection(
+    avatarId: ID!
+    avatarCollectionId: ID!
+  ): AvatarCollection
+    @cypher(
+      statement: """
+      MATCH (avatar:Avatar {avatarId: $avatarId})
+      MATCH (collection:AvatarCollection {avatarCollectionId: $avatarCollectionId})
+      MERGE (avatar)-[r:AVATAR_COLLECTION_AVATAR]->(collection)
+      RETURN collection
+      """
+    )
 
   ## Games
 
