@@ -164,6 +164,69 @@ type Score
   createdAt: DateTime!
 }
 
+type SynonymRollList
+  @auth(
+    rules: [
+      {
+        operations: [CREATE, UPDATE, DELETE, CONNECT, DISCONNECT]
+        isAuthenticated: true
+        roles: [ADMIN, EDITOR]
+      }
+    ]
+  ) {
+  synonymId: ID! @id
+  synonyms: [String!]!
+}
+
+type FabVocabQuestion
+  @auth(
+    rules: [
+      {
+        operations: [CREATE, UPDATE, DELETE, CONNECT, DISCONNECT]
+        isAuthenticated: true
+        roles: [ADMIN, EDITOR]
+      }
+    ]
+  ) {
+  fabvocabId: ID! @id
+  picture: String!
+  correctWords: [String!]!
+  wrongWords: [String!]!
+  correctSentence: String!
+  wrongSentences: [String!]!
+}
+
+type AntonymHuntAssociation
+  @auth(
+    rules: [
+      {
+        operations: [CREATE, UPDATE, DELETE, CONNECT, DISCONNECT]
+        isAuthenticated: true
+        roles: [ADMIN, EDITOR]
+      }
+    ]
+  ) {
+  antonymId: ID! @id
+  rightWord: String!
+  leftWord: String!
+}
+
+type GrammarGeekQuestion
+  @auth(
+    rules: [
+      {
+        operations: [CREATE, UPDATE, DELETE, CONNECT, DISCONNECT]
+        isAuthenticated: true
+        roles: [ADMIN, EDITOR]
+      }
+    ]
+  ) {
+  grammarId: ID! @id
+  sentence: String!
+  correctWord: String!
+  wrongWords: [String!]!
+}
+
 type Mutation {
   # regular users
   signup(mail: String!, username: String!, password: String!): AuthToken
