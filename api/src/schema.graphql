@@ -9,6 +9,14 @@ enum Right {
   READER # Can read content
 }
 
+enum GameName {
+  SYNONYM_ROLL
+  FAB_VOCAB
+  ANTONYM_HUNT
+  GRAMMAR_GEEK
+  KNOWLYMPICS
+}
+
 type AuthToken {
   token: String!
 }
@@ -39,7 +47,9 @@ type User
   tickets: Int!
   # invetory: [Avatar!]!
   # scores: [score]
+  scores: [Score] @relationship(type: "SCORE_USER", direction: OUT)
   # currentAvatar: Avatar!
+
   stars: Int!
   daysInArow: Int!
   isPremium: Boolean!
@@ -119,6 +129,41 @@ type AvatarCollection
     @relationship(type: "AVATAR_COLLECTION_AVATAR", direction: OUT)
 }
 
+## Games
+
+type Game
+  @auth(
+    rules: [
+      {
+        operations: [CREATE, UPDATE, DELETE, CONNECT, DISCONNECT]
+        isAuthenticated: true
+        roles: [ADMIN, EDITOR]
+      }
+    ]
+  ) {
+  gameId: ID! @id
+  name: GameName! @unique
+  description: String
+  scores: [Score] @relationship(type: "SCORE_GAME", direction: IN)
+  timer: Int!
+}
+
+type Score
+  @auth(
+    rules: [
+      {
+        operations: [READ, CREATE, UPDATE, DELETE, CONNECT, DISCONNECT]
+        isAuthenticated: true
+      }
+    ]
+  ) {
+  scoreId: ID! @id
+  user: User! @relationship(type: "SCORE_USER", direction: IN)
+  game: Game! @relationship(type: "SCORE_GAME", direction: OUT)
+  score: Int!
+  createdAt: DateTime!
+}
+
 type Mutation {
   # regular users
   signup(mail: String!, username: String!, password: String!): AuthToken
@@ -171,6 +216,28 @@ type Mutation {
   #     }
   #   }
   # }
+
+  ## Games
+
+  addNewScore(gameName: GameName!, score: Int!): Score
+    @cypher(
+      statement: """
+      MATCH (game:Game {name: $gameName})
+      MATCH (user:User {userId: $auth.jwt.userId})
+      MERGE (user)-[r:SCORE_USER]->(s:Score {score: $score})-[r2:SCORE_GAME]->(game)
+      RETURN s
+      """
+    )
+  updateScore(gameName: GameName!, score: Int!): Score
+    @cypher(
+      statement: """
+      MATCH (game:Game {name: $gameName})
+      MATCH (user:User {userId: $auth.jwt.userId})
+      MATCH (user)-[r:SCORE_USER]->(s:Score)-[r2:SCORE_GAME]->(game)
+      set s.score = $score
+      RETURN s
+      """
+    )
 }
 
 type Query {
