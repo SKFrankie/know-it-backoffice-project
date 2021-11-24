@@ -16,7 +16,21 @@ type AuthToken {
 ## Users
 
 # Regular users (players)
-type User {
+type User
+  @auth(
+    rules: [
+      {
+        operations: [UPDATE, DELETE, CONNECT, DISCONNECT]
+        isAuthenticated: true
+        roles: [ADMIN]
+      }
+      {
+        operations: [READ]
+        isAuthenticated: true
+        roles: [ADMIN, READER, EDITOR]
+      }
+    ]
+  ) {
   userId: ID!
   username: String!
   mail: String!
@@ -40,7 +54,21 @@ type User {
 }
 
 # Admin users, who can add/remove/manage content
-type SuperUser {
+type SuperUser
+  @auth(
+    rules: [
+      {
+        operations: [CREATE, UPDATE, DELETE, CONNECT, DISCONNECT]
+        isAuthenticated: true
+        roles: [ADMIN]
+      }
+      {
+        operations: [READ]
+        isAuthenticated: true
+        roles: [ADMIN, READER, EDITOR]
+      }
+    ]
+  ) {
   userId: ID!
   mail: String!
   password: String @private
@@ -72,7 +100,17 @@ type Avatar
     @relationship(type: "AVATAR_COLLECTION_AVATAR", direction: IN)
 }
 
-type AvatarCollection {
+type AvatarCollection
+  @auth(
+    rules: [
+      {
+        operations: [CREATE, UPDATE, DELETE, CONNECT, DISCONNECT]
+        isAuthenticated: true
+        roles: [ADMIN, EDITOR]
+      }
+      { operations: [READ], isAuthenticated: true }
+    ]
+  ) {
   avatarCollectionId: ID! @id
   name: String! @unique
   startDate: DateTime
