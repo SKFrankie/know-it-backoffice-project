@@ -17,6 +17,12 @@ enum GameName {
   KNOWLYMPICS
 }
 
+enum RewardType {
+  COINS
+  TICKETS
+  STARS
+}
+
 type AuthToken {
   token: String!
 }
@@ -225,6 +231,24 @@ type GrammarGeekQuestion
   sentence: String!
   correctWord: String!
   wrongWords: [String!]!
+}
+
+## Gifts
+
+type Gift
+  @auth(
+    rules: [
+      {
+        operations: [CREATE, UPDATE, DELETE, CONNECT, DISCONNECT]
+        isAuthenticated: true
+        roles: [ADMIN, EDITOR]
+      }
+    ]
+  ) {
+  giftId: ID! @id
+  day: Int! @unique
+  quantity: Int!
+  reward: RewardType!
 }
 
 type Mutation {
