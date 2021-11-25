@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button as MuiButton } from '@mui/material'
-import { Link as RouterLink } from 'react-router-dom'
+import { NavLink as RouterLink } from 'react-router-dom'
 
 const Button = ({ children, ...props }) => {
   return (

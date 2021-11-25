@@ -1,6 +1,7 @@
 import { AppBar, Box, Toolbar, Typography } from '@mui/material'
 import Button, { ButtonLink } from '../ui/Button'
 import React from 'react'
+import { SECTIONS } from '../helpers/constants'
 
 const Header = () => {
   return (
@@ -45,27 +46,18 @@ const Logo = () => {
 }
 
 const MenuButtons = () => {
-  const headersData = [
-    { label: 'Analytics', href: 'test' },
-    { label: 'Users', href: '' },
-    { label: 'Admin', href: '' },
-    { label: 'Games', href: '' },
-    { label: 'Avatars', href: '' },
-    { label: 'Gifts', href: '' },
-  ]
   return (
     <Box>
-      {headersData.map(({ label, href }) => {
+      {SECTIONS.map(({ label, href }) => {
         return (
           <ButtonLink
             key={label}
-            style={{ textTransform: 'uppercase' }}
+            style={{ textTransform: 'uppercase', color: '#7B9497' }}
             href={href}
             label={label}
+            activeStyle={{ color: '#007EA7' }}
           >
-            <Typography color="textSecondary" fontWeight="medium">
-              {label}
-            </Typography>
+            <Typography fontWeight="medium">{label}</Typography>
           </ButtonLink>
         )
       })}
