@@ -32,7 +32,7 @@ const Header = () => {
 const Logo = () => {
   return (
     <ButtonLink href="/">
-      <Box sx={{ m: '5' }}>
+      <Box mr={5}>
         <Typography color="textPrimary" variant="h5">
           <Box fontWeight="600">Know It!</Box>
         </Typography>
@@ -80,8 +80,8 @@ const Logout = () => {
         <Typography color="textSecondary" variant="caption">
           Logged as ...
         </Typography>
-        <Typography color="textPrimary" variant="h6">
-          <Box fontWeight="600">Logout</Box>
+        <Typography color="textPrimary" variant="medium">
+          <Box fontWeight="500">Logout</Box>
         </Typography>
       </Box>
     </Button>
