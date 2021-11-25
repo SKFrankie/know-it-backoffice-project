@@ -11,14 +11,13 @@ import {
   MuiThemeProvider,
 } from '@material-ui/core'
 import Home from './pages/Home'
+import Header from './features/Header'
 
 const theme = createMuiTheme({
   palette: {
-    primary: {
-      main: '#FF0000',
-    },
-    secondary: {
-      main: '#f44336',
+    text: {
+      primary: '#007EA7',
+      secondary: '#7B9497',
     },
   },
 })
@@ -40,6 +39,7 @@ export default function App() {
   return (
     <MuiThemeProvider theme={theme}>
       <Router>
+        <Header />
         <Container>
           <Switch>
             {/* <Route exact path="/" component={Dashboard} />
