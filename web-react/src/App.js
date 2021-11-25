@@ -2,19 +2,19 @@ import React from 'react'
 
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom'
 
-import {
-  Box,
-  Typography,
-  Container,
-  Link as MUILink,
-  createMuiTheme,
-  MuiThemeProvider,
-} from '@material-ui/core'
+import { Box, Typography, Container, Link as MUILink } from '@mui/material'
+import { ThemeProvider, createTheme } from '@mui/material/styles'
 import Home from './pages/Home'
 import Header from './features/Header'
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
+    primary: {
+      main: '#007EA7',
+    },
+    secondary: {
+      main: '#7B9497',
+    },
     text: {
       primary: '#007EA7',
       secondary: '#7B9497',
@@ -37,7 +37,7 @@ function Copyright() {
 
 export default function App() {
   return (
-    <MuiThemeProvider theme={theme}>
+    <ThemeProvider theme={theme}>
       <Router>
         <Header />
         <Container>
@@ -53,6 +53,6 @@ export default function App() {
           </Box>
         </Container>
       </Router>
-    </MuiThemeProvider>
+    </ThemeProvider>
   )
 }

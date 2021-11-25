@@ -1,6 +1,6 @@
 import React from 'react'
 import { useQuery, gql } from '@apollo/client'
-import { withStyles } from '@material-ui/core/styles'
+import { withStyles } from '@mui/material/styles'
 import {
   Table,
   TableBody,
@@ -11,7 +11,7 @@ import {
   Paper,
   TableSortLabel,
   TextField,
-} from '@material-ui/core'
+} from '@mui/material'
 
 import Title from './Title'
 

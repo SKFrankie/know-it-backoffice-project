@@ -1,7 +1,7 @@
 import React from 'react'
-import { useTheme } from '@material-ui/core/styles'
-import { Grid, Paper } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
+import { useTheme } from '@mui/material/styles'
+import { Grid, Paper } from '@mui/material'
+import { makeStyles } from '@mui/material/styles'
 import clsx from 'clsx'
 
 import RatingsChart from './RatingsChart'

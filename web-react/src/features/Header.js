@@ -1,4 +1,4 @@
-import { AppBar, Box, Toolbar, Typography } from '@material-ui/core'
+import { AppBar, Box, Toolbar, Typography } from '@mui/material'
 import Button, { ButtonLink } from '../ui/Button'
 import React from 'react'
 
@@ -18,8 +18,10 @@ const Header = () => {
             justifyContent: 'space-between',
           }}
         >
-          <Logo />
-          <MenuButtons />
+          <Box style={{ display: 'flex', alignItems: 'center' }}>
+            <Logo />
+            <MenuButtons />
+          </Box>
           <Logout />
         </Toolbar>
       </AppBar>
@@ -30,7 +32,7 @@ const Header = () => {
 const Logo = () => {
   return (
     <ButtonLink href="/">
-      <Box>
+      <Box sx={{ m: '5' }}>
         <Typography color="textPrimary" variant="h5">
           <Box fontWeight="600">Know It!</Box>
         </Typography>
@@ -61,7 +63,9 @@ const MenuButtons = () => {
             href={href}
             label={label}
           >
-            {label}
+            <Typography color="textSecondary" fontWeight="medium">
+              {label}
+            </Typography>
           </ButtonLink>
         )
       })}

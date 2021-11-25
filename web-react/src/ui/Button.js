@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button as MuiButton } from '@material-ui/core'
+import { Button as MuiButton } from '@mui/material'
 import { Link as RouterLink } from 'react-router-dom'
 
 const Button = ({ children, ...props }) => {
@@ -9,15 +9,11 @@ const Button = ({ children, ...props }) => {
     </MuiButton>
   )
 }
-const ButtonLink = ({ label, href, children, ...props }) => {
+const ButtonLink = ({ href, children, ...props }) => {
   return (
     <MuiButton
-      {...{
-        key: label,
-        color: 'blue',
-        to: href,
-        component: RouterLink,
-      }}
+      component={RouterLink}
+      to={href}
       style={{ textTransform: 'initial' }}
       {...props}
     >
