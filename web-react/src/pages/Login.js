@@ -62,6 +62,7 @@ const Login = () => {
           type="email"
           required
           label="Email"
+          autoComplete="email"
           onChange={(e) => {
             setMail(e.target.value)
           }}
@@ -71,6 +72,7 @@ const Login = () => {
           type="password"
           required
           label="Password"
+          autoComplete="current-password"
           onChange={(e) => {
             setPassword(e.target.value)
           }}
