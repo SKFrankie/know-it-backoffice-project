@@ -3,3 +3,8 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+
+.inputRounded .MuiOutlinedInput-root {
+  border-radius: 20px;
+  background-color: #fafafa;
+}

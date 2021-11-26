@@ -59,7 +59,7 @@ const Login = () => {
         <Input
           type="email"
           required
-          label="email"
+          label="Email"
           onChange={(e) => {
             setMail(e.target.value)
           }}
@@ -68,7 +68,7 @@ const Login = () => {
           sx={{ border: '0px' }}
           type="password"
           required
-          label="password"
+          label="Password"
           onChange={(e) => {
             setPassword(e.target.value)
           }}
