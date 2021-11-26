@@ -48,20 +48,21 @@ const login = (obj, args, context, type = 'User') => {
     )
     .then((res) => {
       session.close()
-      const {
-        userId,
-        mail,
-        roles: [rights],
-        password,
-      } = res.records[0].get('u').properties
+      const { userId, mail, rights, password } = res.records[0].get(
+        'u'
+      ).properties
       if (!compareSync(args.password, password)) {
         // is this the same password ?
         throw new Error('Authorization Error')
       }
       return {
-        token: jwt.sign({ userId, mail, rights }, process.env.JWT_SECRET, {
-          expiresIn: '30d',
-        }),
+        token: jwt.sign(
+          { userId, mail, roles: [rights] },
+          process.env.JWT_SECRET,
+          {
+            expiresIn: '30d',
+          }
+        ),
       }
     })
 }
