@@ -11,16 +11,19 @@ const Button = ({ children, ...props }) => {
 }
 const ButtonLink = ({ href, children, ...props }) => {
   return (
-    <MuiButton
-      component={RouterLink}
-      to={href}
-      style={{ textTransform: 'initial' }}
-      {...props}
-    >
+    <Button component={RouterLink} to={href} {...props}>
       {children}
-    </MuiButton>
+    </Button>
   )
 }
 
-export { ButtonLink }
+const ButtonLinkUnstyled = ({ href, children, ...props }) => {
+  return (
+    <ButtonLink href={href} {...props}>
+      {children}
+    </ButtonLink>
+  )
+}
+
+export { ButtonLink, ButtonLinkUnstyled }
 export default Button

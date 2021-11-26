@@ -26,7 +26,7 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <MUILink color="inherit" href="https://grandstack.io/">
+      <MUILink color="inherit" href="https://www.know-it.bluepopcorn.fun">
         BluePopcorn Production
       </MUILink>{' '}
       {new Date().getFullYear()}

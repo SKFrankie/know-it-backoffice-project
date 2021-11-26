@@ -1,11 +1,53 @@
-// todo add icons
+import BarChartIcon from '@mui/icons-material/BarChart'
+import GroupIcon from '@mui/icons-material/Group'
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings'
+import VideogameAssetIcon from '@mui/icons-material/VideogameAsset'
+import PetsIcon from '@mui/icons-material/Pets'
+import RedeemIcon from '@mui/icons-material/Redeem'
+
 const SECTIONS = [
-  { label: 'Analytics', href: 'Analytics' },
-  { label: 'Users', href: 'Users' },
-  { label: 'Admin', href: 'Admin' },
-  { label: 'Games', href: 'Games' },
-  { label: 'Avatars', href: 'Avatars' },
-  { label: 'Gifts', href: 'Gifts' },
+  {
+    label: 'Analytics',
+    longName: 'Analytics',
+    href: 'analytics',
+    icon: BarChartIcon,
+    description: 'View analytics',
+  },
+  {
+    label: 'Users',
+    longName: 'Browse users',
+    href: 'users',
+    icon: GroupIcon,
+    description: 'Browse users data',
+  },
+  {
+    label: 'Admin',
+    longName: 'Administrators',
+    href: 'admin',
+    icon: AdminPanelSettingsIcon,
+    description: 'You can invite other administators and change their rights',
+  },
+  {
+    label: 'Games',
+    longName: 'Manage games',
+    href: 'games',
+    description: 'Add more content to different games',
+    icon: VideogameAssetIcon,
+  },
+  {
+    label: 'Avatars',
+    longName: 'Avatars',
+    description: 'Create and manage avatar lists',
+    href: 'avatars',
+    icon: PetsIcon,
+  },
+  {
+    label: 'Gifts',
+    longName: 'Gifts',
+    href: 'gifts',
+    description: 'Manage gift calendar',
+    icon: RedeemIcon,
+  },
 ]
 
 export { SECTIONS }
