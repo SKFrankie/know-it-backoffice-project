@@ -1,6 +1,11 @@
 import React, { useState } from 'react'
 import { useQuery, gql } from '@apollo/client'
-import { Switch, Route, BrowserRouter as Router } from 'react-router-dom'
+import {
+  Switch,
+  Route,
+  BrowserRouter as Router,
+  Redirect,
+} from 'react-router-dom'
 
 import { Box, Typography, Container, Link as MUILink } from '@mui/material'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
@@ -51,12 +56,11 @@ function Copyright() {
 
 export default function App() {
   const [currentUser, setCurrentUser] = useState(null)
-  useQuery(GET_CURRENT_USER, {
+  const { loading } = useQuery(GET_CURRENT_USER, {
     onError(err) {
       console.log('error', err)
     },
     onCompleted(res) {
-      console.log('sucess', res)
       setCurrentUser(res.superCurrentUser)
     },
   })
@@ -65,19 +69,25 @@ export default function App() {
       <SuperUserContext.Provider value={currentUser}>
         <Router>
           <Header />
-          <Container>
-            <Switch>
-              {/* <Route exact path="/" component={Dashboard} />
+          {!loading && (
+            <Container>
+              <Switch>
+                {/* <Route exact path="/" component={Dashboard} />
               <Route exact path="/businesses" component={UserList} />
               <Route exact path="/users" component={UserList} /> */}
-              <Route exact path="/" component={Home} />
-              <Route exact path="/login" component={Login} />
-            </Switch>
+                <Route exact path="/" component={Home}>
+                  {currentUser ? <Home /> : <Redirect to="/login" />}
+                </Route>
+                <Route exact path="/login">
+                  {currentUser ? <Redirect to="/" /> : <Login />}
+                </Route>
+              </Switch>
 
-            <Box pt={4}>
-              <Copyright />
-            </Box>
-          </Container>
+              <Box pt={4}>
+                <Copyright />
+              </Box>
+            </Container>
+          )}
         </Router>
       </SuperUserContext.Provider>
     </ThemeProvider>
