@@ -25,5 +25,24 @@ const ButtonLinkUnstyled = ({ href, children, ...props }) => {
   )
 }
 
-export { ButtonLink, ButtonLinkUnstyled }
+const CTAButton = ({ children, sx, ...props }) => {
+  return (
+    <MuiButton
+      sx={{
+        borderRadius: 3,
+        width: '100%',
+        p: 1,
+        m: 1,
+        fontSize: 'h6.fontSize',
+        ...sx,
+      }}
+      variant="contained"
+      {...props}
+    >
+      {children}
+    </MuiButton>
+  )
+}
+
+export { ButtonLink, ButtonLinkUnstyled, CTAButton }
 export default Button

@@ -6,6 +6,7 @@ import { Box, Typography, Container, Link as MUILink } from '@mui/material'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import Home from './pages/Home'
 import Header from './features/Header'
+import Login from './pages/Login'
 
 const theme = createTheme({
   palette: {
@@ -46,6 +47,7 @@ export default function App() {
               <Route exact path="/businesses" component={UserList} />
               <Route exact path="/users" component={UserList} /> */}
             <Route exact path="/" component={Home} />
+            <Route exact path="/login" component={Login} />
           </Switch>
 
           <Box pt={4}>
