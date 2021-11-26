@@ -9,9 +9,11 @@ import {
 
 import { Box, Typography, Container, Link as MUILink } from '@mui/material'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
+import Loading from './ui/Loading'
 import Home from './pages/Home'
 import Header from './features/Header'
 import Login from './pages/Login'
+import Users from './pages/Users'
 import { SuperUserContext } from './context'
 
 const GET_CURRENT_USER = gql`
@@ -69,6 +71,7 @@ export default function App() {
       <SuperUserContext.Provider value={currentUser}>
         <Router>
           <Header />
+          {loading && <Loading />}
           {!loading && (
             <Container>
               <Switch>
@@ -80,6 +83,9 @@ export default function App() {
                 </Route>
                 <Route exact path="/login">
                   {currentUser ? <Redirect to="/" /> : <Login />}
+                </Route>
+                <Route exact path="/users">
+                  {currentUser ? <Users /> : <Redirect to="/login" />}
                 </Route>
               </Switch>
 
