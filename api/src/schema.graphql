@@ -49,8 +49,8 @@ type User
   username: String!
   mail: String!
   password: String! @private
-  coins: Int!
-  tickets: Int!
+  coins: Int! @default(value: 0)
+  tickets: Int! @default(value: 0)
   # invetory: [Avatar!]!
   # scores: [score]
   scores: [Score] @relationship(type: "SCORE_USER", direction: OUT)
@@ -58,14 +58,14 @@ type User
 
   stars: Int!
   daysInArow: Int!
-  isPremium: Boolean!
-  age: Int!
-  country: String!
+  isPremium: Boolean! @default(value: false)
+  age: Int
+  country: String
   actualMoneySpent: Int
   appRate: Rate
   appReview: String
   lastPremiumDate: DateTime
-  lastSeen: DateTime!
+  lastSeen: DateTime
   createdAt: DateTime!
 }
 

@@ -4,11 +4,17 @@ import jwt from 'jsonwebtoken'
 const signup = (obj, args, context, type = 'User') => {
   args.password = hashSync(args.password, 10)
   const session = context.driver.session()
+  const today = new Date()
+  const date =
+    today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate()
+  const time =
+    today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds()
+  const dateTime = date + 'T' + time + 'Z'
 
   return session
     .run(
       `
-        CREATE (u:${type}) SET u += $args, u.userId = randomUUID()
+        CREATE (u:${type}) SET u += $args, u.userId = randomUUID(), u.createdAt=datetime('${dateTime}')
         RETURN u`,
       { args }
     )
@@ -30,7 +36,7 @@ const signup = (obj, args, context, type = 'User') => {
       session.close()
       const error_message = err.message.includes('mail')
         ? 'Email already in use'
-        : 'Username already in use'
+        : 'Username already in use :' + err.message
       throw new Error(error_message)
     })
 }
