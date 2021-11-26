@@ -1,9 +1,11 @@
 import { AppBar, Box, Toolbar, Typography } from '@mui/material'
 import Button, { ButtonLink } from '../ui/Button'
-import React from 'react'
+import React, { useContext } from 'react'
 import { SECTIONS } from '../helpers/constants'
+import { SuperUserContext } from '../context'
 
 const Header = () => {
+  const superCurrentUser = useContext(SuperUserContext)
   return (
     <Box mb={5}>
       <AppBar
@@ -21,9 +23,9 @@ const Header = () => {
         >
           <Box style={{ display: 'flex', alignItems: 'center' }}>
             <Logo />
-            <MenuButtons />
+            {superCurrentUser && <MenuButtons />}
           </Box>
-          <Logout />
+          {superCurrentUser && <Logout superCurrentUser={superCurrentUser} />}
         </Toolbar>
       </AppBar>
     </Box>
@@ -65,12 +67,12 @@ const MenuButtons = () => {
   )
 }
 
-const Logout = () => {
+const Logout = ({ superCurrentUser }) => {
   return (
     <Button>
       <Box>
         <Typography color="textSecondary" variant="caption">
-          Logged as ...
+          Logged as {superCurrentUser?.firstname || superCurrentUser?.mail}
         </Typography>
         <Typography color="textPrimary" variant="medium">
           <Box fontWeight="500">Logout</Box>
