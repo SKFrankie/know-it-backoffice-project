@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useMutation, gql } from '@apollo/client'
+
 import { Alert, Typography } from '@mui/material'
 import { CTAButton } from '../ui/Button'
 import { Column } from '../ui/Flex'
@@ -20,6 +21,7 @@ const Login = () => {
     },
     onCompleted(data) {
       localStorage.setItem('token', data.superLogin.token)
+      location.reload()
     },
   })
 

@@ -75,7 +75,7 @@ export default function App() {
                 {/* <Route exact path="/" component={Dashboard} />
               <Route exact path="/businesses" component={UserList} />
               <Route exact path="/users" component={UserList} /> */}
-                <Route exact path="/" component={Home}>
+                <Route exact path="/">
                   {currentUser ? <Home /> : <Redirect to="/login" />}
                 </Route>
                 <Route exact path="/login">

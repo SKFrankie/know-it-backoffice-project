@@ -1,8 +1,9 @@
+import React, { useContext } from 'react'
+import { SuperUserContext } from '../context'
+import { SECTIONS } from '../helpers/constants'
+
 import { AppBar, Box, Toolbar, Typography } from '@mui/material'
 import Button, { ButtonLink } from '../ui/Button'
-import React, { useContext } from 'react'
-import { SECTIONS } from '../helpers/constants'
-import { SuperUserContext } from '../context'
 
 const Header = () => {
   const superCurrentUser = useContext(SuperUserContext)
@@ -68,8 +69,12 @@ const MenuButtons = () => {
 }
 
 const Logout = ({ superCurrentUser }) => {
+  const logout = () => {
+    localStorage.setItem('token', '')
+    location.reload()
+  }
   return (
-    <Button>
+    <Button onClick={logout}>
       <Box>
         <Typography color="textSecondary" variant="caption">
           Logged as {superCurrentUser?.firstname || superCurrentUser?.mail}
