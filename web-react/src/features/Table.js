@@ -57,17 +57,19 @@ function EnhancedTableHead(props) {
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
             padding={headCell.disablePadding ? 'none' : 'normal'}
-            sortDirection={orderBy === headCell.id ? order : false}
+            sortDirection={
+              orderBy === headCell.id ? order.toLowerCase() : false
+            }
           >
             <TableSortLabel
               active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
+              direction={orderBy === headCell.id ? order.toLowerCase() : 'asc'}
               onClick={createSortHandler(headCell.id)}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
                 <Box component="span" sx={visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                  {order === 'DESC' ? 'sorted descending' : 'sorted ascending'}
                 </Box>
               ) : null}
             </TableSortLabel>
@@ -82,7 +84,7 @@ EnhancedTableHead.propTypes = {
   numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
   onSelectAllClick: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(['asc', 'desc']).isRequired,
+  order: PropTypes.oneOf(['ASC', 'DESC']).isRequired,
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
   headCells: PropTypes.arrayOf(String).isRequired,
@@ -156,16 +158,23 @@ const Table = ({
   count,
   limit = 50,
 }) => {
-  const [order, setOrder] = React.useState('asc')
-  const [orderBy, setOrderBy] = React.useState('calories')
+  const [order, setOrder] = React.useState('ASC')
+  const [orderBy, setOrderBy] = React.useState(headCells[0].id)
   const [selected, setSelected] = React.useState([])
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(limit)
 
   const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc'
-    setOrder(isAsc ? 'desc' : 'asc')
+    const isAsc = orderBy === property && order === 'ASC'
+    const tmpOrder = isAsc ? 'DESC' : 'ASC'
+    setOrder(tmpOrder)
     setOrderBy(property)
+    setPage(0)
+    refetch({
+      limit: rowsPerPage,
+      offset: 0,
+      orderBy: { [property]: tmpOrder },
+    })
   }
 
   const handleSelectAllClick = (event) => {
@@ -199,14 +208,22 @@ const Table = ({
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
-    refetch({ limit: rowsPerPage, offset: rowsPerPage * newPage })
+    refetch({
+      limit: rowsPerPage,
+      offset: rowsPerPage * newPage,
+      orderBy: { [orderBy]: order },
+    })
   }
 
   const handleChangeRowsPerPage = (event) => {
     const tmpRowsPerPage = parseInt(event.target.value, 10)
     setRowsPerPage(tmpRowsPerPage)
     setPage(0)
-    refetch({ limit: tmpRowsPerPage, offset: rowsPerPage * page })
+    refetch({
+      limit: tmpRowsPerPage,
+      offset: 0,
+      orderBy: { [orderBy]: order },
+    })
   }
 
   const isSelected = (name) => selected.indexOf(name) !== -1

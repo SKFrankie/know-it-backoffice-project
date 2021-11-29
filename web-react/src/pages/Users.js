@@ -4,8 +4,8 @@ import Loading from '../ui/Loading'
 import Table from '../features/Table'
 
 const GET_USERS = gql`
-  query Users($limit: Int, $offset: Int) {
-    users(options: { limit: $limit, offset: $offset }) {
+  query Users($limit: Int, $offset: Int, $orderBy: [UserSort]) {
+    users(options: { limit: $limit, offset: $offset, sort: $orderBy }) {
       userId
 
       mail
@@ -27,6 +27,7 @@ const GET_USERS = gql`
     usersCount
   }
 `
+
 const Users = () => {
   const defaultLimit = 1
   const { data, loading, error, refetch } = useQuery(GET_USERS, {
