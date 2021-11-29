@@ -57,13 +57,15 @@ function Copyright() {
 }
 
 export default function App() {
-  const [currentUser, setCurrentUser] = useState(null)
+  const [currentUser, setCurrentUser] = useState({ online: true })
   const { loading } = useQuery(GET_CURRENT_USER, {
     onError(err) {
       console.log('error', err)
+      setCurrentUser({ online: false })
     },
     onCompleted(res) {
-      setCurrentUser(res.superCurrentUser)
+      const online = res.superCurrentUser !== null
+      setCurrentUser({ online, ...res.superCurrentUser })
     },
   })
   return (
@@ -79,13 +81,25 @@ export default function App() {
               <Route exact path="/businesses" component={UserList} />
               <Route exact path="/users" component={UserList} /> */}
                 <Route exact path="/">
-                  {currentUser ? <Home /> : <Redirect to="/login" />}
+                  {currentUser.online === false ? (
+                    <Redirect to="/login" />
+                  ) : (
+                    <Home />
+                  )}
                 </Route>
                 <Route exact path="/login">
-                  {currentUser ? <Redirect to="/" /> : <Login />}
+                  {currentUser.online === false ? (
+                    <Login />
+                  ) : (
+                    <Redirect to="/" />
+                  )}
                 </Route>
                 <Route exact path="/users">
-                  {currentUser ? <Users /> : <Redirect to="/login" />}
+                  {currentUser.online === false ? (
+                    <Redirect to="/login" />
+                  ) : (
+                    <Users />
+                  )}
                 </Route>
               </Switch>
 

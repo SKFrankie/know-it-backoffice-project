@@ -24,9 +24,11 @@ const Header = () => {
         >
           <Box style={{ display: 'flex', alignItems: 'center' }}>
             <Logo />
-            {superCurrentUser && <MenuButtons />}
+            {superCurrentUser.online && <MenuButtons />}
           </Box>
-          {superCurrentUser && <Logout superCurrentUser={superCurrentUser} />}
+          {superCurrentUser.online && (
+            <Logout superCurrentUser={superCurrentUser} />
+          )}
         </Toolbar>
       </AppBar>
     </Box>
