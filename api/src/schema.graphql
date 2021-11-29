@@ -51,13 +51,12 @@ type User
   password: String! @private
   coins: Int! @default(value: 0)
   tickets: Int! @default(value: 0)
-  # invetory: [Avatar!]!
-  # scores: [score]
+  inventory: [Avatar] @relationship(type: "AVATARS_USER", direction: IN)
   scores: [Score] @relationship(type: "SCORE_USER", direction: OUT)
-  # currentAvatar: Avatar!
+  currentAvatar: Avatar @relationship(type: "AVATAR_USER", direction: IN)
 
   stars: Int!
-  daysInArow: Int!
+  daysInArow: Int
   isPremium: Boolean! @default(value: false)
   age: Int
   country: String
@@ -114,6 +113,7 @@ type Avatar
   coinPrice: Int!
   collections: [AvatarCollection]
     @relationship(type: "AVATAR_COLLECTION_AVATAR", direction: OUT)
+  ownedBy: [User] @relationship(type: "AVATARS_USER", direction: OUT)
 }
 
 type AvatarCollection
