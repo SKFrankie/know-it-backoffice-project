@@ -61,7 +61,6 @@ const superUsers = {
         )
         .then((res) => {
           session.close()
-          console.log('ici', context.auth.jwt.userId)
           const { userId, mail, rights } = res.records[0].get('i').properties
           const token = jwt.sign(
             { userId, mail, roles: [rights] },
