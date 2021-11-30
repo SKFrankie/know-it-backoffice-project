@@ -231,59 +231,62 @@ const Table = ({
 
   return (
     <Box sx={{ width: '100%', m: 1 }}>
-      <Paper
-        sx={{
-          width: '100%',
-          mb: 2,
-          borderRadius: '13px',
-          border: '1px solid #7B9497',
-        }}
-      >
-        <EnhancedTableToolbar
-          numSelected={selected.length}
-          tableName={tableName}
-        />
-        <TableContainer>
-          <MUITable sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
-            <EnhancedTableHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
-              headCells={headCells}
-              hasCheckbox={hasCheckbox}
-            />
-            <TableBody>
-              {rows.length &&
-                rows.map((row, index) => {
-                  return (
-                    <Row
-                      headCells={headCells}
-                      key={index}
-                      row={row}
-                      index={index}
-                      isSelected={isSelected}
-                      handleClick={handleClick}
-                      extraColumns={extraColumns}
-                      hasCheckbox={hasCheckbox}
-                    />
-                  )
-                })}
-            </TableBody>
-          </MUITable>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[1, 10, 50, 100]}
-          component="div"
-          count={count}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Paper>
+      {!count && <Typography variant="h6">No {tableName} found</Typography>}
+      {count && (
+        <Paper
+          sx={{
+            width: '100%',
+            mb: 2,
+            borderRadius: '13px',
+            border: '1px solid #7B9497',
+          }}
+        >
+          <EnhancedTableToolbar
+            numSelected={selected.length}
+            tableName={tableName}
+          />
+          <TableContainer>
+            <MUITable sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
+              <EnhancedTableHead
+                numSelected={selected.length}
+                order={order}
+                orderBy={orderBy}
+                onSelectAllClick={handleSelectAllClick}
+                onRequestSort={handleRequestSort}
+                rowCount={rows.length}
+                headCells={headCells}
+                hasCheckbox={hasCheckbox}
+              />
+              <TableBody>
+                {rows.length &&
+                  rows.map((row, index) => {
+                    return (
+                      <Row
+                        headCells={headCells}
+                        key={index}
+                        row={row}
+                        index={index}
+                        isSelected={isSelected}
+                        handleClick={handleClick}
+                        extraColumns={extraColumns}
+                        hasCheckbox={hasCheckbox}
+                      />
+                    )
+                  })}
+              </TableBody>
+            </MUITable>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[1, 10, 50, 100]}
+            component="div"
+            count={count}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Paper>
+      )}
     </Box>
   )
 }
