@@ -15,6 +15,7 @@ import Header from './features/Header'
 import Login from './pages/Login'
 import Users from './pages/Users'
 import { SuperUserContext } from './context'
+import Admin from './pages/Admin'
 
 const GET_CURRENT_USER = gql`
   query SuperCurrentUser {
@@ -56,6 +57,14 @@ function Copyright() {
   )
 }
 
+const PrivateRoute = ({ component: Component, currentUser, ...rest }) => {
+  return (
+    <Route {...rest}>
+      {currentUser.online === false ? <Redirect to="/login" /> : <Component />}
+    </Route>
+  )
+}
+
 export default function App() {
   const [currentUser, setCurrentUser] = useState({ online: true })
   const { loading } = useQuery(GET_CURRENT_USER, {
@@ -77,16 +86,6 @@ export default function App() {
           {!loading && (
             <Container>
               <Switch>
-                {/* <Route exact path="/" component={Dashboard} />
-              <Route exact path="/businesses" component={UserList} />
-              <Route exact path="/users" component={UserList} /> */}
-                <Route exact path="/">
-                  {currentUser.online === false ? (
-                    <Redirect to="/login" />
-                  ) : (
-                    <Home />
-                  )}
-                </Route>
                 <Route exact path="/login">
                   {currentUser.online === false ? (
                     <Login />
@@ -94,13 +93,25 @@ export default function App() {
                     <Redirect to="/" />
                   )}
                 </Route>
-                <Route exact path="/users">
-                  {currentUser.online === false ? (
-                    <Redirect to="/login" />
-                  ) : (
-                    <Users />
-                  )}
-                </Route>
+
+                <PrivateRoute
+                  currentUser={currentUser}
+                  component={Home}
+                  exact
+                  path="/"
+                />
+                <PrivateRoute
+                  currentUser={currentUser}
+                  component={Users}
+                  exact
+                  path="/users"
+                />
+                <PrivateRoute
+                  currentUser={currentUser}
+                  component={Admin}
+                  exact
+                  path="/admin"
+                />
               </Switch>
 
               <Box pt={4}>

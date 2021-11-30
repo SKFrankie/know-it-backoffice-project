@@ -41,7 +41,7 @@ const GET_USERS = gql`
 `
 
 const Users = () => {
-  const defaultLimit = 1
+  const defaultLimit = 50
   const { data, loading, error, refetch } = useQuery(GET_USERS, {
     variables: {
       limit: defaultLimit,
