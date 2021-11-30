@@ -61,7 +61,8 @@ const superUsers = {
         )
         .then((res) => {
           session.close()
-          const { userId, mail } = res.records[0].get('i').properties
+          console.log('ici', context.auth.jwt.userId)
+          const { userId, mail, rights } = res.records[0].get('i').properties
           const token = jwt.sign(
             { userId, mail, roles: [rights] },
             process.env.JWT_SECRET,
@@ -69,7 +70,7 @@ const superUsers = {
               expiresIn: '3d',
             }
           )
-          const url = process.env.ENDPOINT + '/super/invite/' + token
+          const url = process.env.ENDPOINT + '/signup/' + token
           return url
         })
     },
