@@ -18,7 +18,6 @@ import Checkbox from '@mui/material/Checkbox'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import DeleteIcon from '@mui/icons-material/Delete'
-import FilterListIcon from '@mui/icons-material/FilterList'
 import { visuallyHidden } from '@mui/utils'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
@@ -32,6 +31,7 @@ function EnhancedTableHead(props) {
     rowCount,
     onRequestSort,
     headCells,
+    hasCheckbox = true,
   } = props
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property)
@@ -40,17 +40,19 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox">
-          <Checkbox
-            color="primary"
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{
-              'aria-label': 'select all desserts',
-            }}
-          />
-        </TableCell>
+        {hasCheckbox && (
+          <TableCell padding="checkbox">
+            <Checkbox
+              color="primary"
+              indeterminate={numSelected > 0 && numSelected < rowCount}
+              checked={rowCount > 0 && numSelected === rowCount}
+              onChange={onSelectAllClick}
+              inputProps={{
+                'aria-label': 'select all desserts',
+              }}
+            />
+          </TableCell>
+        )}
         <TableCell />
         {headCells.map((headCell) => (
           <TableCell
@@ -85,9 +87,10 @@ EnhancedTableHead.propTypes = {
   onRequestSort: PropTypes.func.isRequired,
   onSelectAllClick: PropTypes.func.isRequired,
   order: PropTypes.oneOf(['ASC', 'DESC']).isRequired,
-  orderBy: PropTypes.string.isRequired,
+  orderBy: PropTypes.string,
   rowCount: PropTypes.number.isRequired,
   headCells: PropTypes.arrayOf(String).isRequired,
+  hasCheckbox: PropTypes.bool,
 }
 
 const EnhancedTableToolbar = (props) => {
@@ -127,16 +130,10 @@ const EnhancedTableToolbar = (props) => {
         </Typography>
       )}
 
-      {numSelected > 0 ? (
+      {numSelected > 0 && (
         <Tooltip title="Delete">
           <IconButton>
             <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
           </IconButton>
         </Tooltip>
       )}
@@ -157,9 +154,10 @@ const Table = ({
   refetch = null,
   count,
   limit = 50,
+  hasCheckbox = true,
 }) => {
   const [order, setOrder] = React.useState('ASC')
-  const [orderBy, setOrderBy] = React.useState(headCells[0].id)
+  const [orderBy, setOrderBy] = React.useState(null)
   const [selected, setSelected] = React.useState([])
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(limit)
@@ -208,29 +206,39 @@ const Table = ({
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
+    const tmpOrderBy = orderBy ? { [orderBy]: order } : null
+    // duplicate refetch needs to be fixed like in searchbar with useeffect
     refetch({
       limit: rowsPerPage,
       offset: rowsPerPage * newPage,
-      orderBy: { [orderBy]: order },
+      orderBy: tmpOrderBy,
     })
   }
 
   const handleChangeRowsPerPage = (event) => {
     const tmpRowsPerPage = parseInt(event.target.value, 10)
+    const tmpOrderBy = orderBy ? { [orderBy]: order } : null
     setRowsPerPage(tmpRowsPerPage)
     setPage(0)
     refetch({
       limit: tmpRowsPerPage,
       offset: 0,
-      orderBy: { [orderBy]: order },
+      orderBy: tmpOrderBy,
     })
   }
 
   const isSelected = (name) => selected.indexOf(name) !== -1
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
+    <Box sx={{ width: '100%', m: 1 }}>
+      <Paper
+        sx={{
+          width: '100%',
+          mb: 2,
+          borderRadius: '13px',
+          border: '1px solid #7B9497',
+        }}
+      >
         <EnhancedTableToolbar
           numSelected={selected.length}
           tableName={tableName}
@@ -245,6 +253,7 @@ const Table = ({
               onRequestSort={handleRequestSort}
               rowCount={rows.length}
               headCells={headCells}
+              hasCheckbox={hasCheckbox}
             />
             <TableBody>
               {rows.length &&
@@ -258,6 +267,7 @@ const Table = ({
                       isSelected={isSelected}
                       handleClick={handleClick}
                       extraColumns={extraColumns}
+                      hasCheckbox={hasCheckbox}
                     />
                   )
                 })}
@@ -285,6 +295,7 @@ const Row = ({
   handleClick,
   index,
   isSelected,
+  hasCheckbox = true,
 }) => {
   const [open, setOpen] = React.useState(false)
   const isItemSelected = isSelected(row.userId)
@@ -294,17 +305,19 @@ const Row = ({
   return (
     <>
       <TableRow hover tabIndex={-1} selected={isItemSelected}>
-        <TableCell padding="checkbox">
-          <Checkbox
-            onClick={(event) => handleClick(event, row.userId)}
-            color="primary"
-            aria-checked={isItemSelected}
-            checked={isItemSelected}
-            inputProps={{
-              'aria-labelledby': labelId,
-            }}
-          />
-        </TableCell>
+        {hasCheckbox && (
+          <TableCell padding="checkbox">
+            <Checkbox
+              onClick={(event) => handleClick(event, row.userId)}
+              color="primary"
+              aria-checked={isItemSelected}
+              checked={isItemSelected}
+              inputProps={{
+                'aria-labelledby': labelId,
+              }}
+            />
+          </TableCell>
+        )}
         {extraColumns && (
           <TableCell>
             <IconButton
@@ -321,7 +334,7 @@ const Row = ({
             align={headCell.numeric ? 'right' : 'left'}
             key={headCell.id}
           >
-            {row[headCell.id]}
+            <Typography color="textSecondary">{row[headCell.id]}</Typography>
           </TableCell>
         ))}
       </TableRow>
@@ -342,9 +355,11 @@ const Row = ({
                 <TableRow>
                   {extraColumns.map((extraColumn) => (
                     <TableCell key={extraColumn.id}>
-                      {extraColumn.child
-                        ? row[extraColumn.id]?.[extraColumn.child]
-                        : row[extraColumn.id]}
+                      <Typography color="textSecondary">
+                        {extraColumn.child
+                          ? row[extraColumn.id]?.[extraColumn.child]
+                          : row[extraColumn.id]}
+                      </Typography>
                     </TableCell>
                   ))}
                 </TableRow>
