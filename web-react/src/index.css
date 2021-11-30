@@ -8,6 +8,10 @@ body {
   border-radius: 20px;
   background-color: #fafafa;
 }
+.inputRounded {
+  border-radius: 20px !important;
+  background-color: #fafafa;
+}
 .inputRounded input::placeholder {
   color: #7b9497;
 }

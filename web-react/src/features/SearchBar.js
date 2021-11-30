@@ -1,6 +1,6 @@
-import { Box, FormControl, InputLabel, MenuItem, Select } from '@mui/material'
+import { Box, FormControl, InputLabel, MenuItem } from '@mui/material'
 import React, { useEffect } from 'react'
-import { Input } from '../ui/Form'
+import { Input, Select } from '../ui/Form'
 
 const SearchBar = ({
   searchFields = [{ label: 'no fields', id: 'no-fields' }],
@@ -50,7 +50,7 @@ const SearchBar = ({
         onChange={handleSearch}
         sx={{ width: '30%', borderRadius: '5px' }}
       />
-      <FormControl>
+      <FormControl sx={{ width: '30%' }}>
         <InputLabel id="select-search">Search by</InputLabel>
         <Select
           labelId="select-search"

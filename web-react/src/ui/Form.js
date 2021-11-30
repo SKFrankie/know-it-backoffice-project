@@ -1,4 +1,4 @@
-import { FormControl, TextField } from '@mui/material'
+import { FormControl, TextField, Select as MUISelect } from '@mui/material'
 import React from 'react'
 import '../index.css'
 
@@ -13,5 +13,14 @@ const Form = ({ children, ...props }) => {
 const Input = ({ sx, ...props }) => {
   return <TextField className="inputRounded" sx={{ m: 1, ...sx }} {...props} />
 }
-export { Input }
+
+const Select = ({ sx, children, ...props }) => {
+  return (
+    <MUISelect className="inputRounded" sx={{ m: 1, ...sx }} {...props}>
+      {children}
+    </MUISelect>
+  )
+}
+
+export { Input, Select }
 export default Form
