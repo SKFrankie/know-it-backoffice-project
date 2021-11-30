@@ -50,4 +50,23 @@ const SECTIONS = [
   },
 ]
 
-export { SECTIONS }
+const RIGHTS = [
+  {
+    id: 'ADMIN',
+    label: 'Admin',
+    description:
+      'Admin can do everything including adding/deleting and modifying other super users',
+  },
+  {
+    id: 'Editor',
+    label: 'Editor',
+    description: 'Editor can edit everything but admins or invite other admins',
+  },
+  {
+    id: 'READER',
+    label: 'Reader',
+    description: 'Readers can only browse data but not modify',
+  },
+]
+
+export { SECTIONS, RIGHTS }

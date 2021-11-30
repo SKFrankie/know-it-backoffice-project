@@ -15,3 +15,7 @@ body {
 .inputRounded input::placeholder {
   color: #7b9497;
 }
+
+.MuiSelect-outlined {
+  text-align: left;
+}
