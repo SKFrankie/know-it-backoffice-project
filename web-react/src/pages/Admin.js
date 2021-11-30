@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useQuery, gql } from '@apollo/client'
 import Loading from '../ui/Loading'
 import Table from '../features/Table'
 import { Box } from '@mui/material'
 import SearchBar from '../features/SearchBar'
+import Invite from '../features/modals/Invite'
+import Flex from '../ui/Flex'
+import { SuperUserContext } from '../context'
 
 const GET_SUPER_USERS = gql`
   query SuperUsers(
@@ -30,6 +33,7 @@ const GET_SUPER_USERS = gql`
 `
 
 const Admin = () => {
+  const superCurrentUser = useContext(SuperUserContext)
   const defaultLimit = 50
   const { data, loading, error, refetch } = useQuery(GET_SUPER_USERS, {
     variables: {
@@ -67,7 +71,14 @@ const Admin = () => {
   return (
     <>
       <Box>
-        <SearchBar searchFields={columns} refetch={refetch} />
+        <Flex>
+          <SearchBar
+            sx={{ flexGrow: 1 }}
+            searchFields={columns}
+            refetch={refetch}
+          />
+          {superCurrentUser.rights === 'ADMIN' && <Invite />}
+        </Flex>
         {loading && <Loading />} {error && 'error'}
         {data && (
           <Table

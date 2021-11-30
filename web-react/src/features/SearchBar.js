@@ -5,6 +5,7 @@ import { Input } from '../ui/Form'
 const SearchBar = ({
   searchFields = [{ label: 'no fields', id: 'no-fields' }],
   refetch,
+  sx,
 }) => {
   const [search, setSearch] = React.useState('')
   const [searchBy, setSearchBy] = React.useState(searchFields[0])
@@ -42,7 +43,7 @@ const SearchBar = ({
   }
 
   return (
-    <Box>
+    <Box sx={{ ...sx }}>
       <Input
         placeholder={`Search by ${searchBy.label}`}
         value={search}
