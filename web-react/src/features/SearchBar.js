@@ -47,8 +47,7 @@ const SearchBar = ({
         placeholder={`Search by ${searchBy.label}`}
         value={search}
         onChange={handleSearch}
-        sx={{ width: '30%' }}
-        className="search-input"
+        sx={{ width: '30%', borderRadius: '5px' }}
       />
       <FormControl>
         <InputLabel id="select-search">Search by</InputLabel>

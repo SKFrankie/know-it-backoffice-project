@@ -8,6 +8,6 @@ body {
   border-radius: 20px;
   background-color: #fafafa;
 }
-.search-input input::placeholder {
+.inputRounded input::placeholder {
   color: #7b9497;
 }
