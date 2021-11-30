@@ -1,6 +1,6 @@
-import { login, signup } from './helpers'
+import { getCurrentDate, login, signup } from './helpers'
 import jwt from 'jsonwebtoken'
-import { compareSync, hashSync } from 'bcrypt'
+import { hashSync } from 'bcrypt'
 
 const superUsers = {
   Mutation: {
@@ -21,7 +21,7 @@ const superUsers = {
       return session
         .run(
           `
-        MATCH (u:SuperUser {userId: $userId}) SET u += $args
+        MATCH (u:SuperUser {userId: $userId}) SET u += $args, u.createdAt=datetime('${getCurrentDate()}')
         RETURN u`,
           { userId, args }
         )
@@ -54,7 +54,7 @@ const superUsers = {
           `
       MATCH (u:SuperUser {userId: "${context.auth.jwt.userId}"})
       WHERE u.rights in ['ADMIN']
-      CREATE (i: SuperUser {mail: $mail, RIGHT: $rights, userId: randomUUID()})
+      CREATE (i: SuperUser {mail: $mail, rights: $rights, userId: randomUUID()})
       RETURN i;
         `,
           { mail: args.mail, rights: args.rights }

@@ -91,7 +91,7 @@ type SuperUser
   lastname: String
   rights: Right!
 
-  createdAt: DateTime!
+  createdAt: DateTime
 }
 
 ## Avatars

@@ -1,20 +1,24 @@
 import { compareSync, hashSync } from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
-const signup = (obj, args, context, type = 'User') => {
-  args.password = hashSync(args.password, 10)
-  const session = context.driver.session()
+const getCurrentDate = () => {
   const today = new Date()
   const date =
     today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate()
   const time =
     today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds()
   const dateTime = date + 'T' + time + 'Z'
+  return dateTime
+}
+
+const signup = (obj, args, context, type = 'User') => {
+  args.password = hashSync(args.password, 10)
+  const session = context.driver.session()
 
   return session
     .run(
       `
-        CREATE (u:${type}) SET u += $args, u.userId = randomUUID(), u.createdAt=datetime('${dateTime}')
+        CREATE (u:${type}) SET u += $args, u.userId = randomUUID(), u.createdAt=datetime('${getCurrentDate()}')
         RETURN u`,
       { args }
     )
@@ -72,4 +76,4 @@ const login = (obj, args, context, type = 'User') => {
       }
     })
 }
-export { signup, login }
+export { signup, login, getCurrentDate }
