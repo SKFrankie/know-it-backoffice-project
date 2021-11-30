@@ -62,6 +62,7 @@ const Users = () => {
       numeric: true,
       disablePadding: false,
       label: 'Last Seen',
+      datetime: true,
     },
     {
       id: 'daysInArow',
@@ -77,6 +78,7 @@ const Users = () => {
       numeric: true,
       disablePadding: false,
       label: 'Created At',
+      datetime: true,
     },
     {
       id: 'isPremium',

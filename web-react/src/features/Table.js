@@ -32,6 +32,7 @@ function EnhancedTableHead(props) {
     onRequestSort,
     headCells,
     hasCheckbox = true,
+    hasCollapse = false,
   } = props
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property)
@@ -53,7 +54,7 @@ function EnhancedTableHead(props) {
             />
           </TableCell>
         )}
-        <TableCell />
+        {hasCollapse && <TableCell />}
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -91,6 +92,7 @@ EnhancedTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
   headCells: PropTypes.arrayOf(String).isRequired,
   hasCheckbox: PropTypes.bool,
+  hasCollapse: PropTypes.bool,
 }
 
 const EnhancedTableToolbar = (props) => {
@@ -150,7 +152,7 @@ const Table = ({
   headCells = [],
   rows = [],
   tableName = '',
-  extraColumns = null,
+  extraColumns = [],
   refetch = null,
   count,
   limit = 50,
@@ -256,6 +258,7 @@ const Table = ({
                 rowCount={rows.length}
                 headCells={headCells}
                 hasCheckbox={hasCheckbox}
+                hasCollapse={extraColumns.length > 0}
               />
               <TableBody>
                 {rows.length &&
@@ -292,7 +295,7 @@ const Table = ({
 }
 
 const Row = ({
-  extraColumns,
+  extraColumns = [],
   row,
   headCells,
   handleClick,
@@ -321,7 +324,7 @@ const Row = ({
             />
           </TableCell>
         )}
-        {extraColumns && (
+        {!!extraColumns.length && (
           <TableCell>
             <IconButton
               aria-label="expand row"
@@ -333,12 +336,7 @@ const Row = ({
           </TableCell>
         )}
         {headCells.map((headCell) => (
-          <TableCell
-            align={headCell.numeric ? 'right' : 'left'}
-            key={headCell.id}
-          >
-            <Typography color="textSecondary">{row[headCell.id]}</Typography>
-          </TableCell>
+          <Cell key={headCell.id} cell={headCell} row={row} />
         ))}
       </TableRow>
       <TableRow>
@@ -357,13 +355,7 @@ const Row = ({
               <TableBody>
                 <TableRow>
                   {extraColumns.map((extraColumn) => (
-                    <TableCell key={extraColumn.id}>
-                      <Typography color="textSecondary">
-                        {extraColumn.child
-                          ? row[extraColumn.id]?.[extraColumn.child]
-                          : row[extraColumn.id]}
-                      </Typography>
-                    </TableCell>
+                    <Cell key={extraColumn.id} cell={extraColumn} row={row} />
                   ))}
                 </TableRow>
               </TableBody>
@@ -372,6 +364,17 @@ const Row = ({
         </TableCell>
       </TableRow>
     </>
+  )
+}
+
+const Cell = ({ cell, row }) => {
+  const value = cell.child ? row[cell.id]?.[cell.child] : row[cell.id]
+  return (
+    <TableCell align={cell.numeric ? 'right' : 'left'} key={cell.id}>
+      <Typography color="textSecondary">
+        {cell.datetime && value ? new Date(value).toLocaleString() : value}
+      </Typography>
+    </TableCell>
   )
 }
 
