@@ -7,8 +7,9 @@ import {
   FormControl,
   InputLabel,
   MenuItem,
+  AlertTitle,
 } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { CTAButton } from '../../ui/Button'
 import { Column } from '../../ui/Flex'
 import Form, { Input, Select } from '../../ui/Form'
@@ -36,22 +37,53 @@ const INVITE = gql`
 `
 
 const Invite = () => {
-  const [invite, { loading, error }] = useMutation(INVITE, {
+  // todo faire un sytème de mail pour les super users ou pouvoir récupérer un nouveau lien d'invitation au cas ou il se perd
+  const invitationSubject = 'Join the Know It Team!'
+  const invitationBody =
+    'Joins us by clicking this authentication link and create your password : '
+  const [invite, { loading }] = useMutation(INVITE, {
     onError(err) {
       console.log(err)
+      setError(err)
     },
     onCompleted(data) {
-      console.log('data', data)
+      setData(data)
     },
   })
+
+  const sendWithGmail = () => {
+    navigator.clipboard.writeText(data.inviteSuperUser)
+    setTimeout(() => {
+      const win = window.open(
+        `https://mail.google.com/mail/u/0/?fs=1&to=${mail}&su=${invitationSubject}&body=${invitationBody} ${data.inviteSuperUser}&tf=cm`,
+        '_blank'
+      )
+      win.focus()
+    }, 1000)
+  }
+
+  const [data, setData] = useState(null)
+  const [error, setError] = useState(null)
 
   const [open, setOpen] = React.useState(false)
   const [mail, setMail] = useState('')
   const [rights, setRights] = useState(RIGHTS[2])
+
+  useEffect(() => {
+    setError(null)
+    setData(null)
+  }, [mail])
+  useEffect(() => {
+    if (data) {
+      sendWithGmail()
+    }
+  }, [data])
+
   const handleOpen = () => {
     setOpen(true)
   }
   const handleClose = () => {
+    setMail('')
     setOpen(false)
   }
   const handleSubmit = (e) => {
@@ -88,7 +120,15 @@ const Invite = () => {
             >
               {error && !loading && (
                 <Alert sx={{ m: 1 }} severity="error">
-                  Mail might already be registered
+                  <AlertTitle>Error</AlertTitle>
+                  <strong>{mail}</strong> might already be registered
+                </Alert>
+              )}
+              {data && (
+                <Alert sx={{ m: 1 }} severity="success">
+                  <AlertTitle>Success</AlertTitle>
+                  Invitation link for <strong>{mail}</strong> has been copied to
+                  your clipboard! Send it to the user.
                 </Alert>
               )}
               <Input
@@ -117,7 +157,7 @@ const Invite = () => {
                   ))}
                 </Select>
               </FormControl>
-              <CTAButton type="submit">Send invitation</CTAButton>
+              <CTAButton type="submit">Get invitation link</CTAButton>
             </Form>
           </Column>
         </Box>
