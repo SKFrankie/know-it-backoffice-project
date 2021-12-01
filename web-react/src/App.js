@@ -16,6 +16,7 @@ import Login from './pages/Login'
 import Users from './pages/Users'
 import { SuperUserContext } from './context'
 import Admin from './pages/Admin'
+import Signup from './pages/SignUp'
 
 const GET_CURRENT_USER = gql`
   query SuperCurrentUser {
@@ -66,7 +67,7 @@ const PrivateRoute = ({ component: Component, currentUser, ...rest }) => {
 }
 
 export default function App() {
-  const [currentUser, setCurrentUser] = useState({ online: true })
+  const [currentUser, setCurrentUser] = useState({ online: false })
   const { loading } = useQuery(GET_CURRENT_USER, {
     onError(err) {
       console.log('error', err)
@@ -86,6 +87,13 @@ export default function App() {
           {!loading && (
             <Container>
               <Switch>
+                <Route path="/signup/:token">
+                  {currentUser.online === false ? (
+                    <Signup />
+                  ) : (
+                    <Redirect to="/" />
+                  )}
+                </Route>
                 <Route exact path="/login">
                   {currentUser.online === false ? (
                     <Login />
