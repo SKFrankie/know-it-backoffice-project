@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { alpha } from '@mui/material/styles'
 import Box from '@mui/material/Box'
@@ -21,6 +21,12 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import { visuallyHidden } from '@mui/utils'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
+import EditIcon from '@mui/icons-material/ModeEditOutlined'
+import DoneOutlinedIcon from '@mui/icons-material/DoneOutlined'
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined'
+
+import { Input } from '../ui/Form'
+import Popover from '../ui/Popover'
 
 function EnhancedTableHead(props) {
   const {
@@ -33,6 +39,7 @@ function EnhancedTableHead(props) {
     headCells,
     hasCheckbox = true,
     hasCollapse = false,
+    canEdit = false,
   } = props
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property)
@@ -78,6 +85,7 @@ function EnhancedTableHead(props) {
             </TableSortLabel>
           </TableCell>
         ))}
+        {canEdit && <TableCell />}
       </TableRow>
     </TableHead>
   )
@@ -93,6 +101,7 @@ EnhancedTableHead.propTypes = {
   headCells: PropTypes.arrayOf(String).isRequired,
   hasCheckbox: PropTypes.bool,
   hasCollapse: PropTypes.bool,
+  canEdit: PropTypes.bool,
 }
 
 const EnhancedTableToolbar = (props) => {
@@ -157,6 +166,9 @@ const Table = ({
   count,
   limit = 50,
   hasCheckbox = true,
+  canEdit = false,
+  setFields,
+  id = '',
 }) => {
   const [order, setOrder] = React.useState('ASC')
   const [orderBy, setOrderBy] = React.useState(null)
@@ -259,6 +271,7 @@ const Table = ({
                 headCells={headCells}
                 hasCheckbox={hasCheckbox}
                 hasCollapse={extraColumns.length > 0}
+                canEdit={canEdit}
               />
               <TableBody>
                 {rows.length &&
@@ -273,6 +286,9 @@ const Table = ({
                         handleClick={handleClick}
                         extraColumns={extraColumns}
                         hasCheckbox={hasCheckbox}
+                        canEdit={canEdit}
+                        setFields={setFields}
+                        id={id}
                       />
                     )
                   })}
@@ -302,11 +318,27 @@ const Row = ({
   index,
   isSelected,
   hasCheckbox = true,
+  canEdit = false,
+  setFields,
+  id,
 }) => {
   const [open, setOpen] = React.useState(false)
   const isItemSelected = isSelected(row.userId)
   // WARNING checkbox is not really working, maybe pass it in props?
   const labelId = `enhanced-table-checkbox-${index}`
+  const [isEditing, setIsEditing] = useState(false)
+
+  const [updatedFields, setUpdatedFields] = useState({})
+
+  const updateFields = () => {
+    setFields({ variables: { [id]: row[id], ...updatedFields } })
+    setIsEditing(false)
+    setUpdatedFields({})
+  }
+  const cancelUpdateFields = () => {
+    setUpdatedFields({})
+    setIsEditing(false)
+  }
 
   return (
     <>
@@ -336,8 +368,50 @@ const Row = ({
           </TableCell>
         )}
         {headCells.map((headCell) => (
-          <Cell key={headCell.id} cell={headCell} row={row} />
+          <Cell
+            editMode={isEditing}
+            key={headCell.id}
+            cell={headCell}
+            row={row}
+            setUpdatedFields={setUpdatedFields}
+            updatedFields={updatedFields}
+          />
         ))}
+        {canEdit && !isEditing && (
+          <TableCell padding="normal">
+            <IconButton
+              aria-label="edit"
+              size="small"
+              onClick={() => setIsEditing(true)}
+            >
+              <EditIcon />
+            </IconButton>
+          </TableCell>
+        )}
+        {isEditing && (
+          <TableCell padding="normal">
+            <Popover text="Save changes">
+              <IconButton
+                aria-label="valid"
+                size="small"
+                sx={{ color: 'green' }}
+                onClick={updateFields}
+              >
+                <DoneOutlinedIcon />
+              </IconButton>
+            </Popover>
+            <Popover text="Cancel changes">
+              <IconButton
+                aria-label="cancel"
+                size="small"
+                onClick={cancelUpdateFields}
+                sx={{ color: 'red' }}
+              >
+                <CloseOutlinedIcon />
+              </IconButton>
+            </Popover>
+          </TableCell>
+        )}
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -367,13 +441,28 @@ const Row = ({
   )
 }
 
-const Cell = ({ cell, row }) => {
+const Cell = ({
+  cell,
+  row,
+  setUpdatedFields,
+  updatedFields = {},
+  editMode = false,
+}) => {
   const value = cell.child ? row[cell.id]?.[cell.child] : row[cell.id]
   return (
     <TableCell align={cell.numeric ? 'right' : 'left'} key={cell.id}>
-      <Typography color="textSecondary">
-        {cell.datetime && value ? new Date(value).toLocaleString() : value}
-      </Typography>
+      {editMode && cell.editable ? (
+        <Input
+          onChange={(e) => {
+            setUpdatedFields({ ...updatedFields, [cell.id]: e.target.value })
+          }}
+          value={updatedFields[cell.id] || value || ''}
+        />
+      ) : (
+        <Typography color="textSecondary">
+          {cell.datetime && value ? new Date(value).toLocaleString() : value}
+        </Typography>
+      )}
     </TableCell>
   )
 }

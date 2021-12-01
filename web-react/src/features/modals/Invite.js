@@ -60,7 +60,7 @@ const Invite = () => {
         '_blank'
       )
       win.focus()
-    }, 1000)
+    }, 4000)
   }
 
   const [data, setData] = useState(null)
