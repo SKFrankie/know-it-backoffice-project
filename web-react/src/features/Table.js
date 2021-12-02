@@ -25,9 +25,10 @@ import EditIcon from '@mui/icons-material/ModeEditOutlined'
 import DoneOutlinedIcon from '@mui/icons-material/DoneOutlined'
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined'
 
-import { Input } from '../ui/Form'
+import { Input, Select } from '../ui/Form'
 import Popover from '../ui/Popover'
 import AreYouSure from './modals/AreYouSure'
+import { MenuItem } from '@mui/material'
 
 function EnhancedTableHead(props) {
   const {
@@ -473,12 +474,32 @@ const Cell = ({
   return (
     <TableCell align={cell.numeric ? 'right' : 'left'} key={cell.id}>
       {editMode && cell.editable ? (
-        <Input
-          onChange={(e) => {
-            setUpdatedFields({ ...updatedFields, [cell.id]: e.target.value })
-          }}
-          value={updatedFields[cell.id] || value || ''}
-        />
+        cell.selectValues ? (
+          <Select
+            value={updatedFields[cell.id] || value || ''}
+            onChange={(e) => {
+              setUpdatedFields({
+                ...updatedFields,
+                [cell.id]: e.target.value,
+              })
+            }}
+            inputProps={{ 'aria-label': 'Without label' }}
+            sx={{ m: 1 }}
+          >
+            {cell.selectValues.map((menuItem) => (
+              <MenuItem key={menuItem.id} value={menuItem.id}>
+                {menuItem.id}
+              </MenuItem>
+            ))}
+          </Select>
+        ) : (
+          <Input
+            onChange={(e) => {
+              setUpdatedFields({ ...updatedFields, [cell.id]: e.target.value })
+            }}
+            value={updatedFields[cell.id] || value || ''}
+          />
+        )
       ) : (
         <Typography color="textSecondary">
           {cell.datetime && value ? new Date(value).toLocaleString() : value}

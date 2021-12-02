@@ -7,6 +7,7 @@ import SearchBar from '../features/SearchBar'
 import Invite from '../features/modals/Invite'
 import Flex from '../ui/Flex'
 import { SuperUserContext } from '../context'
+import { RIGHTS } from '../helpers/constants'
 
 const GET_SUPER_USERS = gql`
   query SuperUsers(
@@ -120,7 +121,8 @@ const Admin = () => {
       id: 'rights',
       disablePadding: false,
       label: 'Rights',
-      numeric: true,
+      selectValues: RIGHTS,
+      editable: true,
     },
     {
       id: 'createdAt',

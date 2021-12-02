@@ -58,7 +58,7 @@ const RIGHTS = [
       'Admin can do everything including adding/deleting and modifying other super users',
   },
   {
-    id: 'Editor',
+    id: 'EDITOR',
     label: 'Editor',
     description: 'Editor can edit everything but admins or invite other admins',
   },
