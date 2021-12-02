@@ -1,35 +1,19 @@
+import React, { useEffect, useState } from 'react'
 import {
   Button,
-  Modal,
   Alert,
   Typography,
-  Box,
   FormControl,
   InputLabel,
   MenuItem,
   AlertTitle,
 } from '@mui/material'
-import React, { useEffect, useState } from 'react'
 import { CTAButton } from '../../ui/Button'
 import { Column } from '../../ui/Flex'
 import Form, { Input, Select } from '../../ui/Form'
 import { useMutation, gql } from '@apollo/client'
 import { RIGHTS } from '../../helpers/constants'
-
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '1px solid #000',
-  boxShadow: 24,
-  borderRadius: '20px',
-  pt: 2,
-  px: 6,
-  pb: 3,
-}
+import Modal from '../../ui/Modal'
 
 const INVITE = gql`
   mutation InviteSuperUser($mail: String!, $rights: Right!) {
@@ -53,14 +37,13 @@ const Invite = () => {
   })
 
   const sendWithGmail = () => {
-    navigator.clipboard.writeText(data.inviteSuperUser)
-    setTimeout(() => {
+    navigator.clipboard.writeText(data.inviteSuperUser).then(() => {
       const win = window.open(
         `https://mail.google.com/mail/u/0/?fs=1&to=${mail}&su=${invitationSubject}&body=${invitationBody} ${data.inviteSuperUser}&tf=cm`,
         '_blank'
       )
       win.focus()
-    }, 4000)
+    })
   }
 
   const [data, setData] = useState(null)
@@ -80,12 +63,8 @@ const Invite = () => {
     }
   }, [data])
 
-  const handleOpen = () => {
-    setOpen(true)
-  }
   const handleClose = () => {
     setMail('')
-    setOpen(false)
   }
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -100,68 +79,68 @@ const Invite = () => {
     const tmpRights = RIGHTS.find((field) => field.id === e.target.value)
     setRights(tmpRights)
   }
+
+  const handleOpen = () => {
+    setOpen(true)
+  }
+
   return (
     <>
       <Button onClick={handleOpen}>Send admin invitation</Button>
-      <Modal open={open} onClose={handleClose}>
-        <Box sx={style}>
-          <Column
-            sx={{
-              textAlign: 'center',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}
-          >
-            <Typography variant="h5" color="textPrimary">
-              Admin Invitation
-            </Typography>
-            <Form
-              onSubmit={handleSubmit}
-              style={{ margin: '5%', width: '100%' }}
-            >
-              {error && !loading && (
-                <Alert sx={{ m: 1 }} severity="error">
-                  <AlertTitle>Error</AlertTitle>
-                  <strong>{mail}</strong> might already be registered
-                </Alert>
-              )}
-              {data && (
-                <Alert sx={{ m: 1 }} severity="success">
-                  <AlertTitle>Success</AlertTitle>
-                  Invitation link for <strong>{mail}</strong> has been copied to
-                  your clipboard! Send it to the user.
-                </Alert>
-              )}
-              <Input
-                type="email"
-                required
-                label="Email"
-                autoComplete="email"
-                onChange={(e) => {
-                  setMail(e.target.value)
-                }}
-              />
-              <FormControl sx={{ width: '100%' }}>
-                <InputLabel id="select-right">Rights</InputLabel>
-                <Select
-                  labelId="select-right"
-                  value={rights.id}
-                  label={rights.label}
-                  onChange={handleRights}
-                  inputProps={{ 'aria-label': 'Without label' }}
-                  sx={{ m: 1 }}
-                >
-                  {RIGHTS.map((right) => (
-                    <MenuItem key={right.id} value={right.id}>
-                      {right.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              <CTAButton type="submit">Get invitation link</CTAButton>
-            </Form>
-          </Column>
-        </Box>
+      <Modal open={open} setOpen={setOpen} onClose={handleClose}>
+        <Column
+          sx={{
+            textAlign: 'center',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <Typography variant="h5" color="textPrimary">
+            Admin Invitation
+          </Typography>
+          <Form onSubmit={handleSubmit} style={{ margin: '5%', width: '100%' }}>
+            {error && !loading && (
+              <Alert sx={{ m: 1 }} severity="error">
+                <AlertTitle>Error</AlertTitle>
+                <strong>{mail}</strong> might already be registered
+              </Alert>
+            )}
+            {data && (
+              <Alert sx={{ m: 1 }} severity="success">
+                <AlertTitle>Success</AlertTitle>
+                Invitation link for <strong>{mail}</strong> has been copied to
+                your clipboard! Send it to the user.
+              </Alert>
+            )}
+            <Input
+              type="email"
+              required
+              label="Email"
+              autoComplete="email"
+              onChange={(e) => {
+                setMail(e.target.value)
+              }}
+            />
+            <FormControl sx={{ width: '100%' }}>
+              <InputLabel id="select-right">Rights</InputLabel>
+              <Select
+                labelId="select-right"
+                value={rights.id}
+                label={rights.label}
+                onChange={handleRights}
+                inputProps={{ 'aria-label': 'Without label' }}
+                sx={{ m: 1 }}
+              >
+                {RIGHTS.map((right) => (
+                  <MenuItem key={right.id} value={right.id}>
+                    {right.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <CTAButton type="submit">Get invitation link</CTAButton>
+          </Form>
+        </Column>
       </Modal>
     </>
   )
