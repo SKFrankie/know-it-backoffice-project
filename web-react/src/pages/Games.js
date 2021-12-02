@@ -1,7 +1,34 @@
-import { Box } from '@mui/material'
-import React from 'react'
+import React, { useContext } from 'react'
+import { Box, Button, IconButton, Typography } from '@mui/material'
+import AreYouSure from '../features/modals/AreYouSure'
 import SectionButton from '../features/SectionButton'
+import { Input } from '../ui/Form'
 import { GAMES } from '../helpers/constants'
+import Flex, { Column } from '../ui/Flex'
+import { useQuery, gql, useMutation } from '@apollo/client'
+import EditIcon from '@mui/icons-material/ModeEditOutlined'
+import DoneOutlinedIcon from '@mui/icons-material/DoneOutlined'
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined'
+import { SuperUserContext } from '../context'
+import Popover from '../ui/Popover'
+
+const GET_GAME = gql`
+  query Games($name: GameName!) {
+    games(where: { name: $name }) {
+      name
+      timer
+    }
+  }
+`
+const SET_GAME = gql`
+  mutation UpdateGames($name: GameName!, $timer: Int) {
+    updateGames(where: { name: $name }, update: { timer: $timer }) {
+      games {
+        timer
+      }
+    }
+  }
+`
 
 const Games = () => {
   return (
@@ -26,4 +53,118 @@ const Games = () => {
   )
 }
 
+const Game = ({
+  title,
+  game,
+  children,
+  CreateModal = AreYouSure,
+  createText = 'modal missing',
+}) => {
+  const [open, setOpen] = React.useState(false)
+  const [timer, setTimer] = React.useState(0)
+  const [isEditing, setIsEditing] = React.useState(false)
+  const superCurrentUser = useContext(SuperUserContext)
+
+  const { data, loading, refetch } = useQuery(GET_GAME, {
+    variables: { name: game },
+    onError: (e) => console.log('GET_GAME', e),
+    onCompleted: (data) => {
+      if (data.games.length > 0) {
+        setTimer(data.games[0].timer)
+      }
+    },
+  })
+  const [setGame] = useMutation(SET_GAME, {
+    onCompleted() {
+      refetch()
+    },
+    onError(error) {
+      console.log('SET GAME', error)
+    },
+  })
+
+  const handleOpen = () => {
+    setOpen(true)
+  }
+
+  return (
+    <Box>
+      <Flex>
+        <Column sx={{ flexGrow: 1 }}>
+          <Typography variant="h6" color="textSecondary">
+            {title}
+          </Typography>
+          {data && !loading && (
+            <Flex>
+              {!isEditing ? (
+                <>
+                  <Typography variant="h6" color="textSecondary">
+                    Timer : {data.games[0]?.timer}s
+                  </Typography>
+                  {['ADMIN', 'EDITOR'].includes(superCurrentUser.rights) && (
+                    <IconButton
+                      aria-label="edit"
+                      size="small"
+                      onClick={() => setIsEditing(true)}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                  )}
+                </>
+              ) : (
+                <>
+                  <Input
+                    type="number"
+                    onChange={(e) => {
+                      setTimer(e.target.value)
+                    }}
+                    value={timer}
+                  />
+                  <Column>
+                    <Popover text="Save changes">
+                      <IconButton
+                        aria-label="valid"
+                        size="small"
+                        sx={{ color: 'green' }}
+                        onClick={() => {
+                          setIsEditing(false)
+                          setGame({
+                            variables: { name: game, timer: parseInt(timer) },
+                          })
+                        }}
+                      >
+                        <DoneOutlinedIcon />
+                      </IconButton>
+                    </Popover>
+                    <Popover text="Cancel changes">
+                      <IconButton
+                        aria-label="cancel"
+                        size="small"
+                        onClick={() => {
+                          setIsEditing(false)
+                        }}
+                        sx={{ color: 'red' }}
+                      >
+                        <CloseOutlinedIcon />
+                      </IconButton>
+                    </Popover>
+                  </Column>
+                </>
+              )}
+            </Flex>
+          )}
+        </Column>
+        <Button onClick={handleOpen}>{createText}</Button>
+        <CreateModal
+          open={open}
+          setOpen={setOpen}
+          onClose={() => setOpen(false)}
+        />
+      </Flex>
+      {children}
+    </Box>
+  )
+}
+
+export { Game }
 export default Games

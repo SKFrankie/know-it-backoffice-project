@@ -18,6 +18,7 @@ import { SuperUserContext } from './context'
 import Admin from './pages/Admin'
 import Signup from './pages/SignUp'
 import Games from './pages/Games'
+import AntonymHunt from './pages/games/AntonymHunt'
 
 const GET_CURRENT_USER = gql`
   query SuperCurrentUser {
@@ -133,6 +134,13 @@ export default function App() {
                   component={Games}
                   exact
                   path="/games"
+                />
+
+                <PrivateRoute
+                  currentUser={currentUser}
+                  component={AntonymHunt}
+                  exact
+                  path="/games/antonym-hunt"
                 />
               </Switch>
 
