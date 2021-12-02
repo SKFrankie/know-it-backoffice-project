@@ -1,6 +1,5 @@
 import React, { useContext } from 'react'
-import { Box, Button, IconButton, Typography } from '@mui/material'
-import AreYouSure from '../features/modals/AreYouSure'
+import { Box, IconButton, Typography } from '@mui/material'
 import SectionButton from '../features/SectionButton'
 import { Input } from '../ui/Form'
 import { GAMES } from '../helpers/constants'
@@ -11,6 +10,8 @@ import DoneOutlinedIcon from '@mui/icons-material/DoneOutlined'
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined'
 import { SuperUserContext } from '../context'
 import Popover from '../ui/Popover'
+import SearchBar from '../features/SearchBar'
+import CreateNew from '../features/modals/CreateNew'
 
 const GET_GAME = gql`
   query Games($name: GameName!) {
@@ -57,15 +58,16 @@ const Game = ({
   title,
   game,
   children,
-  CreateModal = AreYouSure,
   createText = 'modal missing',
+  columns,
+  refetch,
+  QUERY,
 }) => {
-  const [open, setOpen] = React.useState(false)
   const [timer, setTimer] = React.useState(0)
   const [isEditing, setIsEditing] = React.useState(false)
   const superCurrentUser = useContext(SuperUserContext)
 
-  const { data, loading, refetch } = useQuery(GET_GAME, {
+  const { data, loading, refetch: refetchTimer } = useQuery(GET_GAME, {
     variables: { name: game },
     onError: (e) => console.log('GET_GAME', e),
     onCompleted: (data) => {
@@ -76,16 +78,12 @@ const Game = ({
   })
   const [setGame] = useMutation(SET_GAME, {
     onCompleted() {
-      refetch()
+      refetchTimer()
     },
     onError(error) {
       console.log('SET GAME', error)
     },
   })
-
-  const handleOpen = () => {
-    setOpen(true)
-  }
 
   return (
     <Box>
@@ -154,14 +152,21 @@ const Game = ({
             </Flex>
           )}
         </Column>
-        <Button onClick={handleOpen}>{createText}</Button>
-        <CreateModal
-          open={open}
-          setOpen={setOpen}
-          onClose={() => setOpen(false)}
+        <CreateNew
+          name={createText}
+          columns={columns}
+          QUERY={QUERY}
+          refetch={refetch}
         />
       </Flex>
-      {children}
+      <Box>
+        <SearchBar
+          sx={{ flexGrow: 1 }}
+          searchFields={columns}
+          refetch={refetch}
+        />
+        {children}
+      </Box>
     </Box>
   )
 }

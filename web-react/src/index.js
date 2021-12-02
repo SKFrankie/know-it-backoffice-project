@@ -29,6 +29,7 @@ const client = new ApolloClient({
   link: authLink.concat(httpLink),
   uri: process.env.REACT_APP_GRAPHQL_URI || '/graphql',
   cache: new InMemoryCache(),
+  // put data in tables inside memory cache
 })
 
 const Main = () => (
