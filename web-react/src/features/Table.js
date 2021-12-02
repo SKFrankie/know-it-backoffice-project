@@ -27,6 +27,7 @@ import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined'
 
 import { Input } from '../ui/Form'
 import Popover from '../ui/Popover'
+import AreYouSure from './modals/AreYouSure'
 
 function EnhancedTableHead(props) {
   const {
@@ -105,7 +106,8 @@ EnhancedTableHead.propTypes = {
 }
 
 const EnhancedTableToolbar = (props) => {
-  const { numSelected, tableName } = props
+  const { numSelected, tableName, deleteItems } = props
+  const [areYouSure, setAreYouSure] = useState(false)
 
   return (
     <Toolbar
@@ -143,11 +145,21 @@ const EnhancedTableToolbar = (props) => {
 
       {numSelected > 0 && (
         <Tooltip title="Delete">
-          <IconButton>
+          <IconButton
+            onClick={() => {
+              setAreYouSure(true)
+            }}
+          >
             <DeleteIcon />
           </IconButton>
         </Tooltip>
       )}
+      <AreYouSure
+        open={areYouSure}
+        setOpen={setAreYouSure}
+        onConfirm={deleteItems}
+        text={'Are you sure you want to delete these items?'}
+      />
     </Toolbar>
   )
 }
@@ -155,6 +167,7 @@ const EnhancedTableToolbar = (props) => {
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
   tableName: PropTypes.string.isRequired,
+  deleteItems: PropTypes.func,
 }
 
 const Table = ({
@@ -168,6 +181,7 @@ const Table = ({
   hasCheckbox = true,
   canEdit = false,
   setFields,
+  deleteItem,
   id = '',
 }) => {
   const [order, setOrder] = React.useState('ASC')
@@ -191,7 +205,7 @@ const Table = ({
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.userId)
+      const newSelecteds = rows.map((n) => n[id])
       setSelected(newSelecteds)
       return
     }
@@ -243,6 +257,13 @@ const Table = ({
 
   const isSelected = (name) => selected.indexOf(name) !== -1
 
+  const deleteSelected = () => {
+    for (const item of selected) {
+      deleteItem({ variables: { [id]: item } })
+    }
+    setSelected([])
+  }
+
   return (
     <Box sx={{ width: '100%', m: 1 }}>
       {!count && <Typography variant="h6">No {tableName} found</Typography>}
@@ -258,6 +279,7 @@ const Table = ({
           <EnhancedTableToolbar
             numSelected={selected.length}
             tableName={tableName}
+            deleteItems={deleteSelected}
           />
           <TableContainer>
             <MUITable sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
@@ -323,8 +345,7 @@ const Row = ({
   id,
 }) => {
   const [open, setOpen] = React.useState(false)
-  const isItemSelected = isSelected(row.userId)
-  // WARNING checkbox is not really working, maybe pass it in props?
+  const isItemSelected = isSelected(row[id])
   const labelId = `enhanced-table-checkbox-${index}`
   const [isEditing, setIsEditing] = useState(false)
 
@@ -346,7 +367,7 @@ const Row = ({
         {hasCheckbox && (
           <TableCell padding="checkbox">
             <Checkbox
-              onClick={(event) => handleClick(event, row.userId)}
+              onClick={(event) => handleClick(event, row[id])}
               color="primary"
               aria-checked={isItemSelected}
               checked={isItemSelected}
