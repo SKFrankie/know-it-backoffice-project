@@ -61,6 +61,14 @@ const SET_SUPER_USERS = gql`
   }
 `
 
+const DELETE_SUPER_USER = gql`
+  mutation DeleteSuperUser($userId: ID!) {
+    deleteSuperUsers(where: { userId: $userId }) {
+      bookmark
+    }
+  }
+`
+
 const Admin = () => {
   const superCurrentUser = useContext(SuperUserContext)
   const defaultLimit = 50
@@ -70,6 +78,14 @@ const Admin = () => {
     },
   })
   const [setSuperUser] = useMutation(SET_SUPER_USERS, {
+    onCompleted() {
+      refetch()
+    },
+    onError(error) {
+      console.log(error)
+    },
+  })
+  const [deleteSuperUser] = useMutation(DELETE_SUPER_USER, {
     onCompleted() {
       refetch()
     },
@@ -134,9 +150,10 @@ const Admin = () => {
             refetch={refetch}
             count={data.superUsersAggregate.count}
             limit={defaultLimit}
-            hasCheckbox={false}
+            hasCheckbox={superCurrentUser.rights === 'ADMIN'}
             canEdit={superCurrentUser.rights === 'ADMIN'}
             setFields={setSuperUser}
+            deleteItem={deleteSuperUser}
             id={'userId'}
           />
         )}
