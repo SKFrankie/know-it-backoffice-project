@@ -33,6 +33,8 @@ const CreateNew = ({ name, columns, QUERY, refetch }) => {
   }, [fields])
 
   const handleClose = () => {
+    setData(null)
+    setError(null)
     setFields({})
   }
   const handleSubmit = (e) => {
