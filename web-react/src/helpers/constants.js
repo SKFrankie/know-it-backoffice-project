@@ -5,32 +5,37 @@ import VideogameAssetIcon from '@mui/icons-material/VideogameAsset'
 import PetsIcon from '@mui/icons-material/Pets'
 import RedeemIcon from '@mui/icons-material/Redeem'
 
+import AbcIcon from '@mui/icons-material/Abc'
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator'
+import HdrStrongIcon from '@mui/icons-material/HdrStrong'
+import InsertPhotoIcon from '@mui/icons-material/InsertPhoto'
+
 const SECTIONS = [
   {
     label: 'Analytics',
     longName: 'Analytics',
-    href: 'analytics',
+    href: '/analytics',
     icon: BarChartIcon,
     description: 'View analytics',
   },
   {
     label: 'Users',
     longName: 'Browse users',
-    href: 'users',
+    href: '/users',
     icon: GroupIcon,
     description: 'Browse users data',
   },
   {
     label: 'Admin',
     longName: 'Administrators',
-    href: 'admin',
+    href: '/admin',
     icon: AdminPanelSettingsIcon,
     description: 'You can invite other administators and change their rights',
   },
   {
     label: 'Games',
     longName: 'Manage games',
-    href: 'games',
+    href: '/games',
     description: 'Add more content to different games',
     icon: VideogameAssetIcon,
   },
@@ -38,15 +43,37 @@ const SECTIONS = [
     label: 'Avatars',
     longName: 'Avatars',
     description: 'Create and manage avatar lists',
-    href: 'avatars',
+    href: '/avatars',
     icon: PetsIcon,
   },
   {
     label: 'Gifts',
     longName: 'Gifts',
-    href: 'gifts',
+    href: '/gifts',
     description: 'Manage gift calendar',
     icon: RedeemIcon,
+  },
+]
+const GAMES = [
+  {
+    label: 'Synonym Roll',
+    href: '/games/synonym-roll',
+    icon: DragIndicatorIcon,
+  },
+  {
+    label: 'Antonym Hunt',
+    href: '/games/antonym-hunt',
+    icon: HdrStrongIcon,
+  },
+  {
+    label: 'Fab Vocab',
+    href: '/games/fab-vocab',
+    icon: InsertPhotoIcon,
+  },
+  {
+    label: 'Grammar Geek',
+    href: '/games/grammar-geek',
+    icon: AbcIcon,
   },
 ]
 
@@ -69,4 +96,4 @@ const RIGHTS = [
   },
 ]
 
-export { SECTIONS, RIGHTS }
+export { SECTIONS, RIGHTS, GAMES }

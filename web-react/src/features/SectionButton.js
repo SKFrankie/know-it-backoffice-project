@@ -9,6 +9,8 @@ const SectionButton = ({
   description = '',
   href,
   Icon = DisabledByDefaultIcon,
+  sx,
+  ...props
 }) => {
   return (
     <ButtonLinkUnstyled
@@ -18,9 +20,11 @@ const SectionButton = ({
         minHeight: '10vw',
         border: 1,
         borderRadius: 3,
+        ...sx,
       }}
       color="secondary"
       href={href}
+      {...props}
     >
       <Box sx={{ flexDirection: 'column', textAlign: 'center' }}>
         <Icon style={{ color: 'black' }} />

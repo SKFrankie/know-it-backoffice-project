@@ -17,6 +17,7 @@ import Users from './pages/Users'
 import { SuperUserContext } from './context'
 import Admin from './pages/Admin'
 import Signup from './pages/SignUp'
+import Games from './pages/Games'
 
 const GET_CURRENT_USER = gql`
   query SuperCurrentUser {
@@ -126,6 +127,12 @@ export default function App() {
                   component={Admin}
                   exact
                   path="/admin"
+                />
+                <PrivateRoute
+                  currentUser={currentUser}
+                  component={Games}
+                  exact
+                  path="/games"
                 />
               </Switch>
 
