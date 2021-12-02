@@ -61,21 +61,28 @@ function Copyright() {
 const PrivateRoute = ({ component: Component, currentUser, ...rest }) => {
   return (
     <Route {...rest}>
-      {currentUser.online === false ? <Redirect to="/login" /> : <Component />}
+      {currentUser.online === false && currentUser.loading === false ? (
+        <Redirect to="/login" />
+      ) : (
+        <Component />
+      )}
     </Route>
   )
 }
 
 export default function App() {
-  const [currentUser, setCurrentUser] = useState({ online: false })
+  const [currentUser, setCurrentUser] = useState({
+    online: false,
+    loading: true,
+  })
   const { loading } = useQuery(GET_CURRENT_USER, {
     onError(err) {
       console.log('error', err)
-      setCurrentUser({ online: false })
+      setCurrentUser({ online: false, loading: false })
     },
     onCompleted(res) {
       const online = res.superCurrentUser !== null
-      setCurrentUser({ online, ...res.superCurrentUser })
+      setCurrentUser({ online, loading: false, ...res.superCurrentUser })
     },
   })
   return (
