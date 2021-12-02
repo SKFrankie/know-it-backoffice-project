@@ -476,7 +476,9 @@ const Cell = ({
       {editMode && cell.editable ? (
         cell.selectValues ? (
           <Select
-            value={updatedFields[cell.id] || value || ''}
+            value={
+              cell.id in updatedFields ? updatedFields[cell.id] : value || ''
+            }
             onChange={(e) => {
               setUpdatedFields({
                 ...updatedFields,
@@ -497,7 +499,9 @@ const Cell = ({
             onChange={(e) => {
               setUpdatedFields({ ...updatedFields, [cell.id]: e.target.value })
             }}
-            value={updatedFields[cell.id] || value || ''}
+            value={
+              cell.id in updatedFields ? updatedFields[cell.id] : value || ''
+            }
           />
         )
       ) : (
