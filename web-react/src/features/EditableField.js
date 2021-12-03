@@ -10,6 +10,10 @@ const EditableField = ({
   updatedFields = {},
   defaultValue = '',
 }) => {
+  const doUpdate = (field, value) => {
+    setUpdatedFields({ ...updatedFields, [field]: value })
+  }
+
   switch (editMode) {
     case true && column.editable:
       switch (column.type) {
@@ -22,10 +26,7 @@ const EditableField = ({
                   : defaultValue || ''
               }
               onChange={(e) => {
-                setUpdatedFields({
-                  ...updatedFields,
-                  [column.id]: e.target.value,
-                })
+                doUpdate(column.id, e.target.value)
               }}
               inputProps={{ 'aria-label': 'Without label' }}
               sx={{ m: 1 }}
@@ -39,7 +40,14 @@ const EditableField = ({
               id={column.id}
               options={[]}
               freeSolo
-              defaultValue={defaultValue}
+              value={
+                column.id in updatedFields
+                  ? updatedFields[column.id]
+                  : defaultValue || ''
+              }
+              onChange={(e, values) => {
+                doUpdate(column.id, values)
+              }}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -54,10 +62,7 @@ const EditableField = ({
           return (
             <Input
               onChange={(e) => {
-                setUpdatedFields({
-                  ...updatedFields,
-                  [column.id]: e.target.value,
-                })
+                doUpdate(column.id, e.target.value)
               }}
               value={
                 column.id in updatedFields
@@ -83,7 +88,11 @@ const EditableField = ({
               options={[]}
               freeSolo
               disabled
-              defaultValue={defaultValue}
+              value={
+                column.id in updatedFields
+                  ? updatedFields[column.id]
+                  : defaultValue || ''
+              }
               renderInput={(params) => (
                 <TextField
                   {...params}

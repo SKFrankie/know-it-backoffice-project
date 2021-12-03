@@ -27,7 +27,7 @@ const GET_SYNONYM_ROLL_LISTS = gql`
 `
 
 const SET_SYNONYM_ROLL_LISTS = gql`
-  mutation setSynonymRollLists($synonymId: ID!, $synonyms: [String]) {
+  mutation setSynonymRollLists($synonymId: ID!, $synonyms: [String!]) {
     updateSynonymRollLists(
       where: { synonymId: $synonymId }
       update: { synonyms: $synonyms }
