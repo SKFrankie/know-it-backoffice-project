@@ -19,6 +19,7 @@ import Admin from './pages/Admin'
 import Signup from './pages/SignUp'
 import Games from './pages/Games'
 import AntonymHunt from './pages/games/AntonymHunt'
+import SynonymRoll from './pages/games/SynonymRoll'
 
 const GET_CURRENT_USER = gql`
   query SuperCurrentUser {
@@ -141,6 +142,12 @@ export default function App() {
                   component={AntonymHunt}
                   exact
                   path="/games/antonym-hunt"
+                />
+                <PrivateRoute
+                  currentUser={currentUser}
+                  component={SynonymRoll}
+                  exact
+                  path="/games/synonym-roll"
                 />
               </Switch>
 
