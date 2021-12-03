@@ -20,6 +20,7 @@ import Signup from './pages/SignUp'
 import Games from './pages/Games'
 import AntonymHunt from './pages/games/AntonymHunt'
 import SynonymRoll from './pages/games/SynonymRoll'
+import GrammarGeek from './pages/games/GrammarGeek'
 
 const GET_CURRENT_USER = gql`
   query SuperCurrentUser {
@@ -148,6 +149,12 @@ export default function App() {
                   component={SynonymRoll}
                   exact
                   path="/games/synonym-roll"
+                />
+                <PrivateRoute
+                  currentUser={currentUser}
+                  component={GrammarGeek}
+                  exact
+                  path="/games/grammar-geek"
                 />
               </Switch>
 

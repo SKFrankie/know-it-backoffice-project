@@ -89,7 +89,7 @@ const SynonymRoll = () => {
       id: 'synonyms',
       numeric: false,
       disablePadding: false,
-      label: 'Synonym lists',
+      label: 'Synonym list',
       editable: true,
       required: true,
       type: FIELD_TYPES.ARRAY,
