@@ -27,3 +27,7 @@ body {
 .MuiChip-root.Mui-disabled svg {
   display: none;
 }
+
+.MuiAlert-message {
+  text-align: initial;
+}

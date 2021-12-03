@@ -10,11 +10,10 @@ const GET_SYNONYM_ROLL_LISTS = gql`
   query SynonymRollLists(
     $limit: Int
     $offset: Int
-    $orderBy: [SynonymRollListSort]
     $filter: SynonymRollListWhere
   ) {
     synonymRollLists(
-      options: { limit: $limit, offset: $offset, sort: $orderBy }
+      options: { limit: $limit, offset: $offset }
       where: $filter
     ) {
       synonymId
@@ -48,10 +47,8 @@ const DELETE_SYNONYM_ROLL_LISTS = gql`
   }
 `
 const CREATE_SYNONYM_ROLL_LISTS = gql`
-  mutation CreateSynonymRollLists($rightWord: String!, $leftWord: String!) {
-    createSynonymRollLists(
-      input: { rightWord: $rightWord, leftWord: $leftWord }
-    ) {
+  mutation CreateSynonymRollLists($synonyms: [String!]!) {
+    createSynonymRollLists(input: { synonyms: $synonyms }) {
       synonymRollLists {
         synonymId
       }

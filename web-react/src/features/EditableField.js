@@ -8,7 +8,8 @@ const EditableField = ({
   column,
   setUpdatedFields,
   updatedFields = {},
-  defaultValue = '',
+  defaultValue = null,
+  ...props
 }) => {
   const doUpdate = (field, value) => {
     setUpdatedFields({ ...updatedFields, [field]: value })
@@ -31,6 +32,7 @@ const EditableField = ({
               inputProps={{ 'aria-label': 'Without label' }}
               sx={{ m: 1 }}
               selectValues={column.selectValues}
+              {...props}
             />
           )
         case FIELD_TYPES.ARRAY:
@@ -43,7 +45,7 @@ const EditableField = ({
               value={
                 column.id in updatedFields
                   ? updatedFields[column.id]
-                  : defaultValue || ''
+                  : defaultValue || []
               }
               onChange={(e, values) => {
                 doUpdate(column.id, values)
@@ -56,6 +58,7 @@ const EditableField = ({
                   placeholder="Add new"
                 />
               )}
+              {...props}
             />
           )
         default:
@@ -69,6 +72,8 @@ const EditableField = ({
                   ? updatedFields[column.id]
                   : defaultValue || ''
               }
+              label={column.label}
+              {...props}
             />
           )
       }
@@ -76,7 +81,7 @@ const EditableField = ({
       switch (column.type) {
         case FIELD_TYPES.DATE:
           return (
-            <Typography color="textSecondary">
+            <Typography color="textSecondary" {...props}>
               {new Date(defaultValue).toLocaleString()}
             </Typography>
           )
@@ -91,7 +96,7 @@ const EditableField = ({
               value={
                 column.id in updatedFields
                   ? updatedFields[column.id]
-                  : defaultValue || ''
+                  : defaultValue || []
               }
               renderInput={(params) => (
                 <TextField
@@ -100,10 +105,15 @@ const EditableField = ({
                   label={column.label}
                 />
               )}
+              {...props}
             />
           )
         default:
-          return <Typography color="textSecondary">{defaultValue}</Typography>
+          return (
+            <Typography {...props} color="textSecondary">
+              {defaultValue}
+            </Typography>
+          )
       }
   }
 }

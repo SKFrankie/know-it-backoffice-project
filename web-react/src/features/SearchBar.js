@@ -1,5 +1,6 @@
 import { Box, FormControl, InputLabel, MenuItem } from '@mui/material'
 import React, { useEffect } from 'react'
+import { FIELD_TYPES } from '../helpers/constants'
 import { Input, Select } from '../ui/Form'
 
 const SearchBar = ({
@@ -12,11 +13,21 @@ const SearchBar = ({
   const [menuItems, setMenuItems] = React.useState(searchFields)
   const fieldToSearch = (field) => {
     if (field.id === 'no-fields') return ''
-    return `${field.id}_CONTAINS`
+    switch (field.type) {
+      case FIELD_TYPES.ARRAY:
+        return `${field.id}_INCLUDES`
+      default:
+        return `${field.id}_CONTAINS`
+    }
   }
+
+  const supportedTypes = [FIELD_TYPES.ARRAY]
+
   useEffect(() => {
     const tmpSearchFields = searchFields.filter(({ type }) => {
-      return !type
+      if (!type) return true
+      if (type && supportedTypes.includes(type)) return true
+      return false
     })
 
     setMenuItems(tmpSearchFields)

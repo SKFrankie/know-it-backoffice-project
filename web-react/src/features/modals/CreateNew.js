@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { Button, Alert, Typography, AlertTitle } from '@mui/material'
 import { CTAButton } from '../../ui/Button'
 import { Column } from '../../ui/Flex'
-import Form, { Input } from '../../ui/Form'
+import Form from '../../ui/Form'
 import { useMutation } from '@apollo/client'
 import Modal from '../../ui/Modal'
+import EditableField from '../EditableField'
 
 const CreateNew = ({ name, columns, QUERY, refetch }) => {
   const [createNew, { loading }] = useMutation(QUERY, {
@@ -76,15 +77,13 @@ const CreateNew = ({ name, columns, QUERY, refetch }) => {
             )}
             {columns.map((column) => {
               return (
-                <Input
+                <EditableField
+                  editMode={true}
                   key={column.id}
-                  label={column.label}
+                  column={column}
+                  setUpdatedFields={setFields}
                   required={column.required}
-                  type="text"
-                  onChange={(e) => {
-                    setFields({ ...fields, [column.id]: e.target.value })
-                  }}
-                  value={fields[column.id] || ''}
+                  updatedFields={fields}
                 />
               )
             })}
