@@ -12,6 +12,7 @@ import { SuperUserContext } from '../context'
 import Popover from '../ui/Popover'
 import SearchBar from '../features/SearchBar'
 import CreateNew from '../features/modals/CreateNew'
+import { MenuButtons } from '../features/Header'
 
 const GET_GAME = gql`
   query Games($name: GameName!) {
@@ -55,7 +56,6 @@ const Games = () => {
 }
 
 const Game = ({
-  title,
   game,
   children,
   createText = 'modal missing',
@@ -89,14 +89,12 @@ const Game = ({
     <Box>
       <Flex>
         <Column sx={{ flexGrow: 1 }}>
-          <Typography variant="h6" color="textSecondary">
-            {title}
-          </Typography>
+          <MenuButtons sections={GAMES} />
           {data && !loading && (
             <Flex>
               {!isEditing ? (
                 <>
-                  <Typography variant="h6" color="textSecondary">
+                  <Typography p={1} variant="h6" color="textSecondary">
                     Timer : {data.games[0]?.timer}s
                   </Typography>
                   {['ADMIN', 'EDITOR'].includes(superCurrentUser.rights) && (

@@ -50,10 +50,10 @@ const Logo = () => {
   )
 }
 
-const MenuButtons = () => {
+const MenuButtons = ({ sections = SECTIONS }) => {
   return (
     <Box>
-      {SECTIONS.map(({ label, href }) => {
+      {sections.map(({ label, href }) => {
         return (
           <ButtonLink
             key={label}
@@ -88,5 +88,7 @@ const Logout = ({ superCurrentUser }) => {
     </Button>
   )
 }
+
+export { MenuButtons }
 
 export default Header
