@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material'
+import { Autocomplete, TextField, Typography } from '@mui/material'
 import React from 'react'
 import { FIELD_TYPES } from '../helpers/constants'
 import { Input, SelectWithItems } from '../ui/Form'
@@ -32,6 +32,24 @@ const EditableField = ({
               selectValues={column.selectValues}
             />
           )
+        case FIELD_TYPES.ARRAY:
+          return (
+            <Autocomplete
+              multiple
+              id={column.id}
+              options={[]}
+              freeSolo
+              defaultValue={defaultValue}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  variant="standard"
+                  label={column.label}
+                  placeholder="Add new"
+                />
+              )}
+            />
+          )
         default:
           return (
             <Input
@@ -56,6 +74,24 @@ const EditableField = ({
             <Typography color="textSecondary">
               {new Date(defaultValue).toLocaleString()}
             </Typography>
+          )
+        case FIELD_TYPES.ARRAY:
+          return (
+            <Autocomplete
+              multiple
+              id={column.id}
+              options={[]}
+              freeSolo
+              disabled
+              defaultValue={defaultValue}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  variant="standard"
+                  label={column.label}
+                />
+              )}
+            />
           )
         default:
           return <Typography color="textSecondary">{defaultValue}</Typography>

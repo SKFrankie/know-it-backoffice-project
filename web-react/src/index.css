@@ -19,3 +19,11 @@ body {
 .MuiSelect-outlined {
   text-align: left;
 }
+
+.MuiChip-root.Mui-disabled {
+  opacity: 1 !important;
+}
+
+.MuiChip-root.Mui-disabled svg {
+  display: none;
+}
