@@ -25,10 +25,9 @@ import EditIcon from '@mui/icons-material/ModeEditOutlined'
 import DoneOutlinedIcon from '@mui/icons-material/DoneOutlined'
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined'
 
-import { Input, Select } from '../ui/Form'
 import Popover from '../ui/Popover'
 import AreYouSure from './modals/AreYouSure'
-import { MenuItem } from '@mui/material'
+import EditableField from './EditableField'
 
 function EnhancedTableHead(props) {
   const {
@@ -473,42 +472,13 @@ const Cell = ({
   const value = cell.child ? row[cell.id]?.[cell.child] : row[cell.id]
   return (
     <TableCell align={cell.numeric ? 'right' : 'left'} key={cell.id}>
-      {editMode && cell.editable ? (
-        cell.selectValues ? (
-          <Select
-            value={
-              cell.id in updatedFields ? updatedFields[cell.id] : value || ''
-            }
-            onChange={(e) => {
-              setUpdatedFields({
-                ...updatedFields,
-                [cell.id]: e.target.value,
-              })
-            }}
-            inputProps={{ 'aria-label': 'Without label' }}
-            sx={{ m: 1 }}
-          >
-            {cell.selectValues.map((menuItem) => (
-              <MenuItem key={menuItem.id} value={menuItem.id}>
-                {menuItem.id}
-              </MenuItem>
-            ))}
-          </Select>
-        ) : (
-          <Input
-            onChange={(e) => {
-              setUpdatedFields({ ...updatedFields, [cell.id]: e.target.value })
-            }}
-            value={
-              cell.id in updatedFields ? updatedFields[cell.id] : value || ''
-            }
-          />
-        )
-      ) : (
-        <Typography color="textSecondary">
-          {cell.datetime && value ? new Date(value).toLocaleString() : value}
-        </Typography>
-      )}
+      <EditableField
+        setUpdatedFields={setUpdatedFields}
+        column={cell}
+        editMode={editMode}
+        updatedFields={updatedFields}
+        defaultValue={value}
+      />
     </TableCell>
   )
 }

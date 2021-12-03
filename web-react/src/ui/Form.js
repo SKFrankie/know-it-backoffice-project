@@ -1,4 +1,9 @@
-import { FormControl, TextField, Select as MUISelect } from '@mui/material'
+import {
+  FormControl,
+  TextField,
+  Select as MUISelect,
+  MenuItem,
+} from '@mui/material'
 import React from 'react'
 import '../index.css'
 
@@ -21,6 +26,16 @@ const Select = ({ sx, children, ...props }) => {
     </MUISelect>
   )
 }
-
-export { Input, Select }
+const SelectWithItems = ({ selectValues, ...props }) => {
+  return (
+    <Select {...props}>
+      {selectValues.map((menuItem) => (
+        <MenuItem key={menuItem.id} value={menuItem.id}>
+          {menuItem.id}
+        </MenuItem>
+      ))}
+    </Select>
+  )
+}
+export { Input, Select, SelectWithItems }
 export default Form

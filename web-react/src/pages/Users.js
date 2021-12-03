@@ -4,6 +4,7 @@ import Loading from '../ui/Loading'
 import Table from '../features/Table'
 import { Box } from '@mui/material'
 import SearchBar from '../features/SearchBar'
+import { FIELD_TYPES } from '../helpers/constants'
 
 const GET_USERS = gql`
   query Users(
@@ -55,20 +56,27 @@ const Users = () => {
       disablePadding: false,
       label: 'Username',
     },
-    { id: 'age', numeric: true, disablePadding: false, label: 'Age' },
+    {
+      id: 'age',
+      numeric: true,
+      disablePadding: false,
+      label: 'Age',
+      type: FIELD_TYPES.NUMBER,
+    },
     { id: 'country', numeric: false, disablePadding: false, label: 'Country' },
     {
       id: 'lastSeen',
       numeric: true,
       disablePadding: false,
       label: 'Last Seen',
-      datetime: true,
+      type: FIELD_TYPES.DATE,
     },
     {
       id: 'daysInArow',
       numeric: true,
       disablePadding: false,
       label: 'Days in a row',
+      type: FIELD_TYPES.NUMBER,
     },
   ]
 
@@ -78,22 +86,36 @@ const Users = () => {
       numeric: true,
       disablePadding: false,
       label: 'Created At',
-      datetime: true,
+      type: FIELD_TYPES.DATE,
     },
     {
       id: 'isPremium',
       numeric: true,
       disablePadding: false,
       label: 'Is Premium',
+      type: FIELD_TYPES.BOOLEAN,
     },
-    { id: 'coins', numeric: true, disablePadding: false, label: 'Coins' },
-    { id: 'tickets', numeric: true, disablePadding: false, label: 'Tickets' },
+    {
+      id: 'coins',
+      numeric: true,
+      disablePadding: false,
+      label: 'Coins',
+      type: FIELD_TYPES.NUMBER,
+    },
+    {
+      id: 'tickets',
+      numeric: true,
+      disablePadding: false,
+      label: 'Tickets',
+      type: FIELD_TYPES.NUMBER,
+    },
     {
       id: 'currentAvatar',
       child: 'name',
       numeric: false,
       disablePadding: false,
       label: 'Current Avatar',
+      type: FIELD_TYPES.PICTURE,
     },
   ]
   return (

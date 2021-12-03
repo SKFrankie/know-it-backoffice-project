@@ -15,8 +15,8 @@ const SearchBar = ({
     return `${field.id}_CONTAINS`
   }
   useEffect(() => {
-    const tmpSearchFields = searchFields.filter(({ numeric }) => {
-      return !numeric
+    const tmpSearchFields = searchFields.filter(({ type }) => {
+      return !type
     })
 
     setMenuItems(tmpSearchFields)
@@ -43,31 +43,35 @@ const SearchBar = ({
   }
 
   return (
-    <Box sx={{ ...sx }}>
-      <Input
-        placeholder={`Search by ${searchBy.label}`}
-        value={search}
-        onChange={handleSearch}
-        sx={{ width: '30%', borderRadius: '5px' }}
-      />
-      <FormControl sx={{ width: '30%' }}>
-        <InputLabel id="select-search">Search by</InputLabel>
-        <Select
-          labelId="select-search"
-          value={searchBy.id}
-          label={searchBy.label}
-          onChange={handleSearchBy}
-          inputProps={{ 'aria-label': 'Without label' }}
-          sx={{ m: 1 }}
-        >
-          {menuItems.map((menuItem) => (
-            <MenuItem key={menuItem.id} value={menuItem.id}>
-              {menuItem.label}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    </Box>
+    <>
+      {searchBy && (
+        <Box sx={{ ...sx }}>
+          <Input
+            placeholder={`Search by ${searchBy.label}`}
+            value={search}
+            onChange={handleSearch}
+            sx={{ width: '30%', borderRadius: '5px' }}
+          />
+          <FormControl sx={{ width: '30%' }}>
+            <InputLabel id="select-search">Search by</InputLabel>
+            <Select
+              labelId="select-search"
+              value={searchBy.id}
+              label={searchBy.label}
+              onChange={handleSearchBy}
+              inputProps={{ 'aria-label': 'Without label' }}
+              sx={{ m: 1 }}
+            >
+              {menuItems.map((menuItem) => (
+                <MenuItem key={menuItem.id} value={menuItem.id}>
+                  {menuItem.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+      )}
+    </>
   )
 }
 

@@ -4,6 +4,7 @@ import Loading from '../../ui/Loading'
 import Table from '../../features/Table'
 import { SuperUserContext } from '../../context'
 import { Game } from '../Games'
+import { FIELD_TYPES } from '../../helpers/constants'
 
 const GET_SYNONYM_ROLL_LISTS = gql`
   query SynonymRollLists(
@@ -94,7 +95,7 @@ const SynonymRoll = () => {
       label: 'Synonym lists',
       editable: true,
       required: true,
-      array: true,
+      type: FIELD_TYPES.ARRAY,
     },
   ]
 
