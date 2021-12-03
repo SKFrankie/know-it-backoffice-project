@@ -66,7 +66,7 @@ const CreateNew = ({ name, columns, QUERY, refetch }) => {
             {error && !loading && (
               <Alert sx={{ m: 1 }} severity="error">
                 <AlertTitle>Error</AlertTitle>
-                Items might already exist
+                Be sure you have filled out all the fields and try again.
               </Alert>
             )}
             {data && (

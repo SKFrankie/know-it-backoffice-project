@@ -11,9 +11,10 @@ const GET_GRAMMAR_GEEK_QUESTIONS = gql`
     $limit: Int
     $offset: Int
     $filter: GrammarGeekQuestionWhere
+    $orderBy: [GrammarGeekQuestionSort]
   ) {
     grammarGeekQuestions(
-      options: { limit: $limit, offset: $offset }
+      options: { limit: $limit, offset: $offset, sort: $orderBy }
       where: $filter
     ) {
       grammarId
