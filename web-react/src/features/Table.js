@@ -28,6 +28,7 @@ import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined'
 import Popover from '../ui/Popover'
 import AreYouSure from './modals/AreYouSure'
 import EditableField from './EditableField'
+import { FIELD_TYPES } from '../helpers/constants'
 
 function EnhancedTableHead(props) {
   const {
@@ -42,8 +43,8 @@ function EnhancedTableHead(props) {
     hasCollapse = false,
     canEdit = false,
   } = props
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property)
+  const createSortHandler = (property, type = null) => (event) => {
+    onRequestSort(event, property, type)
   }
 
   return (
@@ -75,7 +76,7 @@ function EnhancedTableHead(props) {
             <TableSortLabel
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order.toLowerCase() : 'asc'}
-              onClick={createSortHandler(headCell.id)}
+              onClick={createSortHandler(headCell.id, headCell.type)}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
@@ -190,7 +191,13 @@ const Table = ({
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(limit)
 
-  const handleRequestSort = (event, property) => {
+  const handleRequestSort = (event, property, type = null) => {
+    if (type) {
+      // array is not supported as a sort type
+      if (type === FIELD_TYPES.ARRAY) {
+        return
+      }
+    }
     const isAsc = orderBy === property && order === 'ASC'
     const tmpOrder = isAsc ? 'DESC' : 'ASC'
     setOrder(tmpOrder)
