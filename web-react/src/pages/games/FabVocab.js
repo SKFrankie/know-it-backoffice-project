@@ -122,6 +122,7 @@ const FabVocab = () => {
       label: 'Picture',
       editable: true,
       required: true,
+      type: FIELD_TYPES.PICTURE,
     },
     {
       id: 'correctSentence',
