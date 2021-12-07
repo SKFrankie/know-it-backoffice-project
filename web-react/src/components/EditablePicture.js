@@ -13,7 +13,14 @@ const EditablePicture = ({
   const fallback =
     'https://res.cloudinary.com/dki7jzqlx/image/upload/v1638871483/default_frame.png'
   return (
-    <Box textAlign="center" sx={{ position: 'relative' }}>
+    <Box
+      textAlign="center"
+      sx={{
+        maxWidth: 'fit-content',
+        placeSelf: 'center',
+        position: 'relative',
+      }}
+    >
       <img
         style={{ maxWidth: '10vw', maxHeight: '10vh' }}
         src={
@@ -33,10 +40,11 @@ const EditablePicture = ({
           <WidgetLoader />
           <Widget
             sources={['local', 'url']}
+            cropping={false}
             resourceType={'image'}
             cloudName={process.env.REACT_APP_CLOUDINARY_NAME}
-            uploadPreset={process.env.REACT_APP_CLOUDINARY_UNSIGNED_PRESET} // check that an upload preset exists and check mode is signed or unisgned
-            buttonText={`Upload`} // default 'Upload Files'
+            uploadPreset={process.env.REACT_APP_CLOUDINARY_UNSIGNED_PRESET}
+            buttonText={`Upload`}
             style={{
               color: 'white',
               border: 'none',
@@ -54,11 +62,13 @@ const EditablePicture = ({
             onSuccess={(result) => {
               console.log('res', result)
               doUpdate(column.id, result.info.url)
-            }} // add success callback -> returns result
+            }}
             onFailure={(response) => {
               console.log('error', response.error)
-            }} // add failure callback -> returns 'response.error' + 'response.result'
-            logging={false} // logs will be provided for success and failure messages,
+            }}
+            logging={false}
+            type="button"
+            buttonType="button"
           />
         </>
       )}
