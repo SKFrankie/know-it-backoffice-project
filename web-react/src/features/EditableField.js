@@ -71,6 +71,23 @@ const EditableField = ({
               editMode={editMode}
             />
           )
+        case FIELD_TYPES.NUMBER:
+          return (
+            <Input
+              type="number"
+              onChange={(e) => {
+                doUpdate(column.id, parseInt(e.target.value))
+              }}
+              value={
+                column.id in updatedFields
+                  ? updatedFields[column.id]
+                  : defaultValue || ''
+              }
+              label={column.label}
+              {...props}
+            />
+          )
+
         default:
           return (
             <Input
@@ -128,7 +145,6 @@ const EditableField = ({
               editMode={editMode}
             />
           )
-
         default:
           return (
             <Typography {...props} color="textSecondary">

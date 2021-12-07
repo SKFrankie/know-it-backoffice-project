@@ -22,6 +22,7 @@ import AntonymHunt from './pages/games/AntonymHunt'
 import SynonymRoll from './pages/games/SynonymRoll'
 import GrammarGeek from './pages/games/GrammarGeek'
 import FabVocab from './pages/games/FabVocab'
+import Avatars from './pages/Avatars'
 
 const GET_CURRENT_USER = gql`
   query SuperCurrentUser {
@@ -162,6 +163,12 @@ export default function App() {
                   component={FabVocab}
                   exact
                   path="/games/fab-vocab"
+                />
+                <PrivateRoute
+                  currentUser={currentUser}
+                  component={Avatars}
+                  exact
+                  path="/avatars"
                 />
               </Switch>
 

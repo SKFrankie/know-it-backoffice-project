@@ -77,6 +77,17 @@ const GAMES = [
   },
 ]
 
+const AVATAR_PAGES = [
+  {
+    label: 'Avatars',
+    href: '/avatars',
+  },
+  {
+    label: 'Avatar collections',
+    href: '/avatars/collections',
+  },
+]
+
 const RIGHTS = [
   {
     id: 'ADMIN',
@@ -107,4 +118,4 @@ const FIELD_TYPES = {
   PICTURE: 'PICTURE',
 }
 
-export { SECTIONS, RIGHTS, GAMES, FIELD_TYPES }
+export { SECTIONS, RIGHTS, GAMES, FIELD_TYPES, AVATAR_PAGES }

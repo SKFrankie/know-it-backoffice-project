@@ -5,7 +5,7 @@ import { WidgetLoader, Widget } from 'react-cloudinary-upload-widget'
 const EditablePicture = ({
   editMode = false,
   column,
-  updatedFields,
+  updatedFields = {},
   doUpdate,
   defaultValue,
   ...props

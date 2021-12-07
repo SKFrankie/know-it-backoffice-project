@@ -39,7 +39,7 @@ function EnhancedTableHead(props) {
     rowCount,
     onRequestSort,
     headCells,
-    hasCheckbox = true,
+    hasCheckbox = false,
     hasCollapse = false,
     canEdit = false,
   } = props
@@ -179,7 +179,7 @@ const Table = ({
   refetch = null,
   count,
   limit = 50,
-  hasCheckbox = true,
+  hasCheckbox = false,
   canEdit = false,
   setFields,
   deleteItem,
