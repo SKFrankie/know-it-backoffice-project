@@ -1,8 +1,8 @@
-import { Autocomplete, TextField, Typography, Box } from '@mui/material'
+import { Autocomplete, TextField, Typography } from '@mui/material'
 import React from 'react'
 import { FIELD_TYPES } from '../helpers/constants'
 import { Input, SelectWithItems } from '../ui/Form'
-import { WidgetLoader, Widget } from 'react-cloudinary-upload-widget'
+import EditablePicture from '../components/EditablePicture'
 
 const EditableField = ({
   editMode = false,
@@ -63,48 +63,13 @@ const EditableField = ({
           )
         case FIELD_TYPES.PICTURE:
           return (
-            <Box textAlign="center">
-              {(defaultValue || updatedFields[column.id]) && (
-                <img
-                  style={{ maxHeight: '10vh', maxWidth: '10vw' }}
-                  src={
-                    column.id in updatedFields
-                      ? updatedFields[column.id]
-                      : defaultValue || ''
-                  }
-                  alt={column.label}
-                  {...props}
-                />
-              )}
-              <WidgetLoader />
-              <Widget
-                sources={['local', 'url']}
-                resourceType={'image'}
-                cloudName={process.env.REACT_APP_CLOUDINARY_NAME}
-                uploadPreset={process.env.REACT_APP_CLOUDINARY_UNSIGNED_PRESET} // check that an upload preset exists and check mode is signed or unisgned
-                buttonText={`Upload ${column.label}`} // default 'Upload Files'
-                style={{
-                  color: 'white',
-                  border: 'none',
-                  width: '120px',
-                  borderRadius: '4px',
-                  height: '25px',
-                  alignSelf: 'center',
-                  margin: '10px',
-                  cursor: 'pointer',
-                  backgroundColor: '#007EA7',
-                }}
-                folder={column.label}
-                onSuccess={(result) => {
-                  console.log('res', result)
-                  doUpdate(column.id, result.info.url)
-                }} // add success callback -> returns result
-                onFailure={(response) => {
-                  console.log('error', response.error)
-                }} // add failure callback -> returns 'response.error' + 'response.result'
-                logging={false} // logs will be provided for success and failure messages,
-              />
-            </Box>
+            <EditablePicture
+              column={column}
+              defaultValue={defaultValue}
+              doUpdate={doUpdate}
+              updatedFields={updatedFields}
+              editMode={editMode}
+            />
           )
         default:
           return (
@@ -155,11 +120,12 @@ const EditableField = ({
           )
         case FIELD_TYPES.PICTURE:
           return (
-            <img
-              style={{ maxHeight: '10vh', maxWidth: '10vw' }}
-              src={defaultValue}
-              alt={column.label}
-              {...props}
+            <EditablePicture
+              column={column}
+              defaultValue={defaultValue}
+              doUpdate={doUpdate}
+              updatedFields={updatedFields}
+              editMode={editMode}
             />
           )
 
