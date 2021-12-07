@@ -59,6 +59,8 @@ const columns = [
     label: 'Name',
     editable: true,
     required: true,
+    left: '0',
+    bottom: '0',
   },
   {
     id: 'coinPrice',
@@ -68,6 +70,8 @@ const columns = [
     required: true,
     numeric: true,
     type: FIELD_TYPES.NUMBER,
+    left: '0',
+    top: '0',
   },
 ]
 
