@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Box } from '@mui/material'
 import { AVATAR_PAGES, FIELD_TYPES } from '../helpers/constants'
 import Flex, { Column } from '../ui/Flex'
@@ -8,6 +8,7 @@ import CreateNew from '../features/modals/CreateNew'
 import Loading from '../ui/Loading'
 import SearchBar from '../features/SearchBar'
 import PictureTable from '../features/PictureTable'
+import { SuperUserContext } from '../context'
 
 // add collection
 const CREATE_AVATAR = gql`
@@ -44,6 +45,24 @@ const GET_AVATARS = gql`
   }
 `
 
+const SET_AVATARS = gql`
+  mutation setAvatars(
+    $avatarId: ID!
+    $picture: String
+    $name: String
+    $coinPrice: Int
+  ) {
+    updateAvatars(
+      where: { avatarId: $avatarId }
+      update: { picture: $picture, name: $name, coinPrice: $coinPrice }
+    ) {
+      avatars {
+        avatarId
+      }
+    }
+  }
+`
+
 const columns = [
   {
     id: 'picture',
@@ -60,7 +79,7 @@ const columns = [
     editable: true,
     required: true,
     left: '0',
-    bottom: '0',
+    bottom: '4px',
   },
   {
     id: 'coinPrice',
@@ -72,10 +91,12 @@ const columns = [
     type: FIELD_TYPES.NUMBER,
     left: '0',
     top: '0',
+    additionalText: 'coins',
   },
 ]
 
 const Avatars = () => {
+  const superCurrentUser = useContext(SuperUserContext)
   const defaultLimit = 50
   const { data, loading, error, refetch } = useQuery(GET_AVATARS, {
     variables: {
@@ -85,6 +106,7 @@ const Avatars = () => {
       console.log('get', error)
     },
   })
+  const allowed = ['ADMIN', 'EDITOR']
   return (
     <Avatar
       columns={columns}
@@ -95,15 +117,15 @@ const Avatars = () => {
       {loading && <Loading />} {error && 'error'}
       {data && (
         <PictureTable
-          tableName="Avatars"
+          tableName="Avatar"
           headCells={columns}
           rows={data.avatars}
           refetch={refetch}
           count={data.avatarsAggregate.count}
           limit={defaultLimit}
           // hasCheckbox={allowed.includes(superCurrentUser.rights)}
-          // canEdit={allowed.includes(superCurrentUser.rights)}
-          // setFields={setFabVocabQuestions}
+          canEdit={allowed.includes(superCurrentUser.rights)}
+          QUERY={SET_AVATARS}
           // deleteItem={deleteFabVocabQuestions}
           id={'avatarId'}
         />

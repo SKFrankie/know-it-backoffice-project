@@ -1,13 +1,23 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Alert, Typography, AlertTitle } from '@mui/material'
+import { Alert, Typography, AlertTitle } from '@mui/material'
 import { CTAButton } from '../../ui/Button'
 import { Column } from '../../ui/Flex'
 import Form from '../../ui/Form'
 import { useMutation } from '@apollo/client'
 import Modal from '../../ui/Modal'
 import EditableField from '../EditableField'
+import Button from '../../ui/Button'
 
-const CreateNew = ({ name, columns, QUERY, refetch }) => {
+const CreateNew = ({
+  name,
+  columns,
+  QUERY,
+  refetch,
+  updatedFields = {},
+  children = null,
+  submitText = 'Create new',
+  successText = ' Item created successfully',
+}) => {
   const [createNew, { loading }] = useMutation(QUERY, {
     onError(err) {
       console.log(err)
@@ -15,7 +25,9 @@ const CreateNew = ({ name, columns, QUERY, refetch }) => {
     },
     onCompleted(data) {
       setData(data)
-      setFields({})
+      if (!Object.keys(updatedFields).length) {
+        setFields({})
+      }
       refetch()
     },
   })
@@ -24,7 +36,7 @@ const CreateNew = ({ name, columns, QUERY, refetch }) => {
   const [error, setError] = useState(null)
 
   const [open, setOpen] = React.useState(false)
-  const [fields, setFields] = React.useState({})
+  const [fields, setFields] = React.useState(updatedFields)
 
   useEffect(() => {
     setError(null)
@@ -36,7 +48,7 @@ const CreateNew = ({ name, columns, QUERY, refetch }) => {
   const handleClose = () => {
     setData(null)
     setError(null)
-    setFields({})
+    setFields(updatedFields)
   }
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -50,7 +62,11 @@ const CreateNew = ({ name, columns, QUERY, refetch }) => {
 
   return (
     <>
-      <Button onClick={handleOpen}>{name}</Button>
+      {children ? (
+        <Button onClick={handleOpen}>{children}</Button>
+      ) : (
+        <Button onClick={handleOpen}>{name}</Button>
+      )}
       <Modal open={open} setOpen={setOpen} onClose={handleClose}>
         <Column
           sx={{
@@ -72,7 +88,7 @@ const CreateNew = ({ name, columns, QUERY, refetch }) => {
             {data && (
               <Alert sx={{ m: 1 }} severity="success">
                 <AlertTitle>Success</AlertTitle>
-                Item created successfully
+                {successText}
               </Alert>
             )}
             {columns.map((column) => {
@@ -87,7 +103,7 @@ const CreateNew = ({ name, columns, QUERY, refetch }) => {
                 />
               )
             })}
-            <CTAButton type="submit">Create new</CTAButton>
+            <CTAButton type="submit">{submitText}</CTAButton>
           </Form>
         </Column>
       </Modal>
@@ -95,4 +111,28 @@ const CreateNew = ({ name, columns, QUERY, refetch }) => {
   )
 }
 
+const UpdateItem = ({
+  name,
+  columns,
+  QUERY,
+  refetch,
+  updatedFields,
+  children = null,
+}) => {
+  return (
+    <CreateNew
+      name={name}
+      columns={columns}
+      QUERY={QUERY}
+      refetch={refetch}
+      updatedFields={updatedFields}
+      submitText="Update item"
+      successText=" Item updated successfully"
+    >
+      {children}
+    </CreateNew>
+  )
+}
+
+export { UpdateItem }
 export default CreateNew

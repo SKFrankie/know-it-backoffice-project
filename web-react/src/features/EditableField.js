@@ -76,7 +76,7 @@ const EditableField = ({
             <Input
               type="number"
               onChange={(e) => {
-                doUpdate(column.id, parseInt(e.target.value))
+                doUpdate(column.id, parseInt(e.target.value || '0'))
               }}
               value={
                 column.id in updatedFields

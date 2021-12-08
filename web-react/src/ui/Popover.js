@@ -22,30 +22,32 @@ const Popover = ({ text, children, ...props }) => {
         aria-haspopup="true"
         onMouseEnter={handlePopoverOpen}
         onMouseLeave={handlePopoverClose}
+        {...props}
       >
         {children}
       </div>
-      <MUIPopover
-        id="mouse-over-popover"
-        sx={{
-          pointerEvents: 'none',
-        }}
-        open={open}
-        anchorEl={anchorEl}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
-        onClose={handlePopoverClose}
-        disableRestoreFocus
-        {...props}
-      >
-        <Typography sx={{ p: 1 }}>{text}</Typography>
-      </MUIPopover>
+      {text && (
+        <MUIPopover
+          id="mouse-over-popover"
+          sx={{
+            pointerEvents: 'none',
+          }}
+          open={open}
+          anchorEl={anchorEl}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'left',
+          }}
+          onClose={handlePopoverClose}
+          disableRestoreFocus
+        >
+          <Typography sx={{ p: 1 }}>{text}</Typography>
+        </MUIPopover>
+      )}
     </>
   )
 }

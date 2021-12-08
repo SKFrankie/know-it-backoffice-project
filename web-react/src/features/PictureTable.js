@@ -1,21 +1,23 @@
-import { Box, Typography } from '@mui/material'
+import { Typography } from '@mui/material'
 import React from 'react'
 import EditablePicture from '../components/EditablePicture'
 import Flex from '../ui/Flex'
+import Popover from '../ui/Popover'
+import { UpdateItem } from './modals/CreateNew'
 
 const PictureTable = ({
   headCells = [],
   rows = [],
   id = '',
   pictureId = 'picture',
-  // tableName = '',
+  tableName = '',
   // extraColumns = [],
-  // refetch = null,
+  refetch = null,
   // count,
   // limit = 50,
   // hasCheckbox = false,
-  // canEdit = false,
-  // setFields,
+  canEdit = false,
+  QUERY = null,
   // deleteItem,
 }) => {
   return (
@@ -28,6 +30,10 @@ const PictureTable = ({
             headCells={headCells}
             id={id}
             pictureId={pictureId}
+            canEdit={canEdit}
+            tableName={tableName}
+            refetch={refetch}
+            QUERY={QUERY}
           />
         )
       })}
@@ -35,37 +41,59 @@ const PictureTable = ({
   )
 }
 
-const PictureRow = ({ row, headCells, id, pictureId }) => {
+const PictureRow = ({
+  row,
+  headCells,
+  pictureId,
+  canEdit,
+  tableName = '',
+  QUERY = null,
+  refetch,
+}) => {
   return (
-    <Box
-      key={row[id]}
-      style={{ maxWidth: 'fit-content', position: 'relative', margin: '10px' }}
+    <Popover
+      text={canEdit && `Click to edit ${tableName}`}
+      style={{
+        maxWidth: 'fit-content',
+        position: 'relative',
+        margin: '10px',
+        cursor: 'pointer',
+      }}
     >
-      {headCells.map((headCell) => {
-        return (
-          <>
-            {headCell.id === pictureId ? (
-              <EditablePicture
-                column={headCell}
-                defaultValue={row[pictureId]}
-              />
-            ) : (
-              <Typography
-                style={{
-                  position: 'absolute',
-                  left: headCell.left,
-                  top: headCell.top,
-                  bottom: headCell.bottom,
-                  right: headCell.right,
-                }}
-              >
-                {row[headCell.id]}
-              </Typography>
-            )}
-          </>
-        )
-      })}
-    </Box>
+      <UpdateItem
+        columns={headCells}
+        QUERY={QUERY}
+        refetch={refetch}
+        updatedFields={row}
+      >
+        {headCells.map((headCell) => {
+          return (
+            <div key={headCell.id}>
+              {headCell.id === pictureId ? (
+                <EditablePicture
+                  column={headCell}
+                  defaultValue={row[pictureId]}
+                />
+              ) : (
+                <Typography
+                  color="textSecondary"
+                  variant="body2"
+                  style={{
+                    position: 'absolute',
+                    left: headCell.left,
+                    top: headCell.top,
+                    bottom: headCell.bottom,
+                    right: headCell.right,
+                  }}
+                >
+                  {row[headCell.id]} {headCell.additionalText}
+                </Typography>
+              )}
+            </div>
+          )
+        })}
+      </UpdateItem>
+    </Popover>
   )
 }
 
