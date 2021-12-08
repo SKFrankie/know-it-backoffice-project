@@ -11,14 +11,10 @@ const PictureTable = ({
   id = '',
   pictureId = 'picture',
   tableName = '',
-  // extraColumns = [],
   refetch = null,
-  // count,
-  // limit = 50,
-  // hasCheckbox = false,
   canEdit = false,
   QUERY = null,
-  // deleteItem,
+  deleteItem,
 }) => {
   return (
     <Flex style={{ flexWrap: 'wrap' }}>
@@ -34,6 +30,7 @@ const PictureTable = ({
             tableName={tableName}
             refetch={refetch}
             QUERY={QUERY}
+            deleteItem={deleteItem}
           />
         )
       })}
@@ -49,6 +46,8 @@ const PictureRow = ({
   tableName = '',
   QUERY = null,
   refetch,
+  id,
+  deleteItem,
 }) => {
   return (
     <Popover
@@ -66,6 +65,9 @@ const PictureRow = ({
         refetch={refetch}
         updatedFields={row}
         canEdit={canEdit}
+        id={row[id]}
+        idKey={id}
+        deleteItem={deleteItem}
       >
         {headCells.map((headCell) => {
           return (

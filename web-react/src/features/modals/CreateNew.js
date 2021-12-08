@@ -7,6 +7,7 @@ import { useMutation } from '@apollo/client'
 import Modal from '../../ui/Modal'
 import EditableField from '../EditableField'
 import Button from '../../ui/Button'
+import AreYouSure from './AreYouSure'
 
 const CreateNew = ({
   name,
@@ -17,6 +18,9 @@ const CreateNew = ({
   children = null,
   submitText = 'Create new',
   successText = ' Item created successfully',
+  idKey,
+  id,
+  deleteItem = null,
 }) => {
   const [createNew, { loading }] = useMutation(QUERY, {
     onError(err) {
@@ -104,9 +108,43 @@ const CreateNew = ({
               )
             })}
             <CTAButton type="submit">{submitText}</CTAButton>
+            {deleteItem && (
+              <DeleteItemButton
+                deleteItem={() => {
+                  deleteItem({ variables: { [idKey]: id } })
+                  setOpen(false)
+                }}
+              >
+                Delete item
+              </DeleteItemButton>
+            )}
           </Form>
         </Column>
       </Modal>
+    </>
+  )
+}
+
+const DeleteItemButton = ({ children, deleteItem }) => {
+  const [open, setOpen] = React.useState(false)
+  return (
+    <>
+      <AreYouSure
+        open={open}
+        setOpen={setOpen}
+        onConfirm={deleteItem}
+        text={'Are you sure you want to delete this item?'}
+      />
+      <CTAButton
+        onClick={() => {
+          setOpen(true)
+        }}
+        style={{ marginTop: '2vh' }}
+        color="error"
+        variant="outlined"
+      >
+        {children}
+      </CTAButton>
     </>
   )
 }
@@ -119,6 +157,9 @@ const UpdateItem = ({
   updatedFields,
   children = null,
   canEdit = false,
+  idKey,
+  id,
+  deleteItem,
 }) => {
   if (canEdit) {
     return (
@@ -129,7 +170,10 @@ const UpdateItem = ({
         refetch={refetch}
         updatedFields={updatedFields}
         submitText="Update item"
-        successText=" Item updated successfully"
+        successText="Item updated successfully"
+        idKey={idKey}
+        id={id}
+        deleteItem={deleteItem}
       >
         {children}
       </CreateNew>

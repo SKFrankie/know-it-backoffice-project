@@ -3,7 +3,7 @@ import { Box } from '@mui/material'
 import { AVATAR_PAGES, FIELD_TYPES } from '../helpers/constants'
 import Flex, { Column } from '../ui/Flex'
 import { MenuButtons } from '../features/Header'
-import { gql, useQuery } from '@apollo/client'
+import { gql, useMutation, useQuery } from '@apollo/client'
 import CreateNew from '../features/modals/CreateNew'
 import Loading from '../ui/Loading'
 import SearchBar from '../features/SearchBar'
@@ -62,6 +62,13 @@ const SET_AVATARS = gql`
     }
   }
 `
+const DELETE_AVATAR = gql`
+  mutation DeleteAvatar($avatarId: ID!) {
+    deleteAvatars(where: { avatarId: $avatarId }) {
+      bookmark
+    }
+  }
+`
 
 const columns = [
   {
@@ -106,6 +113,14 @@ const Avatars = () => {
       console.log('get', error)
     },
   })
+  const [deleteAvatar] = useMutation(DELETE_AVATAR, {
+    onCompleted() {
+      refetch()
+    },
+    onError(error) {
+      console.log(error)
+    },
+  })
   const allowed = ['ADMIN', 'EDITOR']
   return (
     <Avatar
@@ -126,7 +141,7 @@ const Avatars = () => {
           // hasCheckbox={allowed.includes(superCurrentUser.rights)}
           canEdit={allowed.includes(superCurrentUser.rights)}
           QUERY={SET_AVATARS}
-          // deleteItem={deleteFabVocabQuestions}
+          deleteItem={deleteAvatar}
           id={'avatarId'}
         />
       )}
