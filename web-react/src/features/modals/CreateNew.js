@@ -21,6 +21,7 @@ const CreateNew = ({
   idKey,
   id,
   deleteItem = null,
+  ...props
 }) => {
   const [createNew, { loading }] = useMutation(QUERY, {
     onError(err) {
@@ -67,7 +68,9 @@ const CreateNew = ({
   return (
     <>
       {children ? (
-        <Button onClick={handleOpen}>{children}</Button>
+        <Button {...props} onClick={handleOpen}>
+          {children}
+        </Button>
       ) : (
         <Button onClick={handleOpen}>{name}</Button>
       )}
@@ -160,6 +163,7 @@ const UpdateItem = ({
   idKey,
   id,
   deleteItem,
+  ...props
 }) => {
   if (canEdit) {
     return (
@@ -174,6 +178,7 @@ const UpdateItem = ({
         idKey={idKey}
         id={id}
         deleteItem={deleteItem}
+        {...props}
       >
         {children}
       </CreateNew>

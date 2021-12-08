@@ -23,6 +23,7 @@ import SynonymRoll from './pages/games/SynonymRoll'
 import GrammarGeek from './pages/games/GrammarGeek'
 import FabVocab from './pages/games/FabVocab'
 import AvatarTable from './pages/Avatars/AvatarTable'
+import AvatarCollectionTable from './pages/Avatars/AvatarCollectionTable'
 
 const GET_CURRENT_USER = gql`
   query SuperCurrentUser {
@@ -169,6 +170,12 @@ export default function App() {
                   component={AvatarTable}
                   exact
                   path="/avatars"
+                />
+                <PrivateRoute
+                  currentUser={currentUser}
+                  component={AvatarCollectionTable}
+                  exact
+                  path="/avatars-collections"
                 />
               </Switch>
 

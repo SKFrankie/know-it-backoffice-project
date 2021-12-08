@@ -84,7 +84,7 @@ const AVATAR_PAGES = [
   },
   {
     label: 'Avatar collections',
-    href: '/avatars/collections',
+    href: '/avatars-collections',
   },
 ]
 
