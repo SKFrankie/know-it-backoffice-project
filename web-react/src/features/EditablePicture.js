@@ -1,13 +1,14 @@
 import { Box } from '@mui/material'
 import React from 'react'
-import { WidgetLoader, Widget } from 'react-cloudinary-upload-widget'
+import openWidget from '../helpers/widget'
+import Button from '../ui/Button'
 
 const EditablePicture = ({
   editMode = false,
   column,
   updatedFields = {},
-  doUpdate,
   defaultValue,
+  doUpdate,
   ...props
 }) => {
   const fallback =
@@ -37,14 +38,10 @@ const EditablePicture = ({
       />
       {editMode && (
         <>
-          <WidgetLoader />
-          <Widget
-            sources={['local', 'url']}
-            cropping={false}
-            resourceType={'image'}
-            cloudName={process.env.REACT_APP_CLOUDINARY_NAME}
-            uploadPreset={process.env.REACT_APP_CLOUDINARY_UNSIGNED_PRESET}
-            buttonText={`Upload`}
+          <Button
+            onClick={() => {
+              openWidget((url) => doUpdate(column.id, url), column.label)
+            }}
             style={{
               color: 'white',
               border: 'none',
@@ -58,18 +55,9 @@ const EditablePicture = ({
               left: 0,
               width: '100%',
             }}
-            folder={column.label}
-            onSuccess={(result) => {
-              console.log('res', result)
-              doUpdate(column.id, result.info.url)
-            }}
-            onFailure={(response) => {
-              console.log('error', response.error)
-            }}
-            logging={false}
-            type="button"
-            buttonType="button"
-          />
+          >
+            Upload
+          </Button>
         </>
       )}
     </Box>
