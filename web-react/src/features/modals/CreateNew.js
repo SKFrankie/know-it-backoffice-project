@@ -118,20 +118,25 @@ const UpdateItem = ({
   refetch,
   updatedFields,
   children = null,
+  canEdit = false,
 }) => {
-  return (
-    <CreateNew
-      name={name}
-      columns={columns}
-      QUERY={QUERY}
-      refetch={refetch}
-      updatedFields={updatedFields}
-      submitText="Update item"
-      successText=" Item updated successfully"
-    >
-      {children}
-    </CreateNew>
-  )
+  if (canEdit) {
+    return (
+      <CreateNew
+        name={name}
+        columns={columns}
+        QUERY={QUERY}
+        refetch={refetch}
+        updatedFields={updatedFields}
+        submitText="Update item"
+        successText=" Item updated successfully"
+      >
+        {children}
+      </CreateNew>
+    )
+  } else {
+    return <>{children}</>
+  }
 }
 
 export { UpdateItem }

@@ -65,6 +65,7 @@ const PictureRow = ({
         QUERY={QUERY}
         refetch={refetch}
         updatedFields={row}
+        canEdit={canEdit}
       >
         {headCells.map((headCell) => {
           return (
