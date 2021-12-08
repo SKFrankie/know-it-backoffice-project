@@ -2,7 +2,7 @@ import { Autocomplete, TextField, Typography } from '@mui/material'
 import React from 'react'
 import { FIELD_TYPES } from '../helpers/constants'
 import { Input, SelectWithItems } from '../ui/Form'
-import EditablePicture from '../components/EditablePicture'
+import EditablePicture from './EditablePicture'
 
 const EditableField = ({
   editMode = false,

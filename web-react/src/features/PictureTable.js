@@ -1,6 +1,6 @@
 import { Typography } from '@mui/material'
 import React from 'react'
-import EditablePicture from '../components/EditablePicture'
+import EditablePicture from './EditablePicture'
 import Flex from '../ui/Flex'
 import Popover from '../ui/Popover'
 import { UpdateItem } from './modals/CreateNew'
