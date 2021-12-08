@@ -4,6 +4,10 @@ body {
   font-family: sans-serif;
 }
 
+.secondary {
+  background-color: #fafafa !important;
+}
+
 .inputRounded .MuiOutlinedInput-root {
   border-radius: 20px;
   background-color: #fafafa;

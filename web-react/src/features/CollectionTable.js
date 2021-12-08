@@ -49,42 +49,50 @@ const Collection = ({
   deleteItem,
 }) => {
   return (
-    <UpdateItem
-      columns={headCells}
-      QUERY={QUERY}
-      refetch={refetch}
-      updatedFields={row}
-      canEdit={canEdit}
-      id={row[id]}
-      idKey={id}
-      deleteItem={deleteItem}
-      sx={{
-        justifyContent: 'flex-start',
-        alignItems: 'baseline',
-        alignSelf: 'flex-start',
-        width: '100%',
-      }}
-    >
-      {headCells.map((headCell) => {
-        return (
-          <Box key={headCell.id}>
-            {headCell.id === collectionName ? (
-              <Typography m={3} variant="h6">
-                {row[headCell.id]}
-              </Typography>
-            ) : (
-              <Box sx={{ m: 3, display: 'inline-flex' }}>
-                <Typography>{headCell.label} :</Typography>
-                <EditableField
-                  column={headCell}
-                  defaultValue={row[headCell.id]}
-                />
-              </Box>
-            )}
-          </Box>
-        )
-      })}
-    </UpdateItem>
+    <Box border="1px solid" borderRadius="20px" my={5}>
+      <UpdateItem
+        columns={headCells}
+        QUERY={QUERY}
+        refetch={refetch}
+        updatedFields={row}
+        canEdit={canEdit}
+        id={row[id]}
+        idKey={id}
+        deleteItem={deleteItem}
+        sx={{
+          justifyContent: 'flex-start',
+          alignItems: 'baseline',
+          alignSelf: 'flex-start',
+          width: '100%',
+          borderRadius: 'inherit',
+        }}
+        className="secondary"
+      >
+        {headCells.map((headCell) => {
+          return (
+            <Box key={headCell.id}>
+              {headCell.id === collectionName ? (
+                <Typography m={3} variant="h6">
+                  {row[headCell.id]}
+                </Typography>
+              ) : (
+                <Box sx={{ m: 3, display: 'inline-flex' }}>
+                  {row[headCell.id] && (
+                    <Typography style={{ paddingRight: '2px' }}>
+                      {headCell.label} :{' '}
+                    </Typography>
+                  )}
+                  <EditableField
+                    column={headCell}
+                    defaultValue={row[headCell.id]}
+                  />
+                </Box>
+              )}
+            </Box>
+          )
+        })}
+      </UpdateItem>
+    </Box>
   )
 }
 
