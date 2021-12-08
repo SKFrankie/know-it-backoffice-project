@@ -1,6 +1,7 @@
 import { Autocomplete, TextField, Typography } from '@mui/material'
 import React from 'react'
 import { FIELD_TYPES } from '../helpers/constants'
+import dateToString from '../helpers/dateToString'
 import { Input, SelectWithItems } from '../ui/Form'
 import EditablePicture from './EditablePicture'
 
@@ -87,6 +88,27 @@ const EditableField = ({
               {...props}
             />
           )
+        case FIELD_TYPES.DATE:
+          return (
+            <Input
+              InputLabelProps={{
+                shrink: true,
+              }}
+              type="date"
+              onChange={(e) => {
+                doUpdate(column.id, e.target.value)
+              }}
+              value={
+                column.id in updatedFields
+                  ? dateToString(updatedFields[column.id])
+                  : defaultValue
+                  ? dateToString(defaultValue)
+                  : ''
+              }
+              label={column.label}
+              {...props}
+            />
+          )
 
         default:
           return (
@@ -109,7 +131,7 @@ const EditableField = ({
         case FIELD_TYPES.DATE:
           return (
             <Typography color="textSecondary" {...props}>
-              {new Date(defaultValue).toLocaleString()}
+              {defaultValue && new Date(defaultValue).toLocaleString()}
             </Typography>
           )
         case FIELD_TYPES.ARRAY:

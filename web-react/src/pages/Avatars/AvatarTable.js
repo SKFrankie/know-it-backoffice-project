@@ -134,7 +134,6 @@ const AvatarTable = () => {
           refetch={refetch}
           count={data.avatarsAggregate.count}
           limit={defaultLimit}
-          // hasCheckbox={allowed.includes(superCurrentUser.rights)}
           canEdit={allowed.includes(superCurrentUser.rights)}
           QUERY={SET_AVATARS}
           deleteItem={deleteAvatar}
