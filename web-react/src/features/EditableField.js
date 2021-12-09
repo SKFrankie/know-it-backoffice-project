@@ -113,11 +113,9 @@ const EditableField = ({
         case FIELD_TYPES.AVATAR_ARRAY:
           return (
             <ToggleAvatarArray
-              editMode={editMode}
-              column={column}
-              setUpdatedFields={setUpdatedFields}
               updatedFields={updatedFields}
-              defaultValue={defaultValue}
+              doUpdate={doUpdate}
+              // defaultValue={defaultValue}
             />
           )
 

@@ -100,7 +100,10 @@ const columns = [
 
 const AvatarTable = ({
   noHeader = false,
+  avatars = null,
   toggleCollection = false,
+  doUpdate,
+  updatedFields,
   collectionId = null,
   ...props
 }) => {
@@ -109,15 +112,24 @@ const AvatarTable = ({
   const filter = collectionId
     ? { collections: { avatarCollectionId: collectionId } }
     : null
-  const { data, loading, error, refetch } = useQuery(GET_AVATARS, {
-    variables: {
-      limit: defaultLimit,
-      filter: filter,
-    },
-    onError(error) {
-      console.log('get', error)
-    },
-  })
+  const { data, loading, error, refetch } = avatars
+    ? {
+        data: { avatars },
+        loading: false,
+        error: false,
+        refetch: () => {
+          return
+        },
+      }
+    : useQuery(GET_AVATARS, {
+        variables: {
+          limit: defaultLimit,
+          filter: filter,
+        },
+        onError(error) {
+          console.log('get', error)
+        },
+      })
   const [deleteAvatar] = useMutation(DELETE_AVATAR, {
     onCompleted() {
       refetch()
@@ -142,15 +154,17 @@ const AvatarTable = ({
         <PictureTable
           tableName="Avatar"
           headCells={columns}
-          rows={data.avatars}
+          rows={avatars || data.avatars}
           refetch={refetch}
-          count={data.avatarsAggregate.count}
+          count={data?.avatarsAggregate?.count}
           limit={defaultLimit}
           canEdit={allowed.includes(superCurrentUser.rights) && !noHeader}
           QUERY={SET_AVATARS}
           deleteItem={deleteAvatar}
           id={'avatarId'}
           toggleCollection={toggleCollection}
+          doUpdate={doUpdate}
+          updatedFields={updatedFields}
         />
       )}
     </Avatars>

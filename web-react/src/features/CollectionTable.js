@@ -10,6 +10,7 @@ import AvatarTable from '../pages/Avatars/AvatarTable'
 const CollectionTable = ({
   headCells = [],
   rows = [],
+  subRows = 'avatars',
   id = '',
   tableName = '',
   refetch = null,
@@ -17,6 +18,7 @@ const CollectionTable = ({
   QUERY = null,
   deleteItem,
   collectionName = 'name',
+  additionalFields,
 }) => {
   return (
     <Column style={{ flexWrap: 'wrap' }}>
@@ -25,12 +27,14 @@ const CollectionTable = ({
           <Collection
             key={index}
             row={row}
+            subRows={subRows}
             headCells={headCells}
             id={id}
             canEdit={canEdit}
             tableName={tableName}
             refetch={refetch}
             QUERY={QUERY}
+            additionalFields={additionalFields}
             deleteItem={deleteItem}
             collectionName={collectionName}
           />
@@ -42,6 +46,7 @@ const CollectionTable = ({
 
 const Collection = ({
   row,
+  subRows,
   headCells,
   canEdit,
   collectionName = 'name',
@@ -49,6 +54,7 @@ const Collection = ({
   refetch,
   id,
   deleteItem,
+  additionalFields,
 }) => {
   return (
     <Box border="1px solid" borderRadius="20px" my={5}>
@@ -56,7 +62,7 @@ const Collection = ({
         columns={headCells}
         QUERY={QUERY}
         refetch={refetch}
-        updatedFields={row}
+        updatedFields={{ ...row, ...additionalFields }}
         canEdit={canEdit}
         id={row[id]}
         idKey={id}
@@ -96,7 +102,7 @@ const Collection = ({
         {canEdit && <EditIcon style={{ position: 'absolute' }} />}
       </UpdateItem>
       {/* avatar component should be pass as a prop I guess */}
-      <AvatarTable noHeader collectionId={row[id]} />
+      <AvatarTable noHeader avatars={row[subRows]} collectionId={row[id]} />
     </Box>
   )
 }

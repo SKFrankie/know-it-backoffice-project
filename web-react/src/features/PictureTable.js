@@ -16,6 +16,8 @@ const PictureTable = ({
   QUERY = null,
   deleteItem,
   toggleCollection = false,
+  doUpdate,
+  updatedFields,
 }) => {
   return (
     <Flex style={{ flexWrap: 'wrap' }}>
@@ -33,6 +35,8 @@ const PictureTable = ({
             QUERY={QUERY}
             deleteItem={deleteItem}
             toggleCollection={toggleCollection}
+            doUpdate={doUpdate}
+            updatedFields={updatedFields}
           />
         )
       })}
@@ -51,6 +55,8 @@ const PictureRow = ({
   id,
   deleteItem,
   toggleCollection,
+  doUpdate,
+  updatedFields,
 }) => {
   return (
     <Popover
@@ -70,12 +76,13 @@ const PictureRow = ({
         columns={headCells}
         QUERY={QUERY}
         refetch={refetch}
-        updatedFields={row}
+        updatedFields={toggleCollection ? updatedFields : row}
         canEdit={canEdit}
         id={row[id]}
         idKey={id}
         deleteItem={deleteItem}
         toggleItem={toggleCollection}
+        doUpdate={doUpdate}
       >
         {headCells.map((headCell) => {
           return (

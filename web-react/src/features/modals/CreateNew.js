@@ -164,10 +164,20 @@ const UpdateItem = ({
   id,
   deleteItem,
   toggleItem = false,
+  doUpdate,
   ...props
 }) => {
   const [toggle, setToggle] = useState(false)
   const handleToggle = () => {
+    // WARNING the toggle logic only works for avatars, refactoring is needed if you want to use it for other components
+
+    console.log('updatedFields', updatedFields)
+    updatedFields.avatarIds.indexOf(id) === -1
+      ? doUpdate('avatarIds', [id, ...updatedFields.avatarIds])
+      : doUpdate(
+          'avatarIds',
+          updatedFields.avatarIds.filter((item) => item !== id)
+        )
     setToggle(!toggle)
   }
   if (toggleItem) {

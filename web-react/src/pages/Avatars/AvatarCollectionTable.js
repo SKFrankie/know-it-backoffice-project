@@ -21,6 +21,12 @@ const GET_AVATAR_COLLECTIONS = gql`
       name
       startDate
       endDate
+      avatars {
+        avatarId
+        picture
+        name
+        coinPrice
+      }
     }
     avatarCollectionsAggregate(where: $filter) {
       count
@@ -33,6 +39,7 @@ const SET_AVATAR_COLLECTIONS = gql`
     $name: String
     $startDate: DateTime
     $endDate: DateTime
+    $avatarIds: [ID!]!
   ) {
     updateAvatarCollections(
       where: { avatarCollectionId: $avatarCollectionId }
@@ -41,6 +48,12 @@ const SET_AVATAR_COLLECTIONS = gql`
       avatarCollections {
         avatarCollectionId
       }
+    }
+    toggleAvatarsToCollection(
+      avatarIds: $avatarIds
+      avatarCollectionId: $avatarCollectionId
+    ) {
+      avatarCollectionId
     }
   }
 `
@@ -83,7 +96,7 @@ const columns = [
     type: FIELD_TYPES.DATE,
   },
   {
-    id: 'avatars',
+    id: 'avatars_hack_id',
     disablePadding: false,
     label: 'Avatars',
     editable: true,
@@ -117,11 +130,13 @@ const AvatarCollectionTable = () => {
           tableName="Avatar Collections"
           headCells={columns}
           rows={data.avatarCollections}
+          subRows="avatars"
           refetch={refetch}
           count={data.avatarCollectionsAggregate.count}
           limit={defaultLimit}
           canEdit={allowed.includes(superCurrentUser.rights)}
           QUERY={SET_AVATAR_COLLECTIONS}
+          additionalFields={{ avatarIds: [] }}
           // deleteItem={deleteAvatar}
           id={'avatarCollectionId'}
         />
