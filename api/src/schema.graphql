@@ -304,6 +304,22 @@ type Mutation {
       """
     )
 
+  toggleAvatarsToCollection(
+    avatarIds: [ID!]!
+    avatarCollectionId: ID!
+  ): AvatarCollection
+    @cypher(
+      statement: """
+      MATCH (avatar:Avatar) WHERE avatar.avatarId IN $avatarIds
+      MATCH (collection:AvatarCollection {avatarCollectionId: $avatarCollectionId})
+      OPTIONAL MATCH (avatar)-[oldR:AVATAR_COLLECTION_AVATAR]->(collection)
+      MERGE (avatar)-[r:AVATAR_COLLECTION_AVATAR]->(collection)
+      DELETE oldR
+      WITH collection
+      RETURN collection
+      """
+    )
+
   ## Games
 
   addNewScore(gameName: GameName!, score: Int!): Score
