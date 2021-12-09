@@ -1,5 +1,4 @@
 const dateToString = (d) => {
-  console.log('date', d)
   if (!d) return ''
 
   const date = new Date(d)
@@ -8,7 +7,6 @@ const dateToString = (d) => {
   )
     .toString()
     .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`
-  console.log(stringDate)
   return stringDate
 }
 

@@ -163,8 +163,23 @@ const UpdateItem = ({
   idKey,
   id,
   deleteItem,
+  toggleItem = false,
   ...props
 }) => {
+  const [toggle, setToggle] = useState(false)
+  const handleToggle = () => {
+    setToggle(!toggle)
+  }
+  if (toggleItem) {
+    return (
+      <Button
+        onClick={handleToggle}
+        style={{ border: toggle ? '1px solid' : null }}
+      >
+        {children}
+      </Button>
+    )
+  }
   if (canEdit) {
     return (
       <CreateNew

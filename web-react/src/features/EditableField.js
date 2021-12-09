@@ -4,6 +4,7 @@ import { FIELD_TYPES } from '../helpers/constants'
 import dateToString from '../helpers/dateToString'
 import { Input, SelectWithItems } from '../ui/Form'
 import EditablePicture from './EditablePicture'
+import ToggleAvatarArray from './ToggleAvatarArray'
 
 const EditableField = ({
   editMode = false,
@@ -107,6 +108,16 @@ const EditableField = ({
               }
               label={column.label}
               {...props}
+            />
+          )
+        case FIELD_TYPES.AVATAR_ARRAY:
+          return (
+            <ToggleAvatarArray
+              editMode={editMode}
+              column={column}
+              setUpdatedFields={setUpdatedFields}
+              updatedFields={updatedFields}
+              defaultValue={defaultValue}
             />
           )
 

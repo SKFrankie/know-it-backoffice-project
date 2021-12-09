@@ -98,7 +98,12 @@ const columns = [
   },
 ]
 
-const AvatarTable = ({ noHeader = false, collectionId = null }) => {
+const AvatarTable = ({
+  noHeader = false,
+  toggleCollection = false,
+  collectionId = null,
+  ...props
+}) => {
   const superCurrentUser = useContext(SuperUserContext)
   const defaultLimit = 50
   const filter = collectionId
@@ -130,6 +135,7 @@ const AvatarTable = ({ noHeader = false, collectionId = null }) => {
       QUERY={CREATE_AVATAR}
       refetch={refetch}
       filter={filter}
+      {...props}
     >
       {loading && <Loading />} {error && 'error'}
       {data && (
@@ -140,14 +146,16 @@ const AvatarTable = ({ noHeader = false, collectionId = null }) => {
           refetch={refetch}
           count={data.avatarsAggregate.count}
           limit={defaultLimit}
-          canEdit={allowed.includes(superCurrentUser.rights)}
+          canEdit={allowed.includes(superCurrentUser.rights) && !noHeader}
           QUERY={SET_AVATARS}
           deleteItem={deleteAvatar}
           id={'avatarId'}
+          toggleCollection={toggleCollection}
         />
       )}
     </Avatars>
   )
 }
 
+export { columns }
 export default AvatarTable

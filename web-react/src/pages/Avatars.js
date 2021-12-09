@@ -14,11 +14,12 @@ const Avatars = ({
   refetch,
   noHeader = false,
   filter = null,
+  ...props
 }) => {
   return (
-    <Box>
-      <Flex>
-        <Column sx={{ flexGrow: 1, display: noHeader ? 'none' : 'flex' }}>
+    <Box {...props}>
+      <Flex style={{ display: noHeader ? 'none' : 'flex' }}>
+        <Column sx={{ flexGrow: 1 }}>
           <MenuButtons sections={AVATAR_PAGES} />
         </Column>
         <CreateNew

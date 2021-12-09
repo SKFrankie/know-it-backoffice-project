@@ -21,12 +21,6 @@ const GET_AVATAR_COLLECTIONS = gql`
       name
       startDate
       endDate
-      avatars {
-        avatarId
-        name
-        picture
-        coinPrice
-      }
     }
     avatarCollectionsAggregate(where: $filter) {
       count
@@ -87,6 +81,13 @@ const columns = [
     label: 'End Date',
     editable: true,
     type: FIELD_TYPES.DATE,
+  },
+  {
+    id: 'avatars',
+    disablePadding: false,
+    label: 'Avatars',
+    editable: true,
+    type: FIELD_TYPES.AVATAR_ARRAY,
   },
 ]
 

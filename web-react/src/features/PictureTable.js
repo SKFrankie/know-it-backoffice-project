@@ -15,6 +15,7 @@ const PictureTable = ({
   canEdit = false,
   QUERY = null,
   deleteItem,
+  toggleCollection = false,
 }) => {
   return (
     <Flex style={{ flexWrap: 'wrap' }}>
@@ -31,6 +32,7 @@ const PictureTable = ({
             refetch={refetch}
             QUERY={QUERY}
             deleteItem={deleteItem}
+            toggleCollection={toggleCollection}
           />
         )
       })}
@@ -48,10 +50,15 @@ const PictureRow = ({
   refetch,
   id,
   deleteItem,
+  toggleCollection,
 }) => {
   return (
     <Popover
-      text={canEdit && `Click to edit ${tableName}`}
+      text={
+        toggleCollection
+          ? 'Click to add/remove from collection'
+          : canEdit && `Click to edit ${tableName}`
+      }
       style={{
         maxWidth: 'fit-content',
         position: 'relative',
@@ -68,6 +75,7 @@ const PictureRow = ({
         id={row[id]}
         idKey={id}
         deleteItem={deleteItem}
+        toggleItem={toggleCollection}
       >
         {headCells.map((headCell) => {
           return (
