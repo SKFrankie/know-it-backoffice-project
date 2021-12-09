@@ -6,11 +6,19 @@ import { MenuButtons } from '../features/Header'
 import CreateNew from '../features/modals/CreateNew'
 import SearchBar from '../features/SearchBar'
 
-const Avatars = ({ children, columns, createText, QUERY, refetch }) => {
+const Avatars = ({
+  children,
+  columns,
+  createText,
+  QUERY,
+  refetch,
+  noHeader = false,
+  filter = null,
+}) => {
   return (
     <Box>
       <Flex>
-        <Column sx={{ flexGrow: 1 }}>
+        <Column sx={{ flexGrow: 1, display: noHeader ? 'none' : 'flex' }}>
           <MenuButtons sections={AVATAR_PAGES} />
         </Column>
         <CreateNew
@@ -25,6 +33,7 @@ const Avatars = ({ children, columns, createText, QUERY, refetch }) => {
           sx={{ flexGrow: 1 }}
           searchFields={columns}
           refetch={refetch}
+          filter={filter}
         />
         {children}
       </Box>

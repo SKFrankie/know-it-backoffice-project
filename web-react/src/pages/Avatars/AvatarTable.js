@@ -98,12 +98,16 @@ const columns = [
   },
 ]
 
-const AvatarTable = () => {
+const AvatarTable = ({ noHeader = false, collectionId = null }) => {
   const superCurrentUser = useContext(SuperUserContext)
   const defaultLimit = 50
+  const filter = collectionId
+    ? { collections: { avatarCollectionId: collectionId } }
+    : null
   const { data, loading, error, refetch } = useQuery(GET_AVATARS, {
     variables: {
       limit: defaultLimit,
+      filter: filter,
     },
     onError(error) {
       console.log('get', error)
@@ -120,10 +124,12 @@ const AvatarTable = () => {
   const allowed = ['ADMIN', 'EDITOR']
   return (
     <Avatars
+      noHeader={noHeader}
       columns={columns}
       createText={'Create new Avatar'}
       QUERY={CREATE_AVATAR}
       refetch={refetch}
+      filter={filter}
     >
       {loading && <Loading />} {error && 'error'}
       {data && (

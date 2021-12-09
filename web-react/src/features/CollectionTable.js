@@ -4,6 +4,8 @@ import React from 'react'
 import { Column } from '../ui/Flex'
 import EditableField from './EditableField'
 import { UpdateItem } from './modals/CreateNew'
+import EditIcon from '@mui/icons-material/ModeEditOutlined'
+import AvatarTable from '../pages/Avatars/AvatarTable'
 
 const CollectionTable = ({
   headCells = [],
@@ -91,7 +93,10 @@ const Collection = ({
             </Box>
           )
         })}
+        {canEdit && <EditIcon style={{ position: 'absolute' }} />}
       </UpdateItem>
+      {/* avatar component should be pass as a prop I guess */}
+      <AvatarTable noHeader collectionId={row[id]} />
     </Box>
   )
 }

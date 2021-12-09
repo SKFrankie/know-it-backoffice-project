@@ -7,6 +7,7 @@ const SearchBar = ({
   searchFields = [{ label: 'no fields', id: 'no-fields' }],
   refetch,
   sx,
+  filter = null,
 }) => {
   const [search, setSearch] = React.useState('')
   const [searchBy, setSearchBy] = React.useState(searchFields[0])
@@ -36,11 +37,11 @@ const SearchBar = ({
 
   useEffect(() => {
     if (!search) {
-      refetch({ filter: null })
+      refetch({ filter: filter })
       return
     }
     if (refetch && searchBy.id !== 'no-fields') {
-      refetch({ filter: { [fieldToSearch(searchBy)]: search } })
+      refetch({ filter: { [fieldToSearch(searchBy)]: search, ...filter } })
     }
   }, [search, searchBy])
 
