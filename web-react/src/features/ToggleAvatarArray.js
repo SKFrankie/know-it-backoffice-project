@@ -13,6 +13,7 @@ const ToggleAvatarArray = ({ updatedFields, doUpdate, defaultValue = [] }) => {
         updatedFields={updatedFields}
         doUpdate={doUpdate}
         defaultValue={defaultValue}
+        maxHeight="25vh"
       />
     </>
   )

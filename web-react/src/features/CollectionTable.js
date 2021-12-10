@@ -82,11 +82,16 @@ const Collection = ({
           return (
             <Box key={headCell.id}>
               {headCell.id === collectionName ? (
-                <Typography m={3} variant="h6">
+                <Typography
+                  color="textSecondary"
+                  fontWeight="500"
+                  m={3}
+                  variant="h6"
+                >
                   {row[headCell.id]}
                 </Typography>
               ) : (
-                <Box sx={{ m: 3, display: 'inline-flex' }}>
+                <Box sx={{ background: 'white', m: 3, display: 'inline-flex' }}>
                   {row[headCell.id] && (
                     <Typography style={{ paddingRight: '2px' }}>
                       {headCell.label} :{' '}

@@ -106,6 +106,7 @@ const AvatarTable = ({
   updatedFields,
   collectionId = null,
   defaultValue = [],
+  maxHeight = null,
   ...props
 }) => {
   const superCurrentUser = useContext(SuperUserContext)
@@ -168,6 +169,7 @@ const AvatarTable = ({
           doUpdate={doUpdate}
           updatedFields={updatedFields}
           defaultValue={defaultValue}
+          maxHeight={maxHeight}
         />
       )}
     </Avatars>

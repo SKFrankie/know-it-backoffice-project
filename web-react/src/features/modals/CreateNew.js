@@ -167,7 +167,7 @@ const DeleteItemButton = ({ children, deleteItem }) => {
 }
 
 const UpdateItem = ({
-  name,
+  name = 'Update Item',
   columns,
   QUERY,
   refetch,

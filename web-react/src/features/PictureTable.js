@@ -19,9 +19,18 @@ const PictureTable = ({
   doUpdate,
   updatedFields,
   defaultValue = [],
+  maxHeight = null,
+  ...props
 }) => {
   return (
-    <Flex style={{ flexWrap: 'wrap' }}>
+    <Flex
+      style={{
+        ...props.style,
+        flexWrap: 'wrap',
+        maxHeight: maxHeight ? maxHeight : null,
+        overflowY: 'scroll',
+      }}
+    >
       {rows.map((row, index) => {
         return (
           <PictureRow
