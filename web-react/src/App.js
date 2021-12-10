@@ -24,6 +24,7 @@ import GrammarGeek from './pages/games/GrammarGeek'
 import FabVocab from './pages/games/FabVocab'
 import AvatarTable from './pages/Avatars/AvatarTable'
 import AvatarCollectionTable from './pages/Avatars/AvatarCollectionTable'
+import Gifts from './pages/Gifts'
 
 const GET_CURRENT_USER = gql`
   query SuperCurrentUser {
@@ -176,6 +177,12 @@ export default function App() {
                   component={AvatarCollectionTable}
                   exact
                   path="/avatars-collections"
+                />
+                <PrivateRoute
+                  currentUser={currentUser}
+                  component={Gifts}
+                  exact
+                  path="/gifts"
                 />
               </Switch>
 

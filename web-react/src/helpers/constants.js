@@ -106,6 +106,20 @@ const RIGHTS = [
     description: 'Readers can only browse data but not modify',
   },
 ]
+const REWARDS = [
+  {
+    id: 'COINS',
+    label: 'Coins',
+  },
+  {
+    id: 'TICKETS',
+    label: 'Tickets',
+  },
+  {
+    id: 'STARS',
+    label: 'Stars',
+  },
+]
 
 const FIELD_TYPES = {
   STRING: 'STRING',
@@ -119,4 +133,4 @@ const FIELD_TYPES = {
   AVATAR_ARRAY: 'AVATAR_ARRAY',
 }
 
-export { SECTIONS, RIGHTS, GAMES, FIELD_TYPES, AVATAR_PAGES }
+export { SECTIONS, RIGHTS, GAMES, FIELD_TYPES, AVATAR_PAGES, REWARDS }

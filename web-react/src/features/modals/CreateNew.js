@@ -119,6 +119,7 @@ const CreateNew = ({
                   column={column}
                   setUpdatedFields={setFields}
                   required={column.required}
+                  disabled={column.disabled}
                   updatedFields={fields}
                   defaultValue={defaultValue}
                 />
