@@ -58,7 +58,7 @@ const Collection = ({
 }) => {
   const defaultValue = row[subRows].map((item) => item.avatarId) // only working for avatars, need to be refactored for other collections
   return (
-    <Box border="1px solid" borderRadius="20px" my={5}>
+    <Box border="1px solid #7B9497" borderRadius="20px" my={2}>
       <UpdateItem
         columns={headCells}
         QUERY={QUERY}
@@ -101,7 +101,11 @@ const Collection = ({
             </Box>
           )
         })}
-        {canEdit && <EditIcon style={{ position: 'absolute' }} />}
+        {canEdit && (
+          <EditIcon
+            style={{ position: 'absolute', right: '0', margin: '10px' }}
+          />
+        )}
       </UpdateItem>
       {/* avatar component should be pass as a prop I guess */}
       <AvatarTable noHeader avatars={row[subRows]} collectionId={row[id]} />

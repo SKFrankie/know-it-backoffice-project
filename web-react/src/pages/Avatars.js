@@ -14,6 +14,7 @@ const Avatars = ({
   customMutation = null,
   refetch,
   noHeader = false,
+  noSearchBar = false,
   filter = null,
   ...props
 }) => {
@@ -33,7 +34,7 @@ const Avatars = ({
       </Flex>
       <Box>
         <SearchBar
-          sx={{ flexGrow: 1 }}
+          sx={{ flexGrow: 1, display: noSearchBar ? 'none' : 'block' }}
           searchFields={columns}
           refetch={refetch}
           filter={filter}

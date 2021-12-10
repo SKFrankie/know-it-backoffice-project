@@ -87,6 +87,7 @@ const PictureRow = ({
         toggleItem={toggleCollection}
         doUpdate={doUpdate}
         defaultValue={defaultValue}
+        style={{ padding: 0 }}
       >
         {headCells.map((headCell) => {
           return (
@@ -99,13 +100,14 @@ const PictureRow = ({
               ) : (
                 <Typography
                   color="textSecondary"
-                  variant="body2"
+                  fontWeight="500"
                   style={{
                     position: 'absolute',
                     left: headCell.left,
                     top: headCell.top,
                     bottom: headCell.bottom,
                     right: headCell.right,
+                    fontSize: '0.7rem',
                   }}
                 >
                   {row[headCell.id]} {headCell.additionalText}

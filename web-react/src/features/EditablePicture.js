@@ -1,7 +1,7 @@
-import { Box } from '@mui/material'
 import React from 'react'
 import openWidget from '../helpers/widget'
 import Button from '../ui/Button'
+import { Column } from '../ui/Flex'
 
 const EditablePicture = ({
   editMode = false,
@@ -14,16 +14,20 @@ const EditablePicture = ({
   const fallback =
     'https://res.cloudinary.com/dki7jzqlx/image/upload/v1638871483/default_frame.png'
   return (
-    <Box
+    <Column
       textAlign="center"
       sx={{
-        maxWidth: 'fit-content',
+        width: '10vw',
+        height: '10vw',
         placeSelf: 'center',
         position: 'relative',
+        alignItems: 'center',
+        justifyContent: 'center',
       }}
+      className="imageBackground"
     >
       <img
-        style={{ maxWidth: '10vw', maxHeight: '10vh' }}
+        style={{ maxWidth: '7vw', maxHeight: '7vw' }}
         src={
           column.id in updatedFields
             ? updatedFields[column.id]
@@ -60,7 +64,7 @@ const EditablePicture = ({
           </Button>
         </>
       )}
-    </Box>
+    </Column>
   )
 }
 

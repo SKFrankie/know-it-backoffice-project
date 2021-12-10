@@ -82,7 +82,7 @@ const columns = [
     editable: true,
     required: true,
     left: '0',
-    bottom: '4px',
+    bottom: '0',
   },
   {
     id: 'coinPrice',
@@ -143,6 +143,7 @@ const AvatarTable = ({
   return (
     <Avatars
       noHeader={noHeader}
+      noSearchBar={!!avatars}
       columns={columns}
       createText={'Create new Avatar'}
       QUERY={CREATE_AVATAR}

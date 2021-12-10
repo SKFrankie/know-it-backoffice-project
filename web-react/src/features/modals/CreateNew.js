@@ -211,7 +211,10 @@ const UpdateItem = ({
     return (
       <Button
         onClick={handleToggle}
-        style={{ border: toggle ? '1px solid' : null }}
+        className={toggle ? 'toggledImage' : ''}
+        style={{
+          ...props.style,
+        }}
       >
         {children}
       </Button>

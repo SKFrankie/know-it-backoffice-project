@@ -8,6 +8,16 @@ body {
   background-color: #fafafa !important;
 }
 
+.imageBackground {
+  background-color: rgba(123, 148, 151, 0.25);
+  border-radius: 7px;
+}
+
+.toggledImage {
+  background: rgb(0, 220, 0, 0.5) !important;
+  border: 1px solid rgb(0, 220, 0) !important;
+}
+
 .inputRounded .MuiOutlinedInput-root {
   border-radius: 20px;
   background-color: #fafafa;
