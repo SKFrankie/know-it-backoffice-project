@@ -22,12 +22,14 @@ const Popover = ({ text, children, ...props }) => {
         aria-haspopup="true"
         onMouseEnter={handlePopoverOpen}
         onMouseLeave={handlePopoverClose}
+        onClick={handlePopoverClose}
         {...props}
       >
         {children}
       </div>
       {text && (
         <MUIPopover
+          disableScrollLock
           id="mouse-over-popover"
           sx={{
             pointerEvents: 'none',
