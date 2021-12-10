@@ -29,7 +29,7 @@ const PictureTable = ({
         ...props.style,
         flexWrap: 'wrap',
         maxHeight: maxHeight ? maxHeight : null,
-        overflowY: 'scroll',
+        overflowY: maxHeight ? 'scroll' : null,
       }}
     >
       {rows.map((row, index) => {

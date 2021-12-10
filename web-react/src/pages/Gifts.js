@@ -1,12 +1,21 @@
 import React, { useContext } from 'react'
-import { Box } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import SearchBar from '../features/SearchBar'
 import { FIELD_TYPES, REWARDS } from '../helpers/constants'
-import { gql, useQuery } from '@apollo/client'
+import { gql, useMutation, useQuery } from '@apollo/client'
 import Loading from '../ui/Loading'
 import PictureTable from '../features/PictureTable'
 import { SuperUserContext } from '../context'
 
+const CREATE_GIFTS = gql`
+  mutation CreateGifts($gifts: [GiftCreateInput!]!) {
+    createGifts(input: $gifts) {
+      gifts {
+        giftId
+      }
+    }
+  }
+`
 const GET_GIFTS = gql`
   query Gifts(
     $limit: Int
@@ -85,9 +94,38 @@ const columns = [
 
 const Gifts = () => {
   const superCurrentUser = useContext(SuperUserContext)
+
+  const [createGifts] = useMutation(CREATE_GIFTS, {
+    onCompleted: () => {
+      refetch()
+    },
+    onError: (error) => {
+      console.log(error)
+    },
+  })
+  const createMissingGifts = (number) => {
+    // this is a hack to create missing gifts on first page load
+    const gifts = []
+    for (let i = number; i < 25; i++) {
+      const day = i + 1
+      const gift = {
+        day,
+        reward: REWARDS[0].id,
+        quantity: 0,
+      }
+      gifts.push(gift)
+    }
+    createGifts({ variables: { gifts } })
+  }
+
   const { data, loading, error, refetch } = useQuery(GET_GIFTS, {
     variables: {
-      limit: 10,
+      orderBy: [{ day: 'ASC' }],
+    },
+    onCompleted: (res) => {
+      if (res.giftsAggregate.count < 25) {
+        createMissingGifts(res.giftsAggregate.count)
+      }
     },
     onError(error) {
       console.log('get', error)
@@ -97,6 +135,15 @@ const Gifts = () => {
   return (
     <Box>
       <Box>
+        <Typography
+          fontWeight={500}
+          mb={3}
+          color="textPrimary"
+          textAlign="center"
+          variant="h5"
+        >
+          Calendar Gifts
+        </Typography>
         <SearchBar
           sx={{ flexGrow: 1 }}
           searchFields={columns}
