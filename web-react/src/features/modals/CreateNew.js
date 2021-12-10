@@ -3,16 +3,22 @@ import { Alert, Typography, AlertTitle } from '@mui/material'
 import { CTAButton } from '../../ui/Button'
 import { Column } from '../../ui/Flex'
 import Form from '../../ui/Form'
-import { useMutation } from '@apollo/client'
+import { gql, useMutation } from '@apollo/client'
 import Modal from '../../ui/Modal'
 import EditableField from '../EditableField'
 import Button from '../../ui/Button'
 import AreYouSure from './AreYouSure'
 
+const DEFAULT_MUTATION = gql`
+  mutation DefaultMutation {
+    __typename
+  }
+`
 const CreateNew = ({
   name,
   columns,
-  QUERY,
+  QUERY = DEFAULT_MUTATION,
+  customMutation = null,
   refetch,
   updatedFields = {},
   children = null,
@@ -24,18 +30,20 @@ const CreateNew = ({
   defaultValue = null,
   ...props
 }) => {
+  const onCompleted = (data) => {
+    setData(data)
+
+    if (!Object.keys(updatedFields).length) {
+      setFields({})
+    }
+    refetch()
+  }
   const [createNew, { loading }] = useMutation(QUERY, {
     onError(err) {
       console.log(err)
-      setError(err)
+      setError('Be sure you have filled out all the fields and try again.')
     },
-    onCompleted(data) {
-      setData(data)
-      if (!Object.keys(updatedFields).length) {
-        setFields({})
-      }
-      refetch()
-    },
+    onCompleted,
   })
 
   const [data, setData] = useState(null)
@@ -58,9 +66,13 @@ const CreateNew = ({
   }
   const handleSubmit = (e) => {
     e.preventDefault()
-    createNew({
-      variables: fields,
-    })
+    if (customMutation) {
+      customMutation(fields, onCompleted, setError)
+    } else {
+      createNew({
+        variables: fields,
+      })
+    }
   }
   const handleOpen = () => {
     setOpen(true)
@@ -90,7 +102,7 @@ const CreateNew = ({
             {error && !loading && (
               <Alert sx={{ m: 1 }} severity="error">
                 <AlertTitle>Error</AlertTitle>
-                Be sure you have filled out all the fields and try again.
+                {error}
               </Alert>
             )}
             {data && (
@@ -175,15 +187,26 @@ const UpdateItem = ({
   )
   const handleToggle = () => {
     // WARNING the toggle logic only works for avatars, refactoring is needed if you want to use it for other components
-
-    updatedFields.avatarIds.indexOf(id) === -1
-      ? doUpdate('avatarIds', [id, ...updatedFields.avatarIds])
-      : doUpdate(
-          'avatarIds',
-          updatedFields.avatarIds.filter((item) => item !== id)
-        )
+    if (!updatedFields.avatarIds) {
+      doUpdate('avatarIds', [id])
+    } else {
+      updatedFields.avatarIds.indexOf(id) === -1
+        ? doUpdate('avatarIds', [id, ...updatedFields.avatarIds])
+        : doUpdate(
+            'avatarIds',
+            updatedFields.avatarIds.filter((item) => item !== id)
+          )
+    }
     setToggle(!toggle)
   }
+
+  useEffect(() => {
+    // this is in the case of a submit when creating a new item
+    if (!defaultValue && !updatedFields?.avatarIds?.length) {
+      setToggle(false)
+    }
+  }, [updatedFields])
+
   if (toggleItem) {
     return (
       <Button

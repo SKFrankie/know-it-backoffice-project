@@ -11,6 +11,7 @@ const Avatars = ({
   columns,
   createText,
   QUERY,
+  customMutation = null,
   refetch,
   noHeader = false,
   filter = null,
@@ -26,6 +27,7 @@ const Avatars = ({
           name={createText}
           columns={columns}
           QUERY={QUERY}
+          customMutation={customMutation}
           refetch={refetch}
         />
       </Flex>

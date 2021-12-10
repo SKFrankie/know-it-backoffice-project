@@ -72,6 +72,19 @@ const CREATE_AVATAR_COLLECTION = gql`
     }
   }
 `
+const TOGGLE_AVATARS_COLLECTION = gql`
+  mutation ToggleAvatarsCollection(
+    $avatarCollectionId: ID!
+    $avatarIds: [ID!]!
+  ) {
+    toggleAvatarsToCollection(
+      avatarIds: $avatarIds
+      avatarCollectionId: $avatarCollectionId
+    ) {
+      avatarCollectionId
+    }
+  }
+`
 
 const DELETE_AVATAR_COLLECTION = gql`
   mutation DeleteAvatarCollection($avatarCollectionId: ID!) {
@@ -135,11 +148,59 @@ const AvatarCollectionTable = () => {
       console.log(error)
     },
   })
+
+  const [createNew] = useMutation(CREATE_AVATAR_COLLECTION, {
+    onCompleted() {
+      refetch()
+    },
+    onError(error) {
+      console.log(error)
+    },
+  })
+  const [toggleCollection] = useMutation(TOGGLE_AVATARS_COLLECTION, {
+    onError(error) {
+      console.log('avatar toggle error', error)
+    },
+  })
+  const createMutation = async (variables, onCompleted, setError) => {
+    const { name, startDate, endDate, avatarIds } = variables
+    const createNewResponse = await createNew({
+      variables: { name, startDate, endDate },
+      onError(error) {
+        console.log(error)
+      },
+    })
+    if (createNewResponse?.data) {
+      onCompleted(createNewResponse.data)
+    } else {
+      setError(
+        'Error, this collection name might already exist, please try again'
+      )
+      return
+    }
+
+    const {
+      avatarCollectionId,
+    } = createNewResponse.data.createAvatarCollections.avatarCollections[0]
+    const toggleCollectionResponse = await toggleCollection({
+      variables: { avatarCollectionId, avatarIds: avatarIds || [] },
+      onError(error) {
+        console.log(error)
+      },
+    })
+    if (toggleCollectionResponse?.data) {
+      onCompleted(toggleCollectionResponse.data)
+    } else {
+      setError(
+        'Avatar Collection has been created but something went wrong with the avatars'
+      )
+    }
+  }
   return (
     <Avatars
       columns={columns}
       createText={'Create new Avatar Collection'}
-      QUERY={CREATE_AVATAR_COLLECTION}
+      customMutation={createMutation}
       refetch={refetch}
     >
       {loading && <Loading />} {error && 'error'}
