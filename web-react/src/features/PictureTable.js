@@ -18,6 +18,7 @@ const PictureTable = ({
   toggleCollection = false,
   doUpdate,
   updatedFields,
+  defaultValue = [],
 }) => {
   return (
     <Flex style={{ flexWrap: 'wrap' }}>
@@ -37,6 +38,7 @@ const PictureTable = ({
             toggleCollection={toggleCollection}
             doUpdate={doUpdate}
             updatedFields={updatedFields}
+            defaultValue={defaultValue}
           />
         )
       })}
@@ -57,6 +59,7 @@ const PictureRow = ({
   toggleCollection,
   doUpdate,
   updatedFields,
+  defaultValue = [],
 }) => {
   return (
     <Popover
@@ -83,6 +86,7 @@ const PictureRow = ({
         deleteItem={deleteItem}
         toggleItem={toggleCollection}
         doUpdate={doUpdate}
+        defaultValue={defaultValue}
       >
         {headCells.map((headCell) => {
           return (

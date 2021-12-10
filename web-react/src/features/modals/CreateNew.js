@@ -21,6 +21,7 @@ const CreateNew = ({
   idKey,
   id,
   deleteItem = null,
+  defaultValue = null,
   ...props
 }) => {
   const [createNew, { loading }] = useMutation(QUERY, {
@@ -107,6 +108,7 @@ const CreateNew = ({
                   setUpdatedFields={setFields}
                   required={column.required}
                   updatedFields={fields}
+                  defaultValue={defaultValue}
                 />
               )
             })}
@@ -165,13 +167,15 @@ const UpdateItem = ({
   deleteItem,
   toggleItem = false,
   doUpdate,
+  defaultValue = null,
   ...props
 }) => {
-  const [toggle, setToggle] = useState(false)
+  const [toggle, setToggle] = useState(
+    !!defaultValue && defaultValue.includes(id)
+  )
   const handleToggle = () => {
     // WARNING the toggle logic only works for avatars, refactoring is needed if you want to use it for other components
 
-    console.log('updatedFields', updatedFields)
     updatedFields.avatarIds.indexOf(id) === -1
       ? doUpdate('avatarIds', [id, ...updatedFields.avatarIds])
       : doUpdate(
@@ -203,6 +207,7 @@ const UpdateItem = ({
         idKey={idKey}
         id={id}
         deleteItem={deleteItem}
+        defaultValue={defaultValue}
         {...props}
       >
         {children}

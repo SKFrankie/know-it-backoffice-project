@@ -105,6 +105,7 @@ const AvatarTable = ({
   doUpdate,
   updatedFields,
   collectionId = null,
+  defaultValue = [],
   ...props
 }) => {
   const superCurrentUser = useContext(SuperUserContext)
@@ -165,6 +166,7 @@ const AvatarTable = ({
           toggleCollection={toggleCollection}
           doUpdate={doUpdate}
           updatedFields={updatedFields}
+          defaultValue={defaultValue}
         />
       )}
     </Avatars>

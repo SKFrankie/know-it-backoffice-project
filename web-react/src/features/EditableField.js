@@ -115,7 +115,7 @@ const EditableField = ({
             <ToggleAvatarArray
               updatedFields={updatedFields}
               doUpdate={doUpdate}
-              // defaultValue={defaultValue}
+              defaultValue={defaultValue}
             />
           )
 

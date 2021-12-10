@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import Avatars from '../Avatars'
 import { FIELD_TYPES } from '../../helpers/constants'
-import { gql, useQuery } from '@apollo/client'
+import { gql, useMutation, useQuery } from '@apollo/client'
 import Loading from '../../ui/Loading'
 import { SuperUserContext } from '../../context'
 import CollectionTable from '../../features/CollectionTable'
@@ -73,6 +73,16 @@ const CREATE_AVATAR_COLLECTION = gql`
   }
 `
 
+const DELETE_AVATAR_COLLECTION = gql`
+  mutation DeleteAvatarCollection($avatarCollectionId: ID!) {
+    deleteAvatarCollections(
+      where: { avatarCollectionId: $avatarCollectionId }
+    ) {
+      bookmark
+    }
+  }
+`
+
 const columns = [
   {
     id: 'name',
@@ -117,6 +127,14 @@ const AvatarCollectionTable = () => {
       console.log('get', error)
     },
   })
+  const [deleteAvatarCollection] = useMutation(DELETE_AVATAR_COLLECTION, {
+    onCompleted() {
+      refetch()
+    },
+    onError(error) {
+      console.log(error)
+    },
+  })
   return (
     <Avatars
       columns={columns}
@@ -137,7 +155,7 @@ const AvatarCollectionTable = () => {
           canEdit={allowed.includes(superCurrentUser.rights)}
           QUERY={SET_AVATAR_COLLECTIONS}
           additionalFields={{ avatarIds: [] }}
-          // deleteItem={deleteAvatar}
+          deleteItem={deleteAvatarCollection}
           id={'avatarCollectionId'}
         />
       )}

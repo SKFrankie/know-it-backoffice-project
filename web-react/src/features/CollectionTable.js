@@ -56,6 +56,7 @@ const Collection = ({
   deleteItem,
   additionalFields,
 }) => {
+  const defaultValue = row[subRows].map((item) => item.avatarId) // only working for avatars, need to be refactored for other collections
   return (
     <Box border="1px solid" borderRadius="20px" my={5}>
       <UpdateItem
@@ -67,6 +68,7 @@ const Collection = ({
         id={row[id]}
         idKey={id}
         deleteItem={deleteItem}
+        defaultValue={defaultValue}
         sx={{
           justifyContent: 'flex-start',
           alignItems: 'baseline',

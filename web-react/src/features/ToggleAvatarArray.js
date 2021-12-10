@@ -2,7 +2,7 @@ import { Divider } from '@mui/material'
 import React from 'react'
 import AvatarTable from '../pages/Avatars/AvatarTable'
 
-const ToggleAvatarArray = ({ updatedFields, doUpdate }) => {
+const ToggleAvatarArray = ({ updatedFields, doUpdate, defaultValue = [] }) => {
   return (
     <>
       <Divider sx={{ m: 5 }} />{' '}
@@ -12,6 +12,7 @@ const ToggleAvatarArray = ({ updatedFields, doUpdate }) => {
         toggleCollection
         updatedFields={updatedFields}
         doUpdate={doUpdate}
+        defaultValue={defaultValue}
       />
     </>
   )
