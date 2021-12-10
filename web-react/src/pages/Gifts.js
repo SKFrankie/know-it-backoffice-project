@@ -65,8 +65,9 @@ const columns = [
     disabled: true,
     numeric: true,
     top: '0',
-    right: '0',
+    left: '0',
     type: FIELD_TYPES.NUMBER,
+    beforeText: 'Day',
   },
   {
     id: 'quantity',
@@ -78,6 +79,7 @@ const columns = [
     left: '0',
     bottom: '0',
     type: FIELD_TYPES.NUMBER,
+    beforeText: 'x',
   },
 ]
 
@@ -113,6 +115,7 @@ const Gifts = () => {
             // deleteItem={deleteAvatar}
             id={'giftId'}
             pictureId="reward"
+            pictureMapping={REWARDS}
           />
         )}
       </Box>

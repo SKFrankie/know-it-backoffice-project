@@ -20,6 +20,7 @@ const PictureTable = ({
   updatedFields,
   defaultValue = [],
   maxHeight = null,
+  pictureMapping = null,
   ...props
 }) => {
   return (
@@ -48,6 +49,7 @@ const PictureTable = ({
             doUpdate={doUpdate}
             updatedFields={updatedFields}
             defaultValue={defaultValue}
+            pictureMapping={pictureMapping}
           />
         )
       })}
@@ -69,7 +71,14 @@ const PictureRow = ({
   doUpdate,
   updatedFields,
   defaultValue = [],
+  pictureMapping = null,
 }) => {
+  const getPictureFromMapping = (picture) => {
+    if (!pictureMapping) return picture
+    const pictureItem = pictureMapping.find((p) => p.id === picture)
+    return pictureItem.picture
+  }
+
   return (
     <Popover
       text={
@@ -104,7 +113,7 @@ const PictureRow = ({
               {headCell.id === pictureId ? (
                 <EditablePicture
                   column={headCell}
-                  defaultValue={row[pictureId]}
+                  defaultValue={getPictureFromMapping(row[pictureId])}
                 />
               ) : (
                 <Typography
@@ -119,7 +128,8 @@ const PictureRow = ({
                     fontSize: '0.7rem',
                   }}
                 >
-                  {row[headCell.id]} {headCell.additionalText}
+                  {headCell.beforeText} {row[headCell.id]}{' '}
+                  {headCell.additionalText}
                 </Typography>
               )}
             </div>

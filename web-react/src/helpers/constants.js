@@ -110,14 +110,17 @@ const REWARDS = [
   {
     id: 'COINS',
     label: 'Coins',
+    picture: '/img/coins.png',
   },
   {
     id: 'TICKETS',
     label: 'Tickets',
+    picture: '/img/tickets.png',
   },
   {
     id: 'STARS',
     label: 'Stars',
+    picture: '/img/stars.png',
   },
 ]
 
