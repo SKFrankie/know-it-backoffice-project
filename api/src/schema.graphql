@@ -89,7 +89,7 @@ type SuperUser
   password: String @private
   firstname: String
   lastname: String
-  rights: Right!
+  rights: Right
 
   createdAt: DateTime
 }
