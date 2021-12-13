@@ -4,8 +4,7 @@ import express from 'express'
 import neo4j from 'neo4j-driver'
 import { Neo4jGraphQL } from '@neo4j/graphql'
 import dotenv from 'dotenv'
-import users from './resolvers/users'
-import superUsers from './resolvers/superUsers'
+import resolvers from './resolvers'
 
 // set environment variables from .env
 dotenv.config()
@@ -24,12 +23,6 @@ const driver = neo4j.driver(
     process.env.NEO4J_PASSWORD || 'neo4j'
   )
 )
-
-// resolvers
-
-const resolvers = {
-  Mutation: { ...superUsers.Mutation, ...users.Mutation },
-}
 
 /*
  * Create an executable GraphQL schema object from GraphQL type definitions
