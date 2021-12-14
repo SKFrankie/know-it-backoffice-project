@@ -9,6 +9,7 @@ import AbcIcon from '@mui/icons-material/Abc'
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator'
 import HdrStrongIcon from '@mui/icons-material/HdrStrong'
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto'
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents'
 
 const SECTIONS = [
   {
@@ -74,6 +75,11 @@ const GAMES = [
     label: 'Grammar Geek',
     href: '/games/grammar-geek',
     icon: AbcIcon,
+  },
+  {
+    label: 'Knowlympics',
+    href: '/games/knowlympics',
+    icon: EmojiEventsIcon,
   },
 ]
 

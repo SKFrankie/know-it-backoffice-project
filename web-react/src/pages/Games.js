@@ -60,7 +60,8 @@ const Game = ({
   children,
   createText = 'modal missing',
   columns,
-  refetch,
+  refetch = () => {},
+  empty = false,
   QUERY,
 }) => {
   const [timer, setTimer] = React.useState(0)
@@ -150,21 +151,25 @@ const Game = ({
             </Flex>
           )}
         </Column>
-        <CreateNew
-          name={createText}
-          columns={columns}
-          QUERY={QUERY}
-          refetch={refetch}
-        />
+        {!empty && (
+          <CreateNew
+            name={createText}
+            columns={columns}
+            QUERY={QUERY}
+            refetch={refetch}
+          />
+        )}
       </Flex>
-      <Box>
-        <SearchBar
-          sx={{ flexGrow: 1 }}
-          searchFields={columns}
-          refetch={refetch}
-        />
-        {children}
-      </Box>
+      {!empty && (
+        <Box>
+          <SearchBar
+            sx={{ flexGrow: 1 }}
+            searchFields={columns}
+            refetch={refetch}
+          />
+          {children}
+        </Box>
+      )}
     </Box>
   )
 }

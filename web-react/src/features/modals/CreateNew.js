@@ -16,10 +16,10 @@ const DEFAULT_MUTATION = gql`
 `
 const CreateNew = ({
   name,
-  columns,
+  columns = [],
   QUERY = DEFAULT_MUTATION,
   customMutation = null,
-  refetch,
+  refetch = () => {},
   updatedFields = {},
   children = null,
   submitText = 'Create new',

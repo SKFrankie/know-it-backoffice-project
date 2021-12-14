@@ -25,6 +25,7 @@ import FabVocab from './pages/games/FabVocab'
 import AvatarTable from './pages/Avatars/AvatarTable'
 import AvatarCollectionTable from './pages/Avatars/AvatarCollectionTable'
 import Gifts from './pages/Gifts'
+import Knowlympics from './pages/games/Knowlympics'
 
 const GET_CURRENT_USER = gql`
   query SuperCurrentUser {
@@ -165,6 +166,12 @@ export default function App() {
                   component={FabVocab}
                   exact
                   path="/games/fab-vocab"
+                />
+                <PrivateRoute
+                  currentUser={currentUser}
+                  component={Knowlympics}
+                  exact
+                  path="/games/knowlympics"
                 />
                 <PrivateRoute
                   currentUser={currentUser}
