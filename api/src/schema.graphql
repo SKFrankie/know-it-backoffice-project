@@ -231,6 +231,7 @@ type GrammarGeekQuestion
   sentence: String!
   correctWord: String!
   wrongWords: [String!]!
+  hint: String
 }
 
 ## Gifts

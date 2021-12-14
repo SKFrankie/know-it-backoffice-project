@@ -21,6 +21,7 @@ const GET_GRAMMAR_GEEK_QUESTIONS = gql`
       sentence
       correctWord
       wrongWords
+      hint
     }
     grammarGeekQuestionsAggregate(where: $filter) {
       count
@@ -34,6 +35,7 @@ const SET_GRAMMAR_GEEK_QUESTIONS = gql`
     $sentence: String
     $correctWord: String
     $wrongWords: [String!]
+    $hint: String
   ) {
     updateGrammarGeekQuestions(
       where: { grammarId: $grammarId }
@@ -41,6 +43,7 @@ const SET_GRAMMAR_GEEK_QUESTIONS = gql`
         sentence: $sentence
         correctWord: $correctWord
         wrongWords: $wrongWords
+        hint: $hint
       }
     ) {
       grammarGeekQuestions {
@@ -62,12 +65,14 @@ const CREATE_GRAMMAR_GEEK_QUESTIONS = gql`
     $correctWord: String!
     $sentence: String!
     $wrongWords: [String!]!
+    $hint: String
   ) {
     createGrammarGeekQuestions(
       input: {
         sentence: $sentence
         correctWord: $correctWord
         wrongWords: $wrongWords
+        hint: $hint
       }
     ) {
       grammarGeekQuestions {
@@ -133,6 +138,13 @@ const GrammarGeek = () => {
       editable: true,
       required: true,
       type: FIELD_TYPES.ARRAY,
+    },
+    {
+      id: 'hint',
+      disablePadding: false,
+      label: 'Hint',
+      editable: true,
+      required: false,
     },
   ]
 
