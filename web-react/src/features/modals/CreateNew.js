@@ -8,6 +8,7 @@ import Modal from '../../ui/Modal'
 import EditableField from '../EditableField'
 import Button from '../../ui/Button'
 import AreYouSure from './AreYouSure'
+import Loading from '../../ui/Loading'
 
 const DEFAULT_MUTATION = gql`
   mutation DefaultMutation {
@@ -105,6 +106,7 @@ const CreateNew = ({
                 {error}
               </Alert>
             )}
+            {loading && <Loading />}
             {data && (
               <Alert sx={{ m: 1 }} severity="success">
                 <AlertTitle>Success</AlertTitle>
