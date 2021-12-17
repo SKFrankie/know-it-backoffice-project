@@ -46,6 +46,9 @@ neoSchema
   .assertIndexesAndConstraints({ options: { create: true } })
   .then(() => {
     const server = new ApolloServer({
+      cors: {
+        origin: 'https://www.know-it.bluepopcorn.fun/',
+      },
       context: ({ req }) => ({
         req,
         driver,
