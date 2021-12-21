@@ -47,7 +47,7 @@ type User
   ) {
   userId: ID!
   username: String!
-  mail: String!
+  mail: String! @unique
   password: String @private
   coins: Int! @default(value: 0)
   tickets: Int! @default(value: 0)
@@ -85,7 +85,7 @@ type SuperUser
     ]
   ) {
   userId: ID!
-  mail: String!
+  mail: String! @unique
   password: String @private
   firstname: String
   lastname: String
@@ -255,8 +255,10 @@ type Gift
 type Mutation {
   # regular users
   signup(mail: String!, username: String!, password: String!): AuthToken
-  googleSignup(token: String): AuthToken
   login(mail: String!, password: String!): AuthToken
+
+  googleSignup(token: String): AuthToken
+  googleLogin(token: String): AuthToken
 
   # super users
   forbiddenSuperSignup(
