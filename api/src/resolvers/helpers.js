@@ -1,5 +1,7 @@
 import { compareSync, hashSync } from 'bcrypt'
 import jwt from 'jsonwebtoken'
+const { OAuth2Client } = require('google-auth-library')
+const client = new OAuth2Client(process.env.GOOGLE_AUTH_CLIENT_ID)
 
 const getCurrentDate = () => {
   const today = new Date()
@@ -11,8 +13,10 @@ const getCurrentDate = () => {
   return dateTime
 }
 
-const signup = (obj, args, context, type = 'User') => {
-  args.password = hashSync(args.password, 10)
+const signup = (obj, args, context, type = 'User', noPassword = false) => {
+  if (!noPassword) {
+    args.password = hashSync(args.password, 10)
+  }
   const session = context.driver.session()
 
   return session
@@ -76,4 +80,14 @@ const login = (obj, args, context, type = 'User') => {
       }
     })
 }
-export { signup, login, getCurrentDate }
+
+const googleVerify = async (token) => {
+  const ticket = await client.verifyIdToken({
+    idToken: token,
+    audience: process.env.GOOGLE_AUTH_CLIENT_ID,
+  })
+  const payload = ticket.getPayload()
+  return payload
+}
+
+export { signup, login, getCurrentDate, googleVerify }

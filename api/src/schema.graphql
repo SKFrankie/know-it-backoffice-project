@@ -48,7 +48,7 @@ type User
   userId: ID!
   username: String!
   mail: String!
-  password: String! @private
+  password: String @private
   coins: Int! @default(value: 0)
   tickets: Int! @default(value: 0)
   inventory: [Avatar] @relationship(type: "AVATARS_USER", direction: IN)
@@ -255,6 +255,7 @@ type Gift
 type Mutation {
   # regular users
   signup(mail: String!, username: String!, password: String!): AuthToken
+  googleSignup(token: String): AuthToken
   login(mail: String!, password: String!): AuthToken
 
   # super users
