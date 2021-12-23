@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button as MuiButton } from '@mui/material'
+import { Button as MuiButton, Link } from '@mui/material'
 import { NavLink as RouterLink } from 'react-router-dom'
 
 const Button = ({ children, ...props }) => {
@@ -9,12 +9,31 @@ const Button = ({ children, ...props }) => {
     </MuiButton>
   )
 }
-const ButtonLink = ({ href, children, ...props }) => {
-  return (
-    <Button component={RouterLink} to={href} {...props}>
-      {children}
-    </Button>
-  )
+const ButtonLink = ({
+  href,
+  children,
+  external = false,
+  activeStyle = null,
+  ...props
+}) => {
+  if (external) {
+    return (
+      <Button component={Link} href={href} {...props} target="_blank">
+        {children}
+      </Button>
+    )
+  } else {
+    return (
+      <Button
+        component={RouterLink}
+        to={href}
+        activeStyle={activeStyle}
+        {...props}
+      >
+        {children}
+      </Button>
+    )
+  }
 }
 
 const ButtonLinkUnstyled = ({ href, children, ...props }) => {

@@ -53,7 +53,7 @@ const Logo = () => {
 const MenuButtons = ({ sections = SECTIONS }) => {
   return (
     <Box>
-      {sections.map(({ label, href }) => {
+      {sections.map(({ label, href, external }) => {
         return (
           <ButtonLink
             key={label}
@@ -61,6 +61,7 @@ const MenuButtons = ({ sections = SECTIONS }) => {
             href={href}
             label={label}
             activeStyle={{ color: '#007EA7' }}
+            external={external}
           >
             <Typography fontWeight="medium">{label}</Typography>
           </ButtonLink>
