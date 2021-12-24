@@ -49,7 +49,7 @@ const signup = (obj, args, context, type = 'User', noPassword = false) => {
     })
 }
 
-const login = (obj, args, context, type = 'User') => {
+const login = (obj, args, context, type = 'User', noPassword = false) => {
   const session = context.driver.session()
 
   return session
@@ -65,7 +65,7 @@ const login = (obj, args, context, type = 'User') => {
       const { userId, mail, rights, password } = res.records[0].get(
         'u'
       ).properties
-      if (!compareSync(args.password, password)) {
+      if (!noPassword && !compareSync(args.password, password)) {
         // is this the same password ?
         throw new Error('Authorization Error')
       }

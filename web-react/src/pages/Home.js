@@ -13,15 +13,18 @@ const Home = () => {
         flexWrap: 'wrap',
       }}
     >
-      {SECTIONS.map(({ label, longName, description, href, icon }) => (
-        <SectionButton
-          key={label}
-          label={longName}
-          description={description}
-          href={href}
-          Icon={icon}
-        />
-      ))}
+      {SECTIONS.map(
+        ({ label, longName, description, href, icon, external }) => (
+          <SectionButton
+            key={label}
+            label={longName}
+            description={description}
+            href={href}
+            Icon={icon}
+            external={external}
+          />
+        )
+      )}
     </Box>
   )
 }

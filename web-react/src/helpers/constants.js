@@ -15,9 +15,10 @@ const SECTIONS = [
   {
     label: 'Analytics',
     longName: 'Analytics',
-    href: '/analytics',
+    href: 'https://analytics.google.com/analytics/web/',
     icon: BarChartIcon,
     description: 'View analytics',
+    external: true,
   },
   {
     label: 'Users',

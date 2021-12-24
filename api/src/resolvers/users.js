@@ -19,6 +19,12 @@ const users = {
         true
       )
     },
+    googleLogin: async (obj, args, context) => {
+      const payload = await googleVerify(args.token).catch((err) => {
+        throw new Error('Google verification failed')
+      })
+      return login(obj, { ...args, mail: payload.email }, context, 'User', true)
+    },
     login: (obj, args, context) => {
       return login(obj, args, context, 'User')
     },
