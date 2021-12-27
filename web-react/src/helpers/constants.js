@@ -120,9 +120,9 @@ const REWARDS = [
     picture: '/img/coins.png',
   },
   {
-    id: 'TICKETS',
-    label: 'Tickets',
-    picture: '/img/tickets.png',
+    id: 'STAR_PERCENTAGE',
+    label: 'Star Percentage',
+    picture: '/img/star_percentage.png',
   },
   {
     id: 'STARS',

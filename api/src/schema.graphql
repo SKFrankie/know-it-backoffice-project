@@ -19,8 +19,8 @@ enum GameName {
 
 enum RewardType {
   COINS
-  TICKETS
   STARS
+  STAR_PERCENTAGE
 }
 
 type AuthToken {
@@ -50,12 +50,12 @@ type User
   mail: String! @unique
   password: String @private
   coins: Int! @default(value: 0)
-  tickets: Int! @default(value: 0)
+  stars: Int! @default(value: 0)
   inventory: [Avatar] @relationship(type: "AVATARS_USER", direction: IN)
   scores: [Score] @relationship(type: "SCORE_USER", direction: OUT)
   currentAvatar: Avatar @relationship(type: "AVATAR_USER", direction: IN)
 
-  stars: Int!
+  starPerecentage: Int! @default(value: 0)
   daysInArow: Int
   isPremium: Boolean! @default(value: false)
   age: Int

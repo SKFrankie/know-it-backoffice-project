@@ -3,11 +3,23 @@ import { googleVerify, login, signup } from './helpers'
 const users = {
   Mutation: {
     signup: (obj, args, context) => {
-      args = { coins: 0, tickets: 0, isPremium: false, ...args }
+      args = {
+        coins: 0,
+        stars: 0,
+        starPercentage: 0,
+        isPremium: false,
+        ...args,
+      }
       return signup(obj, args, context, 'User')
     },
     googleSignup: async (obj, args, context) => {
-      args = { coins: 0, tickets: 0, isPremium: false, ...args }
+      args = {
+        coins: 0,
+        stars: 0,
+        starPercentage: 0,
+        isPremium: false,
+        ...args,
+      }
       const payload = await googleVerify(args.token).catch((err) => {
         throw new Error('Google verification failed')
       })
