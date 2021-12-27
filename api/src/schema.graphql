@@ -55,7 +55,7 @@ type User
   scores: [Score] @relationship(type: "SCORE_USER", direction: OUT)
   currentAvatar: Avatar @relationship(type: "AVATAR_USER", direction: IN)
 
-  starPerecentage: Int! @default(value: 0)
+  starPercentage: Int! @default(value: 0)
   daysInArow: Int
   isPremium: Boolean! @default(value: false)
   age: Int
