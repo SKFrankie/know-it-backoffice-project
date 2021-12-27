@@ -51,7 +51,7 @@ type User
   password: String @private
   coins: Int! @default(value: 0)
   stars: Int! @default(value: 0)
-  inventory: [Avatar] @relationship(type: "AVATARS_USER", direction: IN)
+  inventory: [Avatar] @relationship(type: "AVATAR_INVENTORY", direction: IN)
   scores: [Score] @relationship(type: "SCORE_USER", direction: OUT)
   currentAvatar: Avatar @relationship(type: "AVATAR_USER", direction: IN)
 
@@ -280,6 +280,26 @@ type Mutation {
 
   # returns authentication url
   inviteSuperUser(mail: String!, rights: Right!): String
+
+  #avatars and users
+  addAvatarToInventory(avatarId: ID!): Avatar
+    @cypher(
+      statement: """
+      MATCH (avatar:Avatar {avatarId: $avatarId})
+      MATCH (user:User {userId: $auth.jwt.userId})
+      MERGE (avatar)-[r:AVATAR_INVENTORY]->(user)
+      RETURN avatar
+      """
+    )
+  changeCurrentAvatar(avatarId: ID!): Avatar
+    @cypher(
+      statement: """
+      MATCH (avatar:Avatar {avatarId: $avatarId})
+      MATCH (user:User {userId: $auth.jwt.userId})
+      MERGE (avatar)-[r:AVATAR_USER]->(user)
+      RETURN avatar
+      """
+    )
 
   ##avatars add avatar to collection##
   addAvatarToCollection(
