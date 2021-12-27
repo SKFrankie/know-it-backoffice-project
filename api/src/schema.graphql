@@ -296,7 +296,9 @@ type Mutation {
       statement: """
       MATCH (avatar:Avatar {avatarId: $avatarId})
       MATCH (user:User {userId: $auth.jwt.userId})
+      OPTIONAL MATCH ()-[old:AVATAR_USER]->(user)
       MERGE (avatar)-[r:AVATAR_USER]->(user)
+      DELETE old
       RETURN avatar
       """
     )
