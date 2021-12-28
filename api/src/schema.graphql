@@ -41,7 +41,6 @@ type User
       {
         operations: [READ]
         isAuthenticated: true
-        roles: [ADMIN, READER, EDITOR]
       }
     ]
   ) {
