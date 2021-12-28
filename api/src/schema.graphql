@@ -280,6 +280,9 @@ type Mutation {
   # returns authentication url
   inviteSuperUser(mail: String!, rights: Right!): String
 
+  #Users and gifts management
+  updateLastSeen(daysInArow: Int): User
+
   #avatars and users
   addAvatarToInventory(avatarId: ID!): Avatar
     @cypher(
