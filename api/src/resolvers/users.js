@@ -40,6 +40,24 @@ const users = {
     login: (obj, args, context) => {
       return login(obj, args, context, 'User')
     },
+    updateCurrentUser: (obj, args, context) => {
+      const session = context.driver.session()
+      return session
+        .run(
+          `MATCH (u:User {userId: $auth.jwt.userId})
+          SET u += $args
+          RETURN u`,
+          { args, auth: context.auth }
+        )
+        .then((res) => {
+          session.close()
+          return res.records[0].get('u').properties
+        })
+        .catch((err) => {
+          session.close()
+          throw new Error(err)
+        })
+    },
     updateLastSeen: (obj, args, context) => {
       const session = context.driver.session()
       return session

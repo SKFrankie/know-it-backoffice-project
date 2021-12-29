@@ -38,10 +38,7 @@ type User
         isAuthenticated: true
         roles: [ADMIN]
       }
-      {
-        operations: [READ]
-        isAuthenticated: true
-      }
+      { operations: [READ], isAuthenticated: true }
     ]
   ) {
   userId: ID!
@@ -258,6 +255,16 @@ type Mutation {
 
   googleSignup(token: String): AuthToken
   googleLogin(token: String): AuthToken
+
+  updateCurrentUser(
+    username: String
+    mail: String
+    password: String
+    isPremium: Boolean
+    coins: Int
+    starPercentage: Int
+    stars: Int
+  ): User
 
   # super users
   forbiddenSuperSignup(
