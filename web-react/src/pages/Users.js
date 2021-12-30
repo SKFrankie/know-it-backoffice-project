@@ -29,7 +29,7 @@ const GET_USERS = gql`
       createdAt
       isPremium
       coins
-      tickets
+      stars
       currentAvatar {
         name
         picture
@@ -103,10 +103,10 @@ const Users = () => {
       type: FIELD_TYPES.NUMBER,
     },
     {
-      id: 'tickets',
+      id: 'stars',
       numeric: true,
       disablePadding: false,
-      label: 'Tickets',
+      label: 'Stars',
       type: FIELD_TYPES.NUMBER,
     },
     {

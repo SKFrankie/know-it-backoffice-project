@@ -19,8 +19,8 @@ enum GameName {
 
 enum RewardType {
   COINS
-  TICKETS
   STARS
+  STAR_PERCENTAGE
 }
 
 type AuthToken {
@@ -38,11 +38,7 @@ type User
         isAuthenticated: true
         roles: [ADMIN]
       }
-      {
-        operations: [READ]
-        isAuthenticated: true
-        roles: [ADMIN, READER, EDITOR]
-      }
+      { operations: [READ], isAuthenticated: true }
     ]
   ) {
   userId: ID!
@@ -50,12 +46,12 @@ type User
   mail: String! @unique
   password: String @private
   coins: Int! @default(value: 0)
-  tickets: Int! @default(value: 0)
-  inventory: [Avatar] @relationship(type: "AVATARS_USER", direction: IN)
+  stars: Int! @default(value: 0)
+  inventory: [Avatar] @relationship(type: "AVATAR_INVENTORY", direction: IN)
   scores: [Score] @relationship(type: "SCORE_USER", direction: OUT)
   currentAvatar: Avatar @relationship(type: "AVATAR_USER", direction: IN)
 
-  stars: Int!
+  starPercentage: Int! @default(value: 0)
   daysInArow: Int
   isPremium: Boolean! @default(value: false)
   age: Int
@@ -114,6 +110,7 @@ type Avatar
   collections: [AvatarCollection]
     @relationship(type: "AVATAR_COLLECTION_AVATAR", direction: OUT)
   ownedBy: [User] @relationship(type: "AVATARS_USER", direction: OUT)
+  createdAt: DateTime!
 }
 
 type AvatarCollection
@@ -133,6 +130,7 @@ type AvatarCollection
   endDate: DateTime
   avatars: [Avatar]!
     @relationship(type: "AVATAR_COLLECTION_AVATAR", direction: IN)
+  createdAt: DateTime!
 }
 
 ## Games
@@ -167,7 +165,7 @@ type Score
   user: User! @relationship(type: "SCORE_USER", direction: IN)
   game: Game! @relationship(type: "SCORE_GAME", direction: OUT)
   score: Int!
-  createdAt: DateTime!
+  createdAt: DateTime @timestamp(operations: [CREATE])
 }
 
 type SynonymRollList
@@ -182,6 +180,7 @@ type SynonymRollList
   ) {
   synonymId: ID! @id
   synonyms: [String!]!
+  createdAt: DateTime @timestamp(operations: [CREATE])
 }
 
 type FabVocabQuestion
@@ -200,6 +199,7 @@ type FabVocabQuestion
   wrongWords: [String!]!
   correctSentence: String!
   wrongSentences: [String!]!
+  createdAt: DateTime @timestamp(operations: [CREATE])
 }
 
 type AntonymHuntAssociation
@@ -215,6 +215,7 @@ type AntonymHuntAssociation
   antonymId: ID! @id
   rightWord: String!
   leftWord: String!
+  createdAt: DateTime @timestamp(operations: [CREATE])
 }
 
 type GrammarGeekQuestion
@@ -232,6 +233,7 @@ type GrammarGeekQuestion
   correctWord: String!
   wrongWords: [String!]!
   hint: String
+  createdAt: DateTime @timestamp(operations: [CREATE])
 }
 
 ## Gifts
@@ -250,6 +252,7 @@ type Gift
   day: Int! @unique
   quantity: Int!
   reward: RewardType!
+  updatedAt: DateTime @timestamp(operations: [UPDATE])
 }
 
 type Mutation {
@@ -259,6 +262,16 @@ type Mutation {
 
   googleSignup(token: String): AuthToken
   googleLogin(token: String): AuthToken
+
+  updateCurrentUser(
+    username: String
+    mail: String
+    password: String
+    isPremium: Boolean
+    coins: Int
+    starPercentage: Int
+    stars: Int
+  ): User
 
   # super users
   forbiddenSuperSignup(
@@ -280,6 +293,31 @@ type Mutation {
 
   # returns authentication url
   inviteSuperUser(mail: String!, rights: Right!): String
+
+  #Users and gifts management
+  updateLastSeen(daysInArow: Int): User
+
+  #avatars and users
+  addAvatarToInventory(avatarId: ID!): Avatar
+    @cypher(
+      statement: """
+      MATCH (avatar:Avatar {avatarId: $avatarId})
+      MATCH (user:User {userId: $auth.jwt.userId})
+      MERGE (avatar)-[r:AVATAR_INVENTORY]->(user)
+      RETURN avatar
+      """
+    )
+  changeCurrentAvatar(avatarId: ID!): Avatar
+    @cypher(
+      statement: """
+      MATCH (avatar:Avatar {avatarId: $avatarId})
+      MATCH (user:User {userId: $auth.jwt.userId})
+      OPTIONAL MATCH ()-[old:AVATAR_USER]->(user)
+      MERGE (avatar)-[r:AVATAR_USER]->(user)
+      DELETE old
+      RETURN avatar
+      """
+    )
 
   ##avatars add avatar to collection##
   addAvatarToCollection(

@@ -308,7 +308,7 @@ const Table = ({
                     return (
                       <Row
                         headCells={headCells}
-                        key={index}
+                        key={row[id]}
                         row={row}
                         index={index}
                         isSelected={isSelected}
