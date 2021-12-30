@@ -32,10 +32,10 @@ const PictureTable = ({
         overflowY: maxHeight ? 'scroll' : null,
       }}
     >
-      {rows.map((row, index) => {
+      {rows.map((row) => {
         return (
           <PictureRow
-            key={index}
+            key={row[id]}
             row={row}
             headCells={headCells}
             id={id}

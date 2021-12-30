@@ -22,10 +22,10 @@ const CollectionTable = ({
 }) => {
   return (
     <Column style={{ flexWrap: 'wrap' }}>
-      {rows.map((row, index) => {
+      {rows.map((row) => {
         return (
           <Collection
-            key={index}
+            key={row[id]}
             row={row}
             subRows={subRows}
             headCells={headCells}
