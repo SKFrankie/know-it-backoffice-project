@@ -13,11 +13,12 @@ const GET_SYNONYM_ROLL_LISTS = gql`
     $filter: SynonymRollListWhere
   ) {
     synonymRollLists(
-      options: { limit: $limit, offset: $offset }
+      options: { limit: $limit, offset: $offset, sort: { createdAt: DESC } }
       where: $filter
     ) {
       synonymId
       synonyms
+      createdAt
     }
     synonymRollListsAggregate(where: $filter) {
       count
