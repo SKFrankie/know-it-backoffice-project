@@ -110,6 +110,7 @@ type Avatar
   collections: [AvatarCollection]
     @relationship(type: "AVATAR_COLLECTION_AVATAR", direction: OUT)
   ownedBy: [User] @relationship(type: "AVATARS_USER", direction: OUT)
+  createdAt: DateTime!
 }
 
 type AvatarCollection
@@ -129,6 +130,7 @@ type AvatarCollection
   endDate: DateTime
   avatars: [Avatar]!
     @relationship(type: "AVATAR_COLLECTION_AVATAR", direction: IN)
+  createdAt: DateTime!
 }
 
 ## Games
@@ -163,7 +165,7 @@ type Score
   user: User! @relationship(type: "SCORE_USER", direction: IN)
   game: Game! @relationship(type: "SCORE_GAME", direction: OUT)
   score: Int!
-  createdAt: DateTime!
+  createdAt: DateTime @timestamp(operations: [CREATE])
 }
 
 type SynonymRollList
@@ -178,6 +180,7 @@ type SynonymRollList
   ) {
   synonymId: ID! @id
   synonyms: [String!]!
+  createdAt: DateTime @timestamp(operations: [CREATE])
 }
 
 type FabVocabQuestion
@@ -196,6 +199,7 @@ type FabVocabQuestion
   wrongWords: [String!]!
   correctSentence: String!
   wrongSentences: [String!]!
+  createdAt: DateTime @timestamp(operations: [CREATE])
 }
 
 type AntonymHuntAssociation
@@ -211,6 +215,7 @@ type AntonymHuntAssociation
   antonymId: ID! @id
   rightWord: String!
   leftWord: String!
+  createdAt: DateTime @timestamp(operations: [CREATE])
 }
 
 type GrammarGeekQuestion
@@ -228,6 +233,7 @@ type GrammarGeekQuestion
   correctWord: String!
   wrongWords: [String!]!
   hint: String
+  createdAt: DateTime @timestamp(operations: [CREATE])
 }
 
 ## Gifts
@@ -246,6 +252,7 @@ type Gift
   day: Int! @unique
   quantity: Int!
   reward: RewardType!
+  updatedAt: DateTime @timestamp(operations: [UPDATE])
 }
 
 type Mutation {
