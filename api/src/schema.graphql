@@ -110,7 +110,7 @@ type Avatar
   collections: [AvatarCollection]
     @relationship(type: "AVATAR_COLLECTION_AVATAR", direction: OUT)
   ownedBy: [User] @relationship(type: "AVATARS_USER", direction: OUT)
-  createdAt: DateTime!
+  createdAt: DateTime @timestamp(operations: [CREATE])
 }
 
 type AvatarCollection
@@ -130,7 +130,7 @@ type AvatarCollection
   endDate: DateTime
   avatars: [Avatar]!
     @relationship(type: "AVATAR_COLLECTION_AVATAR", direction: IN)
-  createdAt: DateTime!
+  createdAt: DateTime @timestamp(operations: [CREATE])
 }
 
 ## Games
