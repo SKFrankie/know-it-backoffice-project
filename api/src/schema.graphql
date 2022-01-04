@@ -307,6 +307,16 @@ type Mutation {
       RETURN avatar
       """
     )
+  buyAvatar(avatarId: ID!, price: Int!): User
+    @cypher(
+      statement: """
+      MATCH (avatar:Avatar {avatarId: $avatarId})
+      MATCH (user:User {userId: $auth.jwt.userId})
+      MERGE (avatar)-[r:AVATAR_INVENTORY]->(user)
+      SET user.coins = user.coins - $price
+      RETURN user
+      """
+    )
   changeCurrentAvatar(avatarId: ID!): Avatar
     @cypher(
       statement: """
@@ -401,6 +411,48 @@ type Query {
       statement: """
       MATCH (u:SuperUser {userId: $auth.jwt.userId})
       RETURN u
+      """
+    )
+
+  ## Games
+  # Synonym Roll
+  randomSynonyms(limit: Int!): [SynonymRollList]
+    @cypher(
+      statement: """
+      MATCH (syn:SynonymRollList)
+      RETURN syn
+      ORDER BY rand()
+      LIMIT $limit;
+      """
+    )
+  # GrammarGeek
+  randomGrammarGeek(limit: Int!): [GrammarGeekQuestion]
+    @cypher(
+      statement: """
+      MATCH (gram:GrammarGeekQuestion)
+      RETURN gram
+      ORDER BY rand()
+      LIMIT $limit;
+      """
+    )
+  # Antonym Hunt
+  randomAntonyms(limit: Int!): [AntonymHuntAssociation]
+    @cypher(
+      statement: """
+      MATCH (ant:AntonymHuntAssociation)
+      RETURN ant
+      ORDER BY rand()
+      LIMIT $limit;
+      """
+    )
+  # Fab Vocab
+  randomFabVocab(limit: Int!): [FabVocabQuestion]
+    @cypher(
+      statement: """
+      MATCH (fab:FabVocabQuestion)
+      RETURN fab
+      ORDER BY rand()
+      LIMIT $limit;
       """
     )
 }
