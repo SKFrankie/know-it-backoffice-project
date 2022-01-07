@@ -100,7 +100,6 @@ type Avatar
         isAuthenticated: true
         roles: [ADMIN, EDITOR]
       }
-      { operations: [READ], isAuthenticated: true }
     ]
   ) {
   avatarId: ID! @id
@@ -121,7 +120,6 @@ type AvatarCollection
         isAuthenticated: true
         roles: [ADMIN, EDITOR]
       }
-      { operations: [READ], isAuthenticated: true }
     ]
   ) {
   avatarCollectionId: ID! @id
