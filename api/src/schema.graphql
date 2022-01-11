@@ -62,6 +62,11 @@ type User
   lastPremiumDate: DateTime
   lastSeen: DateTime
   createdAt: DateTime!
+
+  # ranking
+  points: Int @default(value: 0)
+  lastRankingDate: DateTime
+  lastRankingGiftDate: DateTime
 }
 
 # Admin users, who can add/remove/manage content

@@ -91,9 +91,9 @@ const users = {
         .run(
           `
         MATCH (u:User)
-        WHERE datetime('${getFirstDayOfWeek()}') < u.lastSeen AND  u.lastSeen < datetime('${getLastDayOfWeek()}')
+        WHERE datetime('${getFirstDayOfWeek()}') < u.lastRankingDate AND  u.lastRankingDate < datetime('${getLastDayOfWeek()}')
         RETURN u
-        ORDER BY u.stars DESC
+        ORDER BY u.points DESC
         SKIP apoc.convert.toInteger($skip)
         LIMIT  apoc.convert.toInteger($limit)
       `,
