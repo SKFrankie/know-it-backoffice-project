@@ -1,4 +1,11 @@
-import { googleVerify, login, signup, getCurrentDate } from './helpers'
+import {
+  googleVerify,
+  login,
+  signup,
+  getCurrentDate,
+  getFirstDayOfWeek,
+  getLastDayOfWeek,
+} from './helpers'
 
 const users = {
   Mutation: {
@@ -70,6 +77,33 @@ const users = {
         .then((res) => {
           session.close()
           return res.records[0].get('u').properties
+        })
+        .catch((err) => {
+          session.close()
+          throw new Error(err)
+        })
+    },
+  },
+  Query: {
+    rankingUsers: (obj, args, context) => {
+      const session = context.driver.session()
+      return session
+        .run(
+          `
+        MATCH (u:User)
+        WHERE datetime('${getFirstDayOfWeek()}') < u.lastSeen AND  u.lastSeen < datetime('${getLastDayOfWeek()}')
+        RETURN u
+        ORDER BY u.stars DESC
+        SKIP apoc.convert.toInteger($skip)
+        LIMIT  apoc.convert.toInteger($limit)
+      `,
+          { limit: args.limit || 50, skip: args.offset || 0 }
+        )
+        .then((res) => {
+          session.close()
+          return res.records.map((record) => {
+            return record.get('u').properties
+          })
         })
         .catch((err) => {
           session.close()

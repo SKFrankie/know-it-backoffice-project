@@ -13,6 +13,33 @@ const getCurrentDate = () => {
   return dateTime
 }
 
+const dateToString = (date) => {
+  const strDate =
+    date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
+  const strTime =
+    date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds()
+  const dateTime = strDate + 'T' + strTime + 'Z'
+  return dateTime
+}
+
+const getFirstDayOfWeek = () => {
+  const today = new Date()
+  const day = today.getDay()
+  const diff = today.getDate() - day + (day === 0 ? -6 : 1)
+  const date = new Date(today.setDate(diff))
+  console.log(date, 'is first day')
+  return dateToString(date)
+}
+
+const getLastDayOfWeek = () => {
+  const today = new Date()
+  const day = today.getDay()
+  const diff = today.getDate() - day + (day === 0 ? -6 : 1)
+  const date = new Date(today.setDate(diff + 6))
+  console.log(date, 'is last day')
+  return dateToString(date)
+}
+
 const signup = (obj, args, context, type = 'User', noPassword = false) => {
   if (!noPassword) {
     args.password = hashSync(args.password, 10)
@@ -90,4 +117,11 @@ const googleVerify = async (token) => {
   return payload
 }
 
-export { signup, login, getCurrentDate, googleVerify }
+export {
+  signup,
+  login,
+  getCurrentDate,
+  googleVerify,
+  getFirstDayOfWeek,
+  getLastDayOfWeek,
+}

@@ -453,4 +453,7 @@ type Query {
       LIMIT $limit;
       """
     )
+
+  # Ranking users weekly
+  rankingUsers(limit: Int, offset: Int): [User]
 }
