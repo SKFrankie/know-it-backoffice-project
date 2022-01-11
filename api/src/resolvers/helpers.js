@@ -27,7 +27,6 @@ const getFirstDayOfWeek = () => {
   const day = today.getDay()
   const diff = today.getDate() - day + (day === 0 ? -6 : 1)
   const date = new Date(today.setDate(diff))
-  console.log(date, 'is first day')
   return dateToString(date)
 }
 
@@ -36,7 +35,6 @@ const getLastDayOfWeek = () => {
   const day = today.getDay()
   const diff = today.getDate() - day + (day === 0 ? -6 : 1)
   const date = new Date(today.setDate(diff + 6))
-  console.log(date, 'is last day')
   return dateToString(date)
 }
 

@@ -396,6 +396,11 @@ type Mutation {
       RETURN s
       """
     )
+
+  # ranking
+
+  #Users and gifts management
+  updatePoints(points: Int): User
 }
 
 type Query {

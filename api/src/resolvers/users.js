@@ -83,6 +83,24 @@ const users = {
           throw new Error(err)
         })
     },
+    updatePoints: (obj, args, context) => {
+      const session = context.driver.session()
+      return session
+        .run(
+          `MATCH (u:User {userId: $auth.jwt.userId})
+          SET u += $args, u.lastRankingDate=datetime('${getCurrentDate()}')
+          RETURN u`,
+          { args, auth: context.auth }
+        )
+        .then((res) => {
+          session.close()
+          return res.records[0].get('u').properties
+        })
+        .catch((err) => {
+          session.close()
+          throw new Error(err)
+        })
+    },
   },
   Query: {
     rankingUsers: (obj, args, context) => {
