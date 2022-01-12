@@ -3,8 +3,8 @@ import {
   login,
   signup,
   getCurrentDate,
-  getFirstDayOfWeek,
-  getLastDayOfWeek,
+  getFirstDayOfLastWeek,
+  getLastDayOfLastWeek,
 } from './helpers'
 
 const users = {
@@ -128,12 +128,13 @@ const users = {
   },
   Query: {
     rankingUsers: (obj, args, context) => {
+      // get last week ranking
       const session = context.driver.session()
       return session
         .run(
           `
         MATCH (u:User)
-        WHERE datetime('${getFirstDayOfWeek()}') < u.lastRankingDate AND  u.lastRankingDate < datetime('${getLastDayOfWeek()}')
+        WHERE datetime('${getFirstDayOfLastWeek()}') < u.lastRankingDate AND  u.lastRankingDate < datetime('${getLastDayOfLastWeek()}')
         RETURN u
         ORDER BY u.points DESC
         SKIP apoc.convert.toInteger($skip)

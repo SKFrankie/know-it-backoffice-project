@@ -22,18 +22,18 @@ const dateToString = (date) => {
   return dateTime
 }
 
-const getFirstDayOfWeek = () => {
+const getFirstDayOfLastWeek = () => {
   const today = new Date()
   const day = today.getDay()
-  const diff = today.getDate() - day + (day === 0 ? -6 : 1)
+  const diff = today.getDate() - day + (day === 0 ? -6 : 1) - 7
   const date = new Date(today.setDate(diff))
   return dateToString(date)
 }
 
-const getLastDayOfWeek = () => {
+const getLastDayOfLastWeek = () => {
   const today = new Date()
   const day = today.getDay()
-  const diff = today.getDate() - day + (day === 0 ? -6 : 1)
+  const diff = today.getDate() - day + (day === 0 ? -6 : 1) - 7
   const date = new Date(today.setDate(diff + 6))
   return dateToString(date)
 }
@@ -120,6 +120,6 @@ export {
   login,
   getCurrentDate,
   googleVerify,
-  getFirstDayOfWeek,
-  getLastDayOfWeek,
+  getFirstDayOfLastWeek,
+  getLastDayOfLastWeek,
 }
