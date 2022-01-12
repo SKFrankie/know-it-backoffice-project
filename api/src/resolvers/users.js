@@ -101,6 +101,30 @@ const users = {
           throw new Error(err)
         })
     },
+    setUsersGifts(obj, args, context) {
+      const session = context.driver.session()
+      // when a users is logged in, we check if it's time to update people gifts for this week
+      return session
+        .run(
+          `MATCH (user:User)
+          MATCH (u:User {userId: $auth.jwt.userId})
+          OPTIONAL MATCH (first:User {userId: $args.first})
+          OPTIONAL MATCH (second:User {userId: $args.second})
+          OPTIONAL MATCH (third:User {userId: $args.third})
+          SET user.lastRankingGiftDate = datetime('${getCurrentDate()}'), user.rankingGift = 0
+          SET first.rankingGift = 1, second.rankingGift = 2, third.rankingGift = 3
+          RETURN u`,
+          { args, auth: context.auth }
+        )
+        .then((res) => {
+          session.close()
+          return res.records[0].get('u').properties
+        })
+        .catch((err) => {
+          session.close()
+          throw new Error(err)
+        })
+    },
   },
   Query: {
     rankingUsers: (obj, args, context) => {

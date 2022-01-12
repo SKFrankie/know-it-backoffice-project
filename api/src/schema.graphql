@@ -67,6 +67,7 @@ type User
   points: Int @default(value: 0)
   lastRankingDate: DateTime
   lastRankingGiftDate: DateTime
+  rankingGift: Int @default(value: 0) # 0: no gift, 1: first place gift , 2: second place gift, 3: third place gift
 }
 
 # Admin users, who can add/remove/manage content
@@ -274,6 +275,7 @@ type Mutation {
     coins: Int
     starPercentage: Int
     stars: Int
+    rankingGift: Int
   ): User
 
   # super users
@@ -401,6 +403,7 @@ type Mutation {
 
   #Users and gifts management
   updatePoints(points: Int): User
+  setUsersGifts(first: ID, second: ID, third: ID): User
 }
 
 type Query {
