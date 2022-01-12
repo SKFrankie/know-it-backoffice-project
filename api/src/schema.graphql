@@ -469,4 +469,10 @@ type Query {
 
   # Ranking users weekly
   rankingUsers(limit: Int, offset: Int): [User]
+  lastRankingGiftDate: DateTime
+    @cypher(
+      statement: """
+      MATCH (user:User) RETURN min(user.lastRankingGiftDate)
+      """
+    )
 }
