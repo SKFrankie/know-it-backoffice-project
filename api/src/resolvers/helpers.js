@@ -38,6 +38,22 @@ const getLastDayOfLastWeek = () => {
   return dateToString(date)
 }
 
+const getFirstDayOfWeek = () => {
+  const today = new Date()
+  const day = today.getDay()
+  const diff = today.getDate() - day + (day === 0 ? -6 : 1)
+  const date = new Date(today.setDate(diff))
+  return dateToString(date)
+}
+
+const getLastDayOfWeek = () => {
+  const today = new Date()
+  const day = today.getDay()
+  const diff = today.getDate() - day + (day === 0 ? -6 : 1)
+  const date = new Date(today.setDate(diff + 6))
+  return dateToString(date)
+}
+
 const signup = (obj, args, context, type = 'User', noPassword = false) => {
   if (!noPassword) {
     args.password = hashSync(args.password, 10) // remember if you change the 10 you have to do it everywhere maybe use a constant
@@ -122,4 +138,6 @@ export {
   googleVerify,
   getFirstDayOfLastWeek,
   getLastDayOfLastWeek,
+  getFirstDayOfWeek,
+  getLastDayOfWeek,
 }

@@ -480,7 +480,8 @@ type Query {
     )
 
   # Ranking users weekly
-  rankingUsers(limit: Int, offset: Int): [User]
+  rankingUsers(limit: Int, offset: Int): [User] # this one is to get winners of last week ranking
+  currentRankingUsers(limit: Int, offset: Int): [User] # this one is to get current ranking
   lastRankingGiftDate: DateTime
     @cypher(
       statement: """

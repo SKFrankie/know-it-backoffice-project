@@ -5,6 +5,8 @@ import {
   getCurrentDate,
   getFirstDayOfLastWeek,
   getLastDayOfLastWeek,
+  getFirstDayOfWeek,
+  getLastDayOfWeek,
 } from './helpers'
 import { hashSync } from 'bcrypt'
 
@@ -148,18 +150,41 @@ const users = {
   Query: {
     rankingUsers: (obj, args, context) => {
       // get last week ranking
+      return ranking(
+        obj,
+        args,
+        context,
+        getFirstDayOfLastWeek(),
+        getLastDayOfLastWeek()
+      )
+    },
+    currentRankingUsers(obj, args, context) {
+      return ranking(
+        obj,
+        args,
+        context,
+        getFirstDayOfWeek(),
+        getLastDayOfWeek()
+      )
+    }
+  },
+}
+
+const ranking = (obj, args, context, firstDay, lastDay) => {
       const session = context.driver.session()
+      const limit = args.limit ? `LIMIT apoc.convert.toInteger(${args.limit})` : ''
+      const skip = args.offset ? `SKIP apoc.convert.toInteger(${args.offset})` : ''
       return session
         .run(
           `
         MATCH (u:User)
-        WHERE datetime('${getFirstDayOfLastWeek()}') < u.lastRankingDate AND  u.lastRankingDate < datetime('${getLastDayOfLastWeek()}')
+        WHERE datetime('${firstDay}') < u.lastRankingDate AND  u.lastRankingDate < datetime('${lastDay}')
         RETURN u
         ORDER BY u.points DESC
-        SKIP apoc.convert.toInteger($skip)
-        LIMIT  apoc.convert.toInteger($limit)
+        ${skip}
+        ${limit}
       `,
-          { limit: args.limit || 50, skip: args.offset || 0 }
+          { args }
         )
         .then((res) => {
           session.close()
@@ -171,8 +196,7 @@ const users = {
           session.close()
           throw new Error(err)
         })
-    },
-  },
-}
+    }
+
 
 export default users
