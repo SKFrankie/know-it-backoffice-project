@@ -6,6 +6,7 @@ import {
   getFirstDayOfLastWeek,
   getLastDayOfLastWeek,
 } from './helpers'
+import { hashSync } from 'bcrypt'
 
 const users = {
   Mutation: {
@@ -47,6 +48,23 @@ const users = {
     },
     login: (obj, args, context) => {
       return login(obj, args, context, 'User')
+    },
+    changePassword: (obj, args, context) => {
+      const password = hashSync(args.newPassword, 10) // remember if you change the 10 you have to do it everywhere maybe use a constant
+      const session = context.driver.session()
+
+      return session
+        .run(
+          `MATCH (u:User {userId: $auth.jwt.userId})
+          SET u.password = $password
+          RETURN u LIMIT 1
+        `,
+          { args, auth: context.auth, password }
+        )
+        .then((res) => {
+          session.close()
+          return true
+        })
     },
     updateCurrentUser: (obj, args, context) => {
       const session = context.driver.session()

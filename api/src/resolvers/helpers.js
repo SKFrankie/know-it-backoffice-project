@@ -40,7 +40,7 @@ const getLastDayOfLastWeek = () => {
 
 const signup = (obj, args, context, type = 'User', noPassword = false) => {
   if (!noPassword) {
-    args.password = hashSync(args.password, 10)
+    args.password = hashSync(args.password, 10) // remember if you change the 10 you have to do it everywhere maybe use a constant
   }
   const session = context.driver.session()
 

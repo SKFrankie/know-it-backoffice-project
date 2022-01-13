@@ -264,6 +264,7 @@ type Mutation {
   # regular users
   signup(mail: String!, username: String!, password: String!): AuthToken
   login(mail: String!, password: String!): AuthToken
+  changePassword(newPassword: String!): Boolean
 
   googleSignup(token: String): AuthToken
   googleLogin(token: String): AuthToken
