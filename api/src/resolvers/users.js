@@ -25,6 +25,7 @@ const users = {
         stars: 0,
         starPercentage: 0,
         isPremium: false,
+        tpo: true,
         ...args,
       }
       const payload = await googleVerify(args.token).catch((err) => {

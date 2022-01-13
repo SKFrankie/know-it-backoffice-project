@@ -45,6 +45,7 @@ type User
   username: String!
   mail: String! @unique
   password: String @private
+  tpo : Boolean # third party auth (google etc...)
   coins: Int! @default(value: 0)
   stars: Int! @default(value: 0)
   inventory: [Avatar] @relationship(type: "AVATAR_INVENTORY", direction: IN)
