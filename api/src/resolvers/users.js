@@ -3,6 +3,7 @@ import {
   login,
   signup,
   getCurrentDate,
+  getEndingDate,
   getFirstDayOfLastWeek,
   getLastDayOfLastWeek,
   getFirstDayOfWeek,
@@ -17,7 +18,6 @@ const users = {
         coins: 0,
         stars: 0,
         starPercentage: 0,
-        isPremium: false,
         ...args,
       }
       return signup(obj, args, context, 'User')
@@ -27,7 +27,6 @@ const users = {
         coins: 0,
         stars: 0,
         starPercentage: 0,
-        isPremium: false,
         tpo: true,
         ...args,
       }
@@ -146,6 +145,25 @@ const users = {
           throw new Error(err)
         })
     },
+    getPremium (obj, args, context) {
+      const session = context.driver.session()
+      const endingDate = getEndingDate(args)
+      return session
+        .run(
+          `MATCH (u:User {userId: $auth.jwt.userId})
+        SET u.premiumEndingDate = datetime('${endingDate}')
+        RETURN u`,
+          { auth: context.auth }
+        )
+        .then((res) => {
+          session.close()
+          return true
+        })
+        .catch((err) => {
+          session.close()
+          throw new Error(err)
+        })
+    }
   },
   Query: {
     rankingUsers: (obj, args, context) => {

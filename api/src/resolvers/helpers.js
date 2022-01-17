@@ -13,6 +13,16 @@ const getCurrentDate = () => {
   return dateTime
 }
 
+const getEndingDate = ({ years = 0, months = 0, days = 0, hours = 0 }) => {
+  const today = new Date()
+  const year = today.getFullYear() + years
+  const month = today.getMonth() + months
+  const day = today.getDate() + days
+  const hour = today.getHours() + hours
+  const date = new Date(year, month, day, hour)
+  return dateToString(date)
+}
+
 const dateToString = (date) => {
   const strDate =
     date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
@@ -135,6 +145,7 @@ export {
   signup,
   login,
   getCurrentDate,
+  getEndingDate,
   googleVerify,
   getFirstDayOfLastWeek,
   getLastDayOfLastWeek,
