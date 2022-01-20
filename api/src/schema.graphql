@@ -270,6 +270,7 @@ type Mutation {
 
   updateCurrentUser(
     username: String
+    age: Int
     mail: String
     password: String
     coins: Int
