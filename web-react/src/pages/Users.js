@@ -27,7 +27,8 @@ const GET_USERS = gql`
       daysInArow
 
       createdAt
-      isPremium
+      points
+      premiumEndingDate
       coins
       stars
       currentAvatar {
@@ -63,7 +64,6 @@ const Users = () => {
       label: 'Age',
       type: FIELD_TYPES.NUMBER,
     },
-    { id: 'country', numeric: false, disablePadding: false, label: 'Country' },
     {
       id: 'lastSeen',
       numeric: true,
@@ -89,11 +89,18 @@ const Users = () => {
       type: FIELD_TYPES.DATE,
     },
     {
-      id: 'isPremium',
+      id: 'premiumEndingDate',
       numeric: true,
       disablePadding: false,
-      label: 'Is Premium',
-      type: FIELD_TYPES.BOOLEAN,
+      label: 'Premium ending date',
+      type: FIELD_TYPES.DATE,
+    },
+    {
+      id: 'points',
+      numeric: true,
+      disablePadding: false,
+      label: 'Points',
+      type: FIELD_TYPES.NUMBER,
     },
     {
       id: 'coins',
@@ -111,7 +118,7 @@ const Users = () => {
     },
     {
       id: 'currentAvatar',
-      child: 'name',
+      child: 'picture',
       numeric: false,
       disablePadding: false,
       label: 'Current Avatar',

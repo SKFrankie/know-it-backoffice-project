@@ -45,6 +45,7 @@ type User
   username: String!
   mail: String! @unique
   password: String @private
+  tpo : Boolean # third party auth (google etc...)
   coins: Int! @default(value: 0)
   stars: Int! @default(value: 0)
   inventory: [Avatar] @relationship(type: "AVATAR_INVENTORY", direction: IN)
@@ -53,15 +54,20 @@ type User
 
   starPercentage: Int! @default(value: 0)
   daysInArow: Int
-  isPremium: Boolean! @default(value: false)
   age: Int
   country: String
   actualMoneySpent: Int
   appRate: Rate
   appReview: String
-  lastPremiumDate: DateTime
+  premiumEndingDate: DateTime
   lastSeen: DateTime
   createdAt: DateTime!
+
+  # ranking
+  points: Int @default(value: 0)
+  lastRankingDate: DateTime
+  lastRankingGiftDate: DateTime
+  rankingGift: Int @default(value: 0) # 0: no gift, 1: first place gift , 2: second place gift, 3: third place gift
 }
 
 # Admin users, who can add/remove/manage content
@@ -100,7 +106,6 @@ type Avatar
         isAuthenticated: true
         roles: [ADMIN, EDITOR]
       }
-      { operations: [READ], isAuthenticated: true }
     ]
   ) {
   avatarId: ID! @id
@@ -121,7 +126,6 @@ type AvatarCollection
         isAuthenticated: true
         roles: [ADMIN, EDITOR]
       }
-      { operations: [READ], isAuthenticated: true }
     ]
   ) {
   avatarCollectionId: ID! @id
@@ -259,19 +263,23 @@ type Mutation {
   # regular users
   signup(mail: String!, username: String!, password: String!): AuthToken
   login(mail: String!, password: String!): AuthToken
+  changePassword(newPassword: String!): Boolean
 
   googleSignup(token: String): AuthToken
   googleLogin(token: String): AuthToken
 
   updateCurrentUser(
     username: String
+    age: Int
     mail: String
     password: String
-    isPremium: Boolean
     coins: Int
     starPercentage: Int
     stars: Int
+    rankingGift: Int
   ): User
+
+  getPremium(years: Int, months: Int, days: Int, hours: Int ): Boolean
 
   # super users
   forbiddenSuperSignup(
@@ -305,6 +313,16 @@ type Mutation {
       MATCH (user:User {userId: $auth.jwt.userId})
       MERGE (avatar)-[r:AVATAR_INVENTORY]->(user)
       RETURN avatar
+      """
+    )
+  buyAvatar(avatarId: ID!, price: Int!): User
+    @cypher(
+      statement: """
+      MATCH (avatar:Avatar {avatarId: $avatarId})
+      MATCH (user:User {userId: $auth.jwt.userId})
+      MERGE (avatar)-[r:AVATAR_INVENTORY]->(user)
+      SET user.coins = user.coins - $price
+      RETURN user
       """
     )
   changeCurrentAvatar(avatarId: ID!): Avatar
@@ -383,6 +401,22 @@ type Mutation {
       RETURN s
       """
     )
+
+  # ranking
+
+  #Users and gifts management
+  updatePoints(points: Int): User
+  setUsersGifts(first: ID, second: ID, third: ID): User
+  getAvatarGift(avatarId: ID!): User
+    @cypher(
+      statement: """
+      MATCH (avatar:Avatar {avatarId: $avatarId})
+      MATCH (user:User {userId: $auth.jwt.userId})
+      MERGE (avatar)-[r:AVATAR_INVENTORY]->(user)
+      SET user.rankingGift = 0
+      RETURN user
+      """
+    )
 }
 
 type Query {
@@ -401,6 +435,58 @@ type Query {
       statement: """
       MATCH (u:SuperUser {userId: $auth.jwt.userId})
       RETURN u
+      """
+    )
+
+  ## Games
+  # Synonym Roll
+  randomSynonyms(limit: Int!): [SynonymRollList]
+    @cypher(
+      statement: """
+      MATCH (syn:SynonymRollList)
+      RETURN syn
+      ORDER BY rand()
+      LIMIT $limit;
+      """
+    )
+  # GrammarGeek
+  randomGrammarGeek(limit: Int!): [GrammarGeekQuestion]
+    @cypher(
+      statement: """
+      MATCH (gram:GrammarGeekQuestion)
+      RETURN gram
+      ORDER BY rand()
+      LIMIT $limit;
+      """
+    )
+  # Antonym Hunt
+  randomAntonyms(limit: Int!): [AntonymHuntAssociation]
+    @cypher(
+      statement: """
+      MATCH (ant:AntonymHuntAssociation)
+      RETURN ant
+      ORDER BY rand()
+      LIMIT $limit;
+      """
+    )
+  # Fab Vocab
+  randomFabVocab(limit: Int!): [FabVocabQuestion]
+    @cypher(
+      statement: """
+      MATCH (fab:FabVocabQuestion)
+      RETURN fab
+      ORDER BY rand()
+      LIMIT $limit;
+      """
+    )
+
+  # Ranking users weekly
+  rankingUsers(limit: Int, offset: Int): [User] # this one is to get winners of last week ranking
+  currentRankingUsers(limit: Int, offset: Int): [User] # this one is to get current ranking
+  lastRankingGiftDate: DateTime
+    @cypher(
+      statement: """
+      MATCH (user:User) RETURN min(user.lastRankingGiftDate)
       """
     )
 }

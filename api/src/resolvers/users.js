@@ -1,4 +1,15 @@
-import { googleVerify, login, signup, getCurrentDate } from './helpers'
+import {
+  googleVerify,
+  login,
+  signup,
+  getCurrentDate,
+  getEndingDate,
+  getFirstDayOfLastWeek,
+  getLastDayOfLastWeek,
+  getFirstDayOfWeek,
+  getLastDayOfWeek,
+} from './helpers'
+import { hashSync } from 'bcrypt'
 
 const users = {
   Mutation: {
@@ -7,7 +18,6 @@ const users = {
         coins: 0,
         stars: 0,
         starPercentage: 0,
-        isPremium: false,
         ...args,
       }
       return signup(obj, args, context, 'User')
@@ -17,7 +27,7 @@ const users = {
         coins: 0,
         stars: 0,
         starPercentage: 0,
-        isPremium: false,
+        tpo: true,
         ...args,
       }
       const payload = await googleVerify(args.token).catch((err) => {
@@ -39,6 +49,23 @@ const users = {
     },
     login: (obj, args, context) => {
       return login(obj, args, context, 'User')
+    },
+    changePassword: (obj, args, context) => {
+      const password = hashSync(args.newPassword, 10) // remember if you change the 10 you have to do it everywhere maybe use a constant
+      const session = context.driver.session()
+
+      return session
+        .run(
+          `MATCH (u:User {userId: $auth.jwt.userId})
+          SET u.password = $password
+          RETURN u LIMIT 1
+        `,
+          { args, auth: context.auth, password }
+        )
+        .then((res) => {
+          session.close()
+          return true
+        })
     },
     updateCurrentUser: (obj, args, context) => {
       const session = context.driver.session()
@@ -76,7 +103,118 @@ const users = {
           throw new Error(err)
         })
     },
+    updatePoints: (obj, args, context) => {
+      const session = context.driver.session()
+      return session
+        .run(
+          `MATCH (u:User {userId: $auth.jwt.userId})
+          SET u += $args, u.lastRankingDate=datetime('${getCurrentDate()}')
+          RETURN u`,
+          { args, auth: context.auth }
+        )
+        .then((res) => {
+          session.close()
+          return res.records[0].get('u').properties
+        })
+        .catch((err) => {
+          session.close()
+          throw new Error(err)
+        })
+    },
+    setUsersGifts(obj, args, context) {
+      const session = context.driver.session()
+      // when a users is logged in, we check if it's time to update people gifts for this week
+      return session
+        .run(
+          `MATCH (user:User)
+          MATCH (u:User {userId: $auth.jwt.userId})
+          OPTIONAL MATCH (first:User {userId: $args.first})
+          OPTIONAL MATCH (second:User {userId: $args.second})
+          OPTIONAL MATCH (third:User {userId: $args.third})
+          SET user.lastRankingGiftDate = datetime('${getCurrentDate()}'), user.rankingGift = 0
+          SET first.rankingGift = 1, second.rankingGift = 2, third.rankingGift = 3
+          RETURN u`,
+          { args, auth: context.auth }
+        )
+        .then((res) => {
+          session.close()
+          return res.records[0].get('u').properties
+        })
+        .catch((err) => {
+          session.close()
+          throw new Error(err)
+        })
+    },
+    getPremium (obj, args, context) {
+      const session = context.driver.session()
+      const endingDate = getEndingDate(args)
+      return session
+        .run(
+          `MATCH (u:User {userId: $auth.jwt.userId})
+        SET u.premiumEndingDate = datetime('${endingDate}')
+        RETURN u`,
+          { auth: context.auth }
+        )
+        .then((res) => {
+          session.close()
+          return true
+        })
+        .catch((err) => {
+          session.close()
+          throw new Error(err)
+        })
+    }
+  },
+  Query: {
+    rankingUsers: (obj, args, context) => {
+      // get last week ranking
+      return ranking(
+        obj,
+        args,
+        context,
+        getFirstDayOfLastWeek(),
+        getLastDayOfLastWeek()
+      )
+    },
+    currentRankingUsers(obj, args, context) {
+      return ranking(
+        obj,
+        args,
+        context,
+        getFirstDayOfWeek(),
+        getLastDayOfWeek()
+      )
+    }
   },
 }
+
+const ranking = (obj, args, context, firstDay, lastDay) => {
+      const session = context.driver.session()
+      const limit = args.limit ? `LIMIT apoc.convert.toInteger(${args.limit})` : ''
+      const skip = args.offset ? `SKIP apoc.convert.toInteger(${args.offset})` : ''
+      return session
+        .run(
+          `
+        MATCH (u:User)
+        WHERE datetime('${firstDay}') < u.lastRankingDate AND  u.lastRankingDate < datetime('${lastDay}')
+        RETURN u
+        ORDER BY u.points DESC
+        ${skip}
+        ${limit}
+      `,
+          { args }
+        )
+        .then((res) => {
+          session.close()
+          return res.records.map((record) => {
+            return record.get('u').properties
+          })
+        })
+        .catch((err) => {
+          session.close()
+          throw new Error(err)
+        })
+    }
+
 
 export default users

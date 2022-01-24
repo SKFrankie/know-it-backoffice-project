@@ -13,9 +13,60 @@ const getCurrentDate = () => {
   return dateTime
 }
 
+const getEndingDate = ({ years = 0, months = 0, days = 0, hours = 0 }) => {
+  const today = new Date()
+  const year = today.getFullYear() + years
+  const month = today.getMonth() + months
+  const day = today.getDate() + days
+  const hour = today.getHours() + hours
+  const date = new Date(year, month, day, hour)
+  return dateToString(date)
+}
+
+const dateToString = (date) => {
+  const strDate =
+    date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
+  const strTime =
+    date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds()
+  const dateTime = strDate + 'T' + strTime + 'Z'
+  return dateTime
+}
+
+const getFirstDayOfLastWeek = () => {
+  const today = new Date()
+  const day = today.getDay()
+  const diff = today.getDate() - day + (day === 0 ? -6 : 1) - 7
+  const date = new Date(today.setDate(diff))
+  return dateToString(date)
+}
+
+const getLastDayOfLastWeek = () => {
+  const today = new Date()
+  const day = today.getDay()
+  const diff = today.getDate() - day + (day === 0 ? -6 : 1) - 7
+  const date = new Date(today.setDate(diff + 6))
+  return dateToString(date)
+}
+
+const getFirstDayOfWeek = () => {
+  const today = new Date()
+  const day = today.getDay()
+  const diff = today.getDate() - day + (day === 0 ? -6 : 1)
+  const date = new Date(today.setDate(diff))
+  return dateToString(date)
+}
+
+const getLastDayOfWeek = () => {
+  const today = new Date()
+  const day = today.getDay()
+  const diff = today.getDate() - day + (day === 0 ? -6 : 1)
+  const date = new Date(today.setDate(diff + 6))
+  return dateToString(date)
+}
+
 const signup = (obj, args, context, type = 'User', noPassword = false) => {
   if (!noPassword) {
-    args.password = hashSync(args.password, 10)
+    args.password = hashSync(args.password, 10) // remember if you change the 10 you have to do it everywhere maybe use a constant
   }
   const session = context.driver.session()
 
@@ -90,4 +141,14 @@ const googleVerify = async (token) => {
   return payload
 }
 
-export { signup, login, getCurrentDate, googleVerify }
+export {
+  signup,
+  login,
+  getCurrentDate,
+  getEndingDate,
+  googleVerify,
+  getFirstDayOfLastWeek,
+  getLastDayOfLastWeek,
+  getFirstDayOfWeek,
+  getLastDayOfWeek,
+}
