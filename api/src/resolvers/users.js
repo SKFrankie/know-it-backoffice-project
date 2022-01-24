@@ -197,7 +197,8 @@ const ranking = (obj, args, context, firstDay, lastDay) => {
           `
         MATCH (u:User)
         WHERE datetime('${firstDay}') < u.lastRankingDate AND  u.lastRankingDate < datetime('${lastDay}')
-        RETURN u
+        OPTIONAL MATCH (a:Avatar)-[:AVATAR_USER]->(u:User)
+        RETURN u,a
         ORDER BY u.points DESC
         ${skip}
         ${limit}
@@ -207,6 +208,11 @@ const ranking = (obj, args, context, firstDay, lastDay) => {
         .then((res) => {
           session.close()
           return res.records.map((record) => {
+            const user = record.get('u').properties
+            const avatar = record.get('a')
+            if (avatar) {
+              user.currentAvatar = avatar.properties
+            }
             return record.get('u').properties
           })
         })
