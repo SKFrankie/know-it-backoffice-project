@@ -5,6 +5,8 @@ const { ApolloServer } = require('apollo-server-lambda')
 import { Neo4jGraphQL } from '@neo4j/graphql'
 import resolvers from '../../resolvers'
 const neo4j = require('neo4j-driver')
+import { corsOptions } from '../../constants'
+import cors from 'cors'
 
 // This module is copied during the build step
 // Be sure to run `npm run build`
@@ -32,9 +34,7 @@ const neoSchema = new Neo4jGraphQL({
 
 const server = new ApolloServer({
   schema: neoSchema.schema,
-  cors: {
-    origin: 'https://www.know-it.bluepopcorn.fun',
-  },
+  cors: cors(corsOptions),
   context: ({ event }) => {
     return {
       driver,

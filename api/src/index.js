@@ -5,14 +5,11 @@ import neo4j from 'neo4j-driver'
 import { Neo4jGraphQL } from '@neo4j/graphql'
 import dotenv from 'dotenv'
 import resolvers from './resolvers'
+import { corsOptions } from './constants'
+import cors from 'cors'
 
 // set environment variables from .env
 dotenv.config()
-
-var corsOptions = {
-  origin: process.env.KNOW_IT_URL,
-  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-}
 
 const app = express()
 
@@ -51,9 +48,7 @@ neoSchema
   .assertIndexesAndConstraints({ options: { create: true } })
   .then(() => {
     const server = new ApolloServer({
-      cors: {
-        origin: 'https://www.know-it.bluepopcorn.fun',
-      },
+      cors: cors(corsOptions),
       context: ({ req }) => ({
         req,
         driver,
