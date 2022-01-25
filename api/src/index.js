@@ -5,13 +5,31 @@ import neo4j from 'neo4j-driver'
 import { Neo4jGraphQL } from '@neo4j/graphql'
 import dotenv from 'dotenv'
 import resolvers from './resolvers'
-import cors from 'cors'
 
 // set environment variables from .env
 dotenv.config()
+const whitelist = [
+  'https://checkout.stripe.com',
+  process.env.KNOW_IT_URL,
+  /*add new site to CORS authorized here*/
+]
 
 const app = express()
-app.use(cors())
+app.use((req, res, next) => {
+  const origin = whitelist.includes(`${req.headers.origin}`)
+    ? req.headers.origin
+    : 'null'
+  res.header('Access-Control-Allow-Origin', origin)
+  res.header(
+    'Access-Control-Allow-Headers',
+    `Content-Type, Accept, Authorization`
+  )
+  if (req.method === 'OPTIONS') {
+    res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET')
+    return res.end()
+  }
+  next()
+})
 
 /*
  * Create a Neo4j driver instance to connect to the database
@@ -62,7 +80,10 @@ neoSchema
     const path = process.env.GRAPHQL_SERVER_PATH || '/graphql'
     const host = process.env.GRAPHQL_SERVER_HOST || '0.0.0.0'
 
-    server.applyMiddleware({ app, path })
+    server.applyMiddleware({
+      app,
+      path,
+    })
 
     app.listen({ host, port, path }, () => {
       console.log(`GraphQL server ready at http://${host}:${port}${path}`)
