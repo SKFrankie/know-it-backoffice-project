@@ -47,7 +47,7 @@ neoSchema
   .then(() => {
     const server = new ApolloServer({
       cors: {
-        origin: 'https://www.know-it.bluepopcorn.fun/',
+        origin: 'https://www.know-it.bluepopcorn.fun',
       },
       context: ({ req }) => ({
         req,
