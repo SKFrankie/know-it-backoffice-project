@@ -66,4 +66,5 @@ const server = new ApolloServer({
   playground: true,
 })
 
-exports.handler = server.createHandler({ app })
+const path = process.env.GRAPHQL_SERVER_PATH || '/graphql'
+exports.handler = server.createHandler({ app, path })
