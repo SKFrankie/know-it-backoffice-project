@@ -32,6 +32,9 @@ const neoSchema = new Neo4jGraphQL({
 
 const server = new ApolloServer({
   schema: neoSchema.schema,
+  cors: {
+    origin: 'https://www.know-it.bluepopcorn.fun',
+  },
   context: ({ event }) => {
     return {
       driver,
