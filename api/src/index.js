@@ -1,6 +1,7 @@
 import { typeDefs } from './graphql-schema'
 import { ApolloServer } from 'apollo-server-express'
 import express from 'express'
+import cors from 'cors'
 import neo4j from 'neo4j-driver'
 import { Neo4jGraphQL } from '@neo4j/graphql'
 import dotenv from 'dotenv'
@@ -9,7 +10,13 @@ import resolvers from './resolvers'
 // set environment variables from .env
 dotenv.config()
 
+var corsOptions = {
+  origin: process.env.KNOW_IT_URL,
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+
 const app = express()
+app.use(cors(corsOptions))
 
 /*
  * Create a Neo4j driver instance to connect to the database
