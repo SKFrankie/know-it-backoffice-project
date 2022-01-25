@@ -12,6 +12,7 @@ import cors from 'cors'
 dotenv.config()
 
 const app = express()
+app.use(cors(corsOptions))
 
 /*
  * Create a Neo4j driver instance to connect to the database
