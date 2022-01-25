@@ -1,7 +1,6 @@
 import { typeDefs } from './graphql-schema'
 import { ApolloServer } from 'apollo-server-express'
 import express from 'express'
-import cors from 'cors'
 import neo4j from 'neo4j-driver'
 import { Neo4jGraphQL } from '@neo4j/graphql'
 import dotenv from 'dotenv'
@@ -16,7 +15,6 @@ var corsOptions = {
 }
 
 const app = express()
-app.use(cors(corsOptions))
 
 /*
  * Create a Neo4j driver instance to connect to the database
@@ -70,7 +68,7 @@ neoSchema
     const path = process.env.GRAPHQL_SERVER_PATH || '/graphql'
     const host = process.env.GRAPHQL_SERVER_HOST || '0.0.0.0'
 
-    server.applyMiddleware({ app, path })
+    server.applyMiddleware({ app, cors: corsOptions, path })
 
     app.listen({ host, port, path }, () => {
       console.log(`GraphQL server ready at http://${host}:${port}${path}`)
