@@ -66,4 +66,8 @@ const server = new ApolloServer({
   playground: true,
 })
 
+server.applyMiddleware({
+  app,
+})
+
 exports.handler = server.createHandler()
