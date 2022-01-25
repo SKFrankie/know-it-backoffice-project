@@ -5,21 +5,13 @@ import neo4j from 'neo4j-driver'
 import { Neo4jGraphQL } from '@neo4j/graphql'
 import dotenv from 'dotenv'
 import resolvers from './resolvers'
-import { corsOptions } from './constants'
 import cors from 'cors'
 
 // set environment variables from .env
 dotenv.config()
 
 const app = express()
-app.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', process.env.KNOW_IT_URL) // update to match the domain you will make the request from
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept'
-  )
-  next()
-})
+app.use(cors())
 
 /*
  * Create a Neo4j driver instance to connect to the database
@@ -56,7 +48,6 @@ neoSchema
   .assertIndexesAndConstraints({ options: { create: true } })
   .then(() => {
     const server = new ApolloServer({
-      cors: cors(corsOptions),
       context: ({ req }) => ({
         req,
         driver,
@@ -71,7 +62,7 @@ neoSchema
     const path = process.env.GRAPHQL_SERVER_PATH || '/graphql'
     const host = process.env.GRAPHQL_SERVER_HOST || '0.0.0.0'
 
-    server.applyMiddleware({ app, cors: corsOptions, path })
+    server.applyMiddleware({ app, path })
 
     app.listen({ host, port, path }, () => {
       console.log(`GraphQL server ready at http://${host}:${port}${path}`)
