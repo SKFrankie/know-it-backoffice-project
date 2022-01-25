@@ -5,29 +5,6 @@ const { ApolloServer } = require('apollo-server-lambda')
 import { Neo4jGraphQL } from '@neo4j/graphql'
 import resolvers from '../../resolvers'
 const neo4j = require('neo4j-driver')
-import express from 'express'
-const whitelist = [
-  'https://checkout.stripe.com',
-  process.env.KNOW_IT_URL,
-  /*add new site to CORS authorized here*/
-]
-
-const app = express()
-app.use((req, res, next) => {
-  const origin = whitelist.includes(`${req.headers.origin}`)
-    ? req.headers.origin
-    : 'null'
-  res.header('Access-Control-Allow-Origin', origin)
-  res.header(
-    'Access-Control-Allow-Headers',
-    `Content-Type, Accept, Authorization`
-  )
-  if (req.method === 'OPTIONS') {
-    res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET')
-    return res.end()
-  }
-  next()
-})
 
 // This module is copied during the build step
 // Be sure to run `npm run build`
@@ -66,5 +43,9 @@ const server = new ApolloServer({
   playground: true,
 })
 
-const path = process.env.GRAPHQL_SERVER_PATH || '/graphql'
-exports.handler = server.createHandler({ app, path })
+exports.handler = server.createHandler({
+  cors: {
+    origin: '*',
+    credentials: true,
+  },
+})
