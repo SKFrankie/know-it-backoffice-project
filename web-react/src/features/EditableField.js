@@ -174,6 +174,7 @@ const EditableField = ({
               doUpdate={doUpdate}
               updatedFields={updatedFields}
               editMode={editMode}
+              canZoom={true}
             />
           )
         default:
