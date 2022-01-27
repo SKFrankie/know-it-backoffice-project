@@ -17,7 +17,7 @@ const EditablePicture = ({
   const fallback =
     'https://res.cloudinary.com/dki7jzqlx/image/upload/v1638871483/default_frame.png'
   const zoomPicture = () => {
-    if (editMode || !canZoom) {
+    if (!canZoom) {
       return
     }
     setOpen(true)
@@ -39,7 +39,7 @@ const EditablePicture = ({
         style={{
           maxWidth: '7vw',
           maxHeight: '7vw',
-          cursor: !editMode && canZoom ? 'zoom-in' : 'inherit',
+          cursor: canZoom ? 'zoom-in' : 'inherit',
         }}
         src={
           column.id in updatedFields

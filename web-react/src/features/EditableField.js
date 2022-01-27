@@ -71,6 +71,7 @@ const EditableField = ({
               doUpdate={doUpdate}
               updatedFields={updatedFields}
               editMode={editMode}
+              canZoom={true}
             />
           )
         case FIELD_TYPES.NUMBER:
