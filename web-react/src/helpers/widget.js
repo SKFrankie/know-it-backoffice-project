@@ -1,3 +1,11 @@
+const makeSureItsHttps = (url) => {
+  if (url.startsWith('https')) {
+    return url
+  }
+  const httpsUrl = url.replace('http', 'https')
+  return httpsUrl
+}
+
 const openWidget = (onSuccess, folder) => {
   const widget = window.cloudinary.createUploadWidget(
     {
@@ -7,7 +15,8 @@ const openWidget = (onSuccess, folder) => {
     },
     (error, result) => {
       if (!error && result && result.event === 'success') {
-        onSuccess(result.info.url)
+        const url = makeSureItsHttps(result.info.url)
+        onSuccess(url)
       }
     }
   )
