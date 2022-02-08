@@ -125,7 +125,7 @@ const AvatarTable = ({
       }
     : useQuery(GET_AVATARS, {
         variables: {
-          limit: defaultLimit,
+          orderBy: { name: 'ASC' },
           filter: filter,
         },
         onError(error) {
