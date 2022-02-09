@@ -134,7 +134,7 @@ const AvatarCollectionTable = () => {
   const defaultLimit = 50
   const { data, loading, error, refetch } = useQuery(GET_AVATAR_COLLECTIONS, {
     variables: {
-      limit: defaultLimit,
+      orderBy: { name: 'ASC' },
     },
     onError(error) {
       console.log('get', error)
