@@ -1,9 +1,10 @@
-import React from 'react'
-import { useQuery, gql } from '@apollo/client'
+import React, { useContext } from 'react'
+import { useQuery, useMutation, gql } from '@apollo/client'
 import Loading from '../ui/Loading'
 import Table from '../features/Table'
 import { Box } from '@mui/material'
 import SearchBar from '../features/SearchBar'
+import { SuperUserContext } from '../context'
 import { FIELD_TYPES } from '../helpers/constants'
 
 const GET_USERS = gql`
@@ -42,11 +43,28 @@ const GET_USERS = gql`
   }
 `
 
+const DELETE_USER = gql`
+  mutation DeleteUser($userId: ID!) {
+    deleteUsers(where: { userId: $userId }) {
+      bookmark
+    }
+  }
+`
+
 const Users = () => {
+  const superCurrentUser = useContext(SuperUserContext)
   const defaultLimit = 50
   const { data, loading, error, refetch } = useQuery(GET_USERS, {
     variables: {
       limit: defaultLimit,
+    },
+  })
+  const [deleteUser] = useMutation(DELETE_USER, {
+    onCompleted() {
+      refetch()
+    },
+    onError(error) {
+      console.log(error)
     },
   })
   const columns = [
@@ -139,7 +157,9 @@ const Users = () => {
             refetch={refetch}
             count={data.usersAggregate.count}
             limit={defaultLimit}
-            hasCheckbox={false}
+            hasCheckbox={superCurrentUser.rights === 'ADMIN'}
+            deleteItem={deleteUser}
+            id={'userId'}
           />
         )}
       </Box>
