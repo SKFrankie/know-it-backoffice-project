@@ -6,7 +6,7 @@ import { Box } from '@mui/material'
 import SearchBar from '../features/SearchBar'
 import { SuperUserContext } from '../context'
 import { FIELD_TYPES } from '../helpers/constants'
-// import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium'
+import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium'
 import AddPremiumUsers from '../features/modals/AddPremiumUsers'
 
 const GET_USERS = gql`
@@ -147,13 +147,12 @@ const Users = () => {
   ]
 
   const [openPremium, setOpenPremium] = useState(false)
-  // const [selectedUsers, setSelectedUsers] = useState([])
-  const selectedUsers = []
+  const [selectedUsers, setSelectedUsers] = useState([])
 
-  // const handleOpenPremium = (selected) => {
-  //   setSelectedUsers(selected)
-  //   setOpenPremium(true)
-  // }
+  const handleOpenPremium = (selected) => {
+    setSelectedUsers(selected)
+    setOpenPremium(true)
+  }
 
   return (
     <>
@@ -162,14 +161,14 @@ const Users = () => {
         {loading && <Loading />} {error && 'error'}
         {data && (
           <Table
-            // toolbarOptions={[
-            //   {
-            //     icon: <WorkspacePremiumIcon />,
-            //     onClick: handleOpenPremium,
-            //     label: 'Set these users as premium',
-            //     disabled: !superCurrentUser.rights === 'ADMIN',
-            //   },
-            // ]}
+            toolbarOptions={[
+              {
+                icon: <WorkspacePremiumIcon />,
+                onClick: handleOpenPremium,
+                label: 'Set these users as premium',
+                disabled: !superCurrentUser.rights === 'ADMIN',
+              },
+            ]}
             tableName="Users"
             headCells={columns}
             rows={data.users}
