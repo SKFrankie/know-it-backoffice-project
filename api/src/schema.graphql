@@ -406,7 +406,18 @@ type Mutation {
     )
 
   ## Games
-
+  addModulesToGrammarGeek(
+    moduleIds: [ID]
+    grammarGeekId: ID!
+  ): GrammarGeekQuestion
+    @cypher(
+      statement: """
+      MATCH (module:GrammarModule) WHERE module.grammarModuleId IN $moduleIds
+      MATCH (grammarGeek:GrammarGeekQuestion {grammarId: $grammarGeekId})
+      MERGE (module)-[r:GRAMMAR_MODULE_GRAMMAR_GEEK]->(grammarGeek)
+      RETURN grammarGeek
+      """
+    )
   addNewScore(gameName: GameName!, score: Int!): Score
     @cypher(
       statement: """

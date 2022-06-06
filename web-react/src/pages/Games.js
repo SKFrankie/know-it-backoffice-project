@@ -63,6 +63,7 @@ const Game = ({
   refetch = () => {},
   empty = false,
   QUERY,
+  customMutation = null,
 }) => {
   const [timer, setTimer] = React.useState(0)
   const [isEditing, setIsEditing] = React.useState(false)
@@ -157,6 +158,7 @@ const Game = ({
             columns={columns}
             QUERY={QUERY}
             refetch={refetch}
+            customMutation={customMutation}
           />
         )}
       </Flex>

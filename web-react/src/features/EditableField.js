@@ -20,7 +20,6 @@ const EditableField = ({
   const multilineValue =
     column.id in updatedFields ? updatedFields[column.id] : defaultValue || ''
   const doUpdate = (field, value) => {
-    console.log('doUpdate', field, value)
     setUpdatedFields({ ...updatedFields, [field]: value })
   }
   switch (editMode) {
@@ -237,6 +236,31 @@ const EditableField = ({
             <Typography {...props} color="textSecondary">
               {defaultValue.substring(0, 20)}...
             </Typography>
+          )
+        case FIELD_TYPES.AUTOCOMPLETE_MULTIPLE:
+          return (
+            <Autocomplete
+              multiple
+              disabled
+              id={column.id}
+              options={column.options || []}
+              value={column.valuesCallback(
+                column.id in updatedFields
+                  ? updatedFields[column.id]
+                  : defaultValue || []
+              )}
+              onChange={(event, newValue) => {
+                doUpdate(column.id, newValue)
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  variant="standard"
+                  label={column.label}
+                />
+              )}
+              {...props}
+            />
           )
         default:
           return (

@@ -15,6 +15,17 @@ const GET_GRAMMAR_MODULES = gql`
   }
 `
 
+const ADD_MODULES_TO_GRAMMAR_GEEK = gql`
+  mutation AddModulesToGrammarGeek($grammarGeekId: ID!, $moduleIds: [ID]) {
+    addModulesToGrammarGeek(
+      grammarGeekId: $grammarGeekId
+      moduleIds: $moduleIds
+    ) {
+      grammarId
+    }
+  }
+`
+
 const GET_GRAMMAR_GEEK_QUESTIONS = gql`
   query GrammarGeekQuestions(
     $limit: Int
@@ -33,6 +44,7 @@ const GET_GRAMMAR_GEEK_QUESTIONS = gql`
       hint
       modules {
         name
+        grammarModuleId
       }
     }
     grammarGeekQuestionsAggregate(where: $filter) {
@@ -48,7 +60,7 @@ const SET_GRAMMAR_GEEK_QUESTIONS = gql`
     $correctWord: String
     $wrongWords: [String!]
     $hint: String
-    $modules: [GrammarModule]
+    $moduleIds: [ID]
   ) {
     updateGrammarGeekQuestions(
       where: { grammarId: $grammarId }
@@ -57,12 +69,14 @@ const SET_GRAMMAR_GEEK_QUESTIONS = gql`
         correctWord: $correctWord
         wrongWords: $wrongWords
         hint: $hint
-        modules: $modules
       }
     ) {
       grammarGeekQuestions {
         grammarId
       }
+    }
+    addModulesToGrammarGeek(grammarGeekId: $grammarId, moduleIds: $moduleIds) {
+      grammarId
     }
   }
 `
@@ -80,7 +94,6 @@ const CREATE_GRAMMAR_GEEK_QUESTIONS = gql`
     $sentence: String!
     $wrongWords: [String!]!
     $hint: String
-    $modules: [GrammarModule]
   ) {
     createGrammarGeekQuestions(
       input: {
@@ -88,7 +101,6 @@ const CREATE_GRAMMAR_GEEK_QUESTIONS = gql`
         correctWord: $correctWord
         wrongWords: $wrongWords
         hint: $hint
-        modules: $modules
       }
     ) {
       grammarGeekQuestions {
@@ -101,11 +113,14 @@ const CREATE_GRAMMAR_GEEK_QUESTIONS = gql`
 const GrammarGeek = () => {
   const superCurrentUser = useContext(SuperUserContext)
   const defaultLimit = 50
-  const { data: grammarModules } = useQuery(GET_GRAMMAR_MODULES, {
-    onError(error) {
-      console.log('get', error)
-    },
-  })
+  const { data: grammarModules, refetch: refetchGrammarModules } = useQuery(
+    GET_GRAMMAR_MODULES,
+    {
+      onError(error) {
+        console.log('get', error)
+      },
+    }
+  )
   const { data, loading, error, refetch } = useQuery(
     GET_GRAMMAR_GEEK_QUESTIONS,
     {
@@ -125,6 +140,13 @@ const GrammarGeek = () => {
       console.log(error)
     },
   })
+
+  const setGrammarGeekQuestionsCustom = async ({ variables }) => {
+    const { modules, ...updatedVariables } = variables
+    const moduleIds = modules?.map((module) => module.value) || []
+    console.log('updatedVariables', updatedVariables, moduleIds)
+    setGrammarGeekQuestions({ variables: { ...updatedVariables, moduleIds } })
+  }
   const [deleteGrammarGeekQuestions] = useMutation(
     DELETE_GRAMMAR_GEEK_QUESTIONS,
     {
@@ -136,6 +158,56 @@ const GrammarGeek = () => {
       },
     }
   )
+
+  const [createNew] = useMutation(CREATE_GRAMMAR_GEEK_QUESTIONS, {
+    onCompleted() {
+      refetch()
+    },
+    onError(error) {
+      console.log(error)
+    },
+  })
+  const [addModules] = useMutation(ADD_MODULES_TO_GRAMMAR_GEEK, {
+    onError(error) {
+      console.log('add modules to grammar geek error', error)
+    },
+  })
+  const createMutation = async (variables, onCompleted, setError) => {
+    const { sentence, correctWord, wrongWords, hint, modules } = variables
+    const moduleIds = modules?.map((module) => module.value) || []
+    const createNewResponse = await createNew({
+      variables: { sentence, correctWord, wrongWords, hint },
+      onError(error) {
+        console.log(error)
+      },
+    })
+    if (createNewResponse?.data) {
+      onCompleted(createNewResponse.data)
+    } else {
+      setError('Error, please try again')
+      return
+    }
+
+    const {
+      grammarId: grammarGeekId,
+    } = createNewResponse.data.createGrammarGeekQuestions.grammarGeekQuestions[0]
+    const addModulesToGrammarGeek = await addModules({
+      variables: { grammarGeekId, moduleIds: moduleIds || [] },
+      onComplete() {
+        refetchGrammarModules()
+      },
+      onError(error) {
+        console.log(error)
+      },
+    })
+    if (addModulesToGrammarGeek?.data) {
+      onCompleted(addModulesToGrammarGeek.data)
+    } else {
+      setError(
+        'Grammar Geek question has been created but something went wrong with the modules'
+      )
+    }
+  }
 
   const columns = useMemo(
     () => [
@@ -180,6 +252,12 @@ const GrammarGeek = () => {
             label: module.name,
             value: module.grammarModuleId,
           })) || [],
+        valuesCallback: (values) => {
+          return values.map((module) => ({
+            label: module.name,
+            value: module.grammarModuleId,
+          }))
+        },
       },
     ],
     [grammarModules]
@@ -193,7 +271,8 @@ const GrammarGeek = () => {
       columns={columns}
       refetch={refetch}
       createText="Create new grammar geek question"
-      QUERY={CREATE_GRAMMAR_GEEK_QUESTIONS}
+      // QUERY={CREATE_GRAMMAR_GEEK_QUESTIONS}
+      customMutation={createMutation}
     >
       {loading && <Loading />} {error && 'error'}
       {data && (
@@ -206,7 +285,7 @@ const GrammarGeek = () => {
           limit={defaultLimit}
           hasCheckbox={allowed.includes(superCurrentUser.rights)}
           canEdit={allowed.includes(superCurrentUser.rights)}
-          setFields={setGrammarGeekQuestions}
+          setFields={setGrammarGeekQuestionsCustom}
           deleteItem={deleteGrammarGeekQuestions}
           id={'grammarId'}
         />
