@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useState, useContext } from 'react'
 import { useQuery, useMutation, gql } from '@apollo/client'
 import Loading from '../ui/Loading'
 import Table from '../features/Table'
@@ -6,7 +6,8 @@ import { Box } from '@mui/material'
 import SearchBar from '../features/SearchBar'
 import { SuperUserContext } from '../context'
 import { FIELD_TYPES } from '../helpers/constants'
-import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium'
+// import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium'
+import AddPremiumUsers from '../features/modals/AddPremiumUsers'
 
 const GET_USERS = gql`
   query Users(
@@ -144,6 +145,16 @@ const Users = () => {
       type: FIELD_TYPES.PICTURE,
     },
   ]
+
+  const [openPremium, setOpenPremium] = useState(false)
+  // const [selectedUsers, setSelectedUsers] = useState([])
+  const selectedUsers = []
+
+  // const handleOpenPremium = (selected) => {
+  //   setSelectedUsers(selected)
+  //   setOpenPremium(true)
+  // }
+
   return (
     <>
       <Box>
@@ -151,14 +162,14 @@ const Users = () => {
         {loading && <Loading />} {error && 'error'}
         {data && (
           <Table
-            toolbarOptions={[
-              {
-                icon: <WorkspacePremiumIcon />,
-                onClick: (selected) => console.log('premium', selected),
-                label: 'Set these users as premium',
-                disabled: !superCurrentUser.rights === 'ADMIN',
-              },
-            ]}
+            // toolbarOptions={[
+            //   {
+            //     icon: <WorkspacePremiumIcon />,
+            //     onClick: handleOpenPremium,
+            //     label: 'Set these users as premium',
+            //     disabled: !superCurrentUser.rights === 'ADMIN',
+            //   },
+            // ]}
             tableName="Users"
             headCells={columns}
             rows={data.users}
@@ -172,6 +183,12 @@ const Users = () => {
           />
         )}
       </Box>
+      <AddPremiumUsers
+        open={openPremium}
+        setOpen={setOpenPremium}
+        selectedUsers={selectedUsers}
+        refetch={refetch}
+      />
     </>
   )
 }
