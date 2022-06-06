@@ -45,7 +45,7 @@ type User
   username: String!
   mail: String! @unique
   password: String @private
-  tpo : Boolean # third party auth (google etc...)
+  tpo: Boolean # third party auth (google etc...)
   coins: Int! @default(value: 0)
   stars: Int! @default(value: 0)
   inventory: [Avatar] @relationship(type: "AVATAR_INVENTORY", direction: IN)
@@ -279,7 +279,7 @@ type Mutation {
     rankingGift: Int
   ): User
 
-  getPremium(years: Int, months: Int, days: Int, hours: Int ): Boolean
+  getPremium(years: Int, months: Int, days: Int, hours: Int): Boolean
 
   # super users
   forbiddenSuperSignup(
@@ -301,6 +301,9 @@ type Mutation {
 
   # returns authentication url
   inviteSuperUser(mail: String!, rights: Right!): String
+
+  # sends mail to the user to reset his password
+  resetPassword(mail: String!): String
 
   #Users and gifts management
   updateLastSeen(daysInArow: Int): User

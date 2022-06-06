@@ -1,3 +1,4 @@
+import jwt from 'jsonwebtoken'
 import {
   googleVerify,
   login,
@@ -145,7 +146,7 @@ const users = {
           throw new Error(err)
         })
     },
-    getPremium (obj, args, context) {
+    getPremium(obj, args, context) {
       const session = context.driver.session()
       const endingDate = getEndingDate(args)
       return session
@@ -163,7 +164,31 @@ const users = {
           session.close()
           throw new Error(err)
         })
-    }
+    },
+    resetPassword: (obj, args, context) => {
+      const session = context.driver.session()
+
+      return session
+        .run(`MATCH (u:User) WHERE u.mail="jimmytoken@mail.fr" RETURN u`, {
+          mail: args.mail,
+        })
+        .then((res) => {
+          session.close()
+          const { userId, mail } = res.records[0].get('u').properties
+          console.log('uid', userId)
+          console.log('mail', mail)
+          const token = jwt.sign({ userId, mail }, process.env.JWT_SECRET, {
+            expiresIn: '3d',
+          })
+          const url = process.env.KNOW_IT_URL + '/reset-password/' + token
+          console.log('token', url)
+          return token
+        })
+        .catch((err) => {
+          session.close()
+          throw new Error(err)
+        })
+    },
   },
   Query: {
     rankingUsers: (obj, args, context) => {
@@ -184,17 +209,17 @@ const users = {
         getFirstDayOfWeek(),
         getLastDayOfWeek()
       )
-    }
+    },
   },
 }
 
 const ranking = (obj, args, context, firstDay, lastDay) => {
-      const session = context.driver.session()
-      const limit = args.limit ? `LIMIT apoc.convert.toInteger(${args.limit})` : ''
-      const skip = args.offset ? `SKIP apoc.convert.toInteger(${args.offset})` : ''
-      return session
-        .run(
-          `
+  const session = context.driver.session()
+  const limit = args.limit ? `LIMIT apoc.convert.toInteger(${args.limit})` : ''
+  const skip = args.offset ? `SKIP apoc.convert.toInteger(${args.offset})` : ''
+  return session
+    .run(
+      `
         MATCH (u:User)
         WHERE datetime('${firstDay}') < u.lastRankingDate AND  u.lastRankingDate < datetime('${lastDay}')
         OPTIONAL MATCH (a:Avatar)-[:AVATAR_USER]->(u:User)
@@ -203,24 +228,23 @@ const ranking = (obj, args, context, firstDay, lastDay) => {
         ${skip}
         ${limit}
       `,
-          { args }
-        )
-        .then((res) => {
-          session.close()
-          return res.records.map((record) => {
-            const user = record.get('u').properties
-            const avatar = record.get('a')
-            if (avatar) {
-              user.currentAvatar = avatar.properties
-            }
-            return record.get('u').properties
-          })
-        })
-        .catch((err) => {
-          session.close()
-          throw new Error(err)
-        })
-    }
-
+      { args }
+    )
+    .then((res) => {
+      session.close()
+      return res.records.map((record) => {
+        const user = record.get('u').properties
+        const avatar = record.get('a')
+        if (avatar) {
+          user.currentAvatar = avatar.properties
+        }
+        return record.get('u').properties
+      })
+    })
+    .catch((err) => {
+      session.close()
+      throw new Error(err)
+    })
+}
 
 export default users
