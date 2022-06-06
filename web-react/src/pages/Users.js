@@ -6,6 +6,7 @@ import { Box } from '@mui/material'
 import SearchBar from '../features/SearchBar'
 import { SuperUserContext } from '../context'
 import { FIELD_TYPES } from '../helpers/constants'
+import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium'
 
 const GET_USERS = gql`
   query Users(
@@ -150,6 +151,14 @@ const Users = () => {
         {loading && <Loading />} {error && 'error'}
         {data && (
           <Table
+            toolbarOptions={[
+              {
+                icon: <WorkspacePremiumIcon />,
+                onClick: (selected) => console.log('premium', selected),
+                label: 'Set these users as premium',
+                disabled: !superCurrentUser.rights === 'ADMIN',
+              },
+            ]}
             tableName="Users"
             headCells={columns}
             rows={data.users}

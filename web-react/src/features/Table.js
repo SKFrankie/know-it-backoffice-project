@@ -107,7 +107,13 @@ EnhancedTableHead.propTypes = {
 }
 
 const EnhancedTableToolbar = (props) => {
-  const { numSelected, tableName, deleteItems } = props
+  const {
+    numSelected,
+    tableName,
+    deleteItems,
+    toolbarOptions,
+    selected,
+  } = props
   const [areYouSure, setAreYouSure] = useState(false)
 
   return (
@@ -145,15 +151,31 @@ const EnhancedTableToolbar = (props) => {
       )}
 
       {numSelected > 0 && (
-        <Tooltip title="Delete">
-          <IconButton
-            onClick={() => {
-              setAreYouSure(true)
-            }}
-          >
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
+        <>
+          <Tooltip title="Delete">
+            <IconButton
+              onClick={() => {
+                setAreYouSure(true)
+              }}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
+          {toolbarOptions?.map((option) => (
+            <Tooltip
+              sx={{ display: option.disabled ? 'none' : 'flex' }}
+              key={option.label}
+              title={option.label}
+            >
+              <IconButton
+                aria-label={option.label}
+                onClick={() => option.onClick(selected)}
+              >
+                {option.icon}
+              </IconButton>
+            </Tooltip>
+          ))}
+        </>
       )}
       <AreYouSure
         open={areYouSure}
@@ -169,9 +191,12 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
   tableName: PropTypes.string.isRequired,
   deleteItems: PropTypes.func,
+  toolbarOptions: PropTypes.array,
+  selected: PropTypes.array,
 }
 
 const Table = ({
+  toolbarOptions,
   headCells = [],
   rows = [],
   tableName = '',
@@ -287,6 +312,8 @@ const Table = ({
             numSelected={selected.length}
             tableName={tableName}
             deleteItems={deleteSelected}
+            toolbarOptions={toolbarOptions}
+            selected={selected}
           />
           <TableContainer>
             <MUITable sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
