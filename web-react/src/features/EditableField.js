@@ -1,10 +1,12 @@
 import { Autocomplete, TextField, Typography } from '@mui/material'
-import React from 'react'
+import React, { useState } from 'react'
 import { FIELD_TYPES } from '../helpers/constants'
 import dateToString from '../helpers/dateToString'
 import { Input, SelectWithItems } from '../ui/Form'
 import EditablePicture from './EditablePicture'
 import ToggleAvatarArray from './ToggleAvatarArray'
+import Modal from '../ui/Modal'
+import Button from '../ui/Button'
 
 const EditableField = ({
   editMode = false,
@@ -14,6 +16,9 @@ const EditableField = ({
   defaultValue = null,
   ...props
 }) => {
+  const [openInputMultiline, setOpenInputMultiline] = useState(false)
+  const multilineValue =
+    column.id in updatedFields ? updatedFields[column.id] : defaultValue || ''
   const doUpdate = (field, value) => {
     setUpdatedFields({ ...updatedFields, [field]: value })
   }
@@ -119,6 +124,30 @@ const EditableField = ({
               defaultValue={defaultValue}
             />
           )
+        case FIELD_TYPES.MULTILINE:
+          return (
+            <>
+              <Button onClick={() => setOpenInputMultiline(true)}>
+                Edit {multilineValue.substring(0, 20)}...
+              </Button>
+              <Modal open={openInputMultiline} setOpen={setOpenInputMultiline}>
+                <Input
+                  multiline
+                  onChange={(e) => {
+                    doUpdate(column.id, e.target.value)
+                  }}
+                  value={
+                    column.id in updatedFields
+                      ? updatedFields[column.id]
+                      : defaultValue || ''
+                  }
+                  label={column.label}
+                  sx={{ width: '100%' }}
+                  {...props}
+                />
+              </Modal>
+            </>
+          )
 
         default:
           return (
@@ -177,6 +206,12 @@ const EditableField = ({
               editMode={editMode}
               canZoom={true}
             />
+          )
+        case FIELD_TYPES.MULTILINE:
+          return (
+            <Typography {...props} color="textSecondary">
+              {defaultValue.substring(0, 20)}...
+            </Typography>
           )
         default:
           return (

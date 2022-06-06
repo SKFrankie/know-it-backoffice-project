@@ -3,7 +3,7 @@ import { useQuery, gql, useMutation } from '@apollo/client'
 import Loading from '../ui/Loading'
 import Table from '../features/Table'
 import { SuperUserContext } from '../context'
-// import { FIELD_TYPES } from '../helpers/constants'
+import { FIELD_TYPES } from '../helpers/constants'
 import SearchBar from '../features/SearchBar'
 import { Box } from '@mui/material'
 import CreateNew from '../features/modals/CreateNew'
@@ -105,6 +105,7 @@ const GrammarModule = () => {
       label: 'Text',
       editable: true,
       required: false,
+      type: FIELD_TYPES.MULTILINE,
     },
   ]
 
