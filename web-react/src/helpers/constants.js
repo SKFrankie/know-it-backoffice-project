@@ -55,6 +55,13 @@ const SECTIONS = [
     description: 'Manage gift calendar',
     icon: RedeemIcon,
   },
+  {
+    label: 'Grammar Modules',
+    longName: 'Grammar Modules',
+    href: '/grammar-modules',
+    description: 'Manage grammar modules',
+    icon: AbcIcon,
+  },
 ]
 const GAMES = [
   {

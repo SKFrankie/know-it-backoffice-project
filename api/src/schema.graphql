@@ -172,6 +172,24 @@ type Score
   createdAt: DateTime @timestamp(operations: [CREATE])
 }
 
+type GrammarModule
+  @auth(
+    rules: [
+      {
+        operations: [CREATE, UPDATE, DELETE, CONNECT, DISCONNECT]
+        isAuthenticated: true
+        roles: [ADMIN, EDITOR]
+      }
+    ]
+  ) {
+  grammarModuleId: ID! @id
+  name: String!
+  text: String
+  grammarGeekQuestions: [GrammarGeekQuestion]
+    @relationship(type: "GRAMMAR_MODULE_GRAMMAR_GEEK", direction: OUT)
+  createdAt: DateTime @timestamp(operations: [CREATE])
+}
+
 type SynonymRollList
   @auth(
     rules: [
@@ -237,6 +255,8 @@ type GrammarGeekQuestion
   correctWord: String!
   wrongWords: [String!]!
   hint: String
+  modules: [GrammarModule]
+    @relationship(type: "GRAMMAR_MODULE_GRAMMAR_GEEK", direction: IN)
   createdAt: DateTime @timestamp(operations: [CREATE])
 }
 
