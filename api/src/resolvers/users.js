@@ -12,6 +12,8 @@ import {
 } from './helpers'
 import { hashSync } from 'bcrypt'
 
+import { sendResetPassword } from '../nodeMailer'
+
 const users = {
   Mutation: {
     signup: (obj, args, context) => {
@@ -169,19 +171,23 @@ const users = {
       const session = context.driver.session()
 
       return session
-        .run(`MATCH (u:User) WHERE u.mail="jimmytoken@mail.fr" RETURN u`, {
+        .run(`MATCH (u:User) WHERE u.mail=$mail RETURN u`, {
           mail: args.mail,
         })
         .then((res) => {
           session.close()
-          const { userId, mail } = res.records[0].get('u').properties
-          console.log('uid', userId)
-          console.log('mail', mail)
+          const { userId, mail, tpo } = res.records[0].get('u').properties
+          // we don't let the user reset his password if he's a tpo (meaning he signed up with google etc ...)
+          if (tpo) {
+            throw new Error(
+              'You can not reset your password if you signed up with google'
+            )
+          }
           const token = jwt.sign({ userId, mail }, process.env.JWT_SECRET, {
             expiresIn: '3d',
           })
           const url = process.env.KNOW_IT_URL + '/reset-password/' + token
-          console.log('token', url)
+          sendResetPassword(mail, url)
           return token
         })
         .catch((err) => {
