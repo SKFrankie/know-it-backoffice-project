@@ -157,7 +157,10 @@ const EditableField = ({
               value={
                 column.id in updatedFields
                   ? updatedFields[column.id]
-                  : defaultValue || []
+                  : column?.options.length
+                  ? column.valuesCallback(defaultValue, column.options || []) ||
+                    []
+                  : []
               }
               onChange={(event, newValue) => {
                 doUpdate(column.id, newValue)
@@ -244,11 +247,14 @@ const EditableField = ({
               disabled
               id={column.id}
               options={column.options || []}
-              value={column.valuesCallback(
+              value={
                 column.id in updatedFields
                   ? updatedFields[column.id]
-                  : defaultValue || []
-              )}
+                  : column?.options.length
+                  ? column.valuesCallback(defaultValue, column.options || []) ||
+                    []
+                  : []
+              }
               onChange={(event, newValue) => {
                 doUpdate(column.id, newValue)
               }}

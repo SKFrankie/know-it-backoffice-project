@@ -77,6 +77,9 @@ const SET_GRAMMAR_GEEK_QUESTIONS = gql`
     }
     addModulesToGrammarGeek(grammarGeekId: $grammarId, moduleIds: $moduleIds) {
       grammarId
+      modules {
+        name
+      }
     }
   }
 `
@@ -144,7 +147,6 @@ const GrammarGeek = () => {
   const setGrammarGeekQuestionsCustom = async ({ variables }) => {
     const { modules, ...updatedVariables } = variables
     const moduleIds = modules?.map((module) => module.value) || []
-    console.log('updatedVariables', updatedVariables, moduleIds)
     setGrammarGeekQuestions({ variables: { ...updatedVariables, moduleIds } })
   }
   const [deleteGrammarGeekQuestions] = useMutation(
@@ -252,11 +254,13 @@ const GrammarGeek = () => {
             label: module.name,
             value: module.grammarModuleId,
           })) || [],
-        valuesCallback: (values) => {
-          return values.map((module) => ({
-            label: module.name,
-            value: module.grammarModuleId,
-          }))
+        valuesCallback: (values, options) => {
+          const mappedValues =
+            values?.map((module) => module.grammarModuleId) || []
+          const newValues = options.filter((option) =>
+            mappedValues.includes(option.value)
+          )
+          return newValues
         },
       },
     ],
