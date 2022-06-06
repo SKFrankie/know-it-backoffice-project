@@ -281,6 +281,8 @@ type Mutation {
 
   getPremium(years: Int, months: Int, days: Int, hours: Int): Boolean
 
+  setPremiumMultipleUsers(endingDate: DateTime!, userIds: [ID]): Boolean
+
   # super users
   forbiddenSuperSignup(
     mail: String!

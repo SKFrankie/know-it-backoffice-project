@@ -167,6 +167,27 @@ const users = {
           throw new Error(err)
         })
     },
+    setPremiumMultipleUsers(obj, args, context) {
+      const session = context.driver.session()
+      return session
+        .run(
+          `
+        MATCH (s:SuperUser {userId: "${context.auth.jwt.userId}"})
+        WHERE s.rights in ['ADMIN']
+        MATCH (u:User) WHERE u.userId IN $userIds
+        SET u.premiumEndingDate = datetime('${args.endingDate}')
+        RETURN u`,
+          { userIds: args.userIds }
+        )
+        .then((res) => {
+          session.close()
+          return true
+        })
+        .catch((err) => {
+          session.close()
+          throw new Error(err)
+        })
+    },
     resetPassword: (obj, args, context) => {
       const session = context.driver.session()
 
