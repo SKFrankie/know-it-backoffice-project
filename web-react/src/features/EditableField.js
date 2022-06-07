@@ -128,7 +128,7 @@ const EditableField = ({
           return (
             <>
               <Button onClick={() => setOpenInputMultiline(true)}>
-                Edit {multilineValue.substring(0, 20)}...
+                Click here to edit : {multilineValue?.substring(0, 20)}...
               </Button>
               <Modal open={openInputMultiline} setOpen={setOpenInputMultiline}>
                 <Input
@@ -145,6 +145,12 @@ const EditableField = ({
                   sx={{ width: '100%' }}
                   {...props}
                 />
+                <Button
+                  sx={{ width: '100%' }}
+                  onClick={() => setOpenInputMultiline(false)}
+                >
+                  Ok
+                </Button>
               </Modal>
             </>
           )
@@ -237,7 +243,7 @@ const EditableField = ({
         case FIELD_TYPES.MULTILINE:
           return (
             <Typography {...props} color="textSecondary">
-              {defaultValue.substring(0, 20)}...
+              {defaultValue?.substring(0, 20)}...
             </Typography>
           )
         case FIELD_TYPES.AUTOCOMPLETE_MULTIPLE:
