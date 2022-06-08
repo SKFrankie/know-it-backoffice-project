@@ -55,6 +55,13 @@ const SECTIONS = [
     description: 'Manage gift calendar',
     icon: RedeemIcon,
   },
+  {
+    label: 'Grammar Modules',
+    longName: 'Grammar Modules',
+    href: '/grammar-modules',
+    description: 'Manage grammar modules',
+    icon: AbcIcon,
+  },
 ]
 const GAMES = [
   {
@@ -141,6 +148,8 @@ const FIELD_TYPES = {
   SELECT: 'SELECT',
   PICTURE: 'PICTURE',
   AVATAR_ARRAY: 'AVATAR_ARRAY',
+  MULTILINE: 'MULTILINE',
+  AUTOCOMPLETE_MULTIPLE: 'AUTOCOMPLETE_MULTIPLE',
 }
 
 export { SECTIONS, RIGHTS, GAMES, FIELD_TYPES, AVATAR_PAGES, REWARDS }

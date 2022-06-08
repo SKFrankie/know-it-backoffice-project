@@ -219,7 +219,9 @@ const Table = ({
   const handleRequestSort = (event, property, type = null) => {
     if (type) {
       // array is not supported as a sort type
-      if (type === FIELD_TYPES.ARRAY) {
+      if (
+        [FIELD_TYPES.ARRAY, FIELD_TYPES.AUTOCOMPLETE_MULTIPLE].includes(type)
+      ) {
         return
       }
     }

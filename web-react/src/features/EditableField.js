@@ -1,10 +1,12 @@
 import { Autocomplete, TextField, Typography } from '@mui/material'
-import React from 'react'
+import React, { useState } from 'react'
 import { FIELD_TYPES } from '../helpers/constants'
 import dateToString from '../helpers/dateToString'
 import { Input, SelectWithItems } from '../ui/Form'
 import EditablePicture from './EditablePicture'
 import ToggleAvatarArray from './ToggleAvatarArray'
+import Modal from '../ui/Modal'
+import Button from '../ui/Button'
 
 const EditableField = ({
   editMode = false,
@@ -14,6 +16,9 @@ const EditableField = ({
   defaultValue = null,
   ...props
 }) => {
+  const [openInputMultiline, setOpenInputMultiline] = useState(false)
+  const multilineValue =
+    column.id in updatedFields ? updatedFields[column.id] : defaultValue || ''
   const doUpdate = (field, value) => {
     setUpdatedFields({ ...updatedFields, [field]: value })
   }
@@ -119,6 +124,63 @@ const EditableField = ({
               defaultValue={defaultValue}
             />
           )
+        case FIELD_TYPES.MULTILINE:
+          return (
+            <>
+              <Button onClick={() => setOpenInputMultiline(true)}>
+                Click here to edit : {multilineValue?.substring(0, 20)}...
+              </Button>
+              <Modal open={openInputMultiline} setOpen={setOpenInputMultiline}>
+                <Input
+                  multiline
+                  onChange={(e) => {
+                    doUpdate(column.id, e.target.value)
+                  }}
+                  value={
+                    column.id in updatedFields
+                      ? updatedFields[column.id]
+                      : defaultValue || ''
+                  }
+                  label={column.label}
+                  sx={{ width: '100%' }}
+                  {...props}
+                />
+                <Button
+                  sx={{ width: '100%' }}
+                  onClick={() => setOpenInputMultiline(false)}
+                >
+                  Ok
+                </Button>
+              </Modal>
+            </>
+          )
+        case FIELD_TYPES.AUTOCOMPLETE_MULTIPLE:
+          return (
+            <Autocomplete
+              multiple
+              id={column.id}
+              options={column.options || []}
+              value={
+                column.id in updatedFields
+                  ? updatedFields[column.id]
+                  : column?.options.length
+                  ? column.valuesCallback(defaultValue, column.options || []) ||
+                    []
+                  : []
+              }
+              onChange={(event, newValue) => {
+                doUpdate(column.id, newValue)
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  variant="standard"
+                  label={column.label}
+                />
+              )}
+              {...props}
+            />
+          )
 
         default:
           return (
@@ -176,6 +238,40 @@ const EditableField = ({
               updatedFields={updatedFields}
               editMode={editMode}
               canZoom={true}
+            />
+          )
+        case FIELD_TYPES.MULTILINE:
+          return (
+            <Typography {...props} color="textSecondary">
+              {defaultValue?.substring(0, 20)}...
+            </Typography>
+          )
+        case FIELD_TYPES.AUTOCOMPLETE_MULTIPLE:
+          return (
+            <Autocomplete
+              multiple
+              disabled
+              id={column.id}
+              options={column.options || []}
+              value={
+                column.id in updatedFields
+                  ? updatedFields[column.id]
+                  : column?.options.length
+                  ? column.valuesCallback(defaultValue, column.options || []) ||
+                    []
+                  : []
+              }
+              onChange={(event, newValue) => {
+                doUpdate(column.id, newValue)
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  variant="standard"
+                  label={column.label}
+                />
+              )}
+              {...props}
             />
           )
         default:
