@@ -208,8 +208,9 @@ const users = {
             expiresIn: '3d',
           })
           const url = process.env.KNOW_IT_URL + '/reset-password/' + token
-          await sendResetPassword(mail, url)
-          return true
+          return sendResetPassword(mail, url).then(() => {
+            return true
+          })
         })
         .catch((err) => {
           session.close()
