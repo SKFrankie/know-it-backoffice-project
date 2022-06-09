@@ -57,9 +57,10 @@ async function sendMail({ to, subject, text, html }) {
   // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
 }
 
-export default sendMail
 export async function sendResetPassword(mail, url) {
   const html = `<div><p>Hi, <a href=${url}>click here</a> to reset your Know It! password or just copy and paste this url:</p><p>${url}</p></div>`
   const subject = 'Know It! - Reset your password'
-  sendMail({ to: mail, html, subject })
+  await sendMail({ to: mail, html, subject })
 }
+
+export default sendMail
