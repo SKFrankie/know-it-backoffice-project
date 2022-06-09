@@ -24,6 +24,7 @@ const Modal = ({
   onClose = () => {
     return
   },
+  top = '50%',
   ...props
 }) => {
   const handleClose = () => {
@@ -32,7 +33,7 @@ const Modal = ({
   }
   return (
     <MUIModal open={open} onClose={handleClose} {...props}>
-      <Box sx={{ ...style, ...moreStyle }}>{children}</Box>
+      <Box sx={{ ...style, ...moreStyle, top }}>{children}</Box>
     </MUIModal>
   )
 }

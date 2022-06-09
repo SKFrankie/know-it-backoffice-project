@@ -1,4 +1,4 @@
-import { Autocomplete, TextField, Typography } from '@mui/material'
+import { Autocomplete, TextField, Typography, Link, Box } from '@mui/material'
 import React, { useState } from 'react'
 import { FIELD_TYPES } from '../helpers/constants'
 import dateToString from '../helpers/dateToString'
@@ -130,7 +130,29 @@ const EditableField = ({
               <Button onClick={() => setOpenInputMultiline(true)}>
                 Click here to edit : {multilineValue?.substring(0, 20)}...
               </Button>
-              <Modal open={openInputMultiline} setOpen={setOpenInputMultiline}>
+              <Modal
+                sx={{ overflow: 'scroll' }}
+                top="80%"
+                open={openInputMultiline}
+                setOpen={setOpenInputMultiline}
+              >
+                <Box textAlign="center">
+                  <Typography fontSize="h5.fontSize">
+                    To create more complexe texts you can use this website :
+                  </Typography>
+                  <Link target="_blank" href="https://html-online.com/editor/">
+                    https://html-online.com/editor/
+                  </Link>
+                </Box>
+                <Typography>
+                  <b>New module :</b> Write on the left, copy paste the code on
+                  the right there
+                </Typography>
+                <Typography>
+                  <b>Editing a module :</b> Copy paste current text on the
+                  right, edit on the left then copy paste the new text on the
+                  right there (replace the previous)
+                </Typography>
                 <Input
                   multiline
                   onChange={(e) => {
