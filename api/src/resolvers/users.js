@@ -208,7 +208,7 @@ const users = {
             expiresIn: '3d',
           })
           const url = process.env.KNOW_IT_URL + '/reset-password/' + token
-          sendResetPassword(mail, url)
+          await sendResetPassword(mail, url)
           return true
         })
         .catch((err) => {
