@@ -1,5 +1,6 @@
-import { Autocomplete, TextField, Typography, Link, Box } from '@mui/material'
-import React, { useState } from 'react'
+import { Autocomplete, TextField, Typography } from '@mui/material'
+import { Editor } from '@tinymce/tinymce-react'
+import React, { useState, useRef } from 'react'
 import { FIELD_TYPES } from '../helpers/constants'
 import dateToString from '../helpers/dateToString'
 import { Input, SelectWithItems } from '../ui/Form'
@@ -21,6 +22,13 @@ const EditableField = ({
     column.id in updatedFields ? updatedFields[column.id] : defaultValue || ''
   const doUpdate = (field, value) => {
     setUpdatedFields({ ...updatedFields, [field]: value })
+  }
+  const editorRef = useRef(null)
+  const richTextUpdate = (columnId) => {
+    if (editorRef.current) {
+      doUpdate(columnId, editorRef.current.getContent())
+    }
+    setOpenInputMultiline(false)
   }
   switch (editMode) {
     case true && column.editable:
@@ -132,44 +140,53 @@ const EditableField = ({
               </Button>
               <Modal
                 sx={{ overflow: 'scroll' }}
-                top="80%"
                 open={openInputMultiline}
                 setOpen={setOpenInputMultiline}
+                onClose={() => richTextUpdate(column.id)}
               >
-                <Box textAlign="center">
-                  <Typography fontSize="h5.fontSize">
-                    To create more complexe texts you can use this website :
-                  </Typography>
-                  <Link target="_blank" href="https://html-online.com/editor/">
-                    https://html-online.com/editor/
-                  </Link>
-                </Box>
-                <Typography>
-                  <b>New module :</b> Write on the left, copy paste the code on
-                  the right there
-                </Typography>
-                <Typography>
-                  <b>Editing a module :</b> Copy paste current text on the
-                  right, edit on the left then copy paste the new text on the
-                  right there (replace the previous)
-                </Typography>
-                <Input
-                  multiline
-                  onChange={(e) => {
-                    doUpdate(column.id, e.target.value)
-                  }}
-                  value={
+                <Editor
+                  apiKey="026c1wi22jjw1w0hkxdsxiwpt96440dvpuygaojytimbluf6"
+                  onInit={(evt, editor) => (editorRef.current = editor)}
+                  initialValue={
                     column.id in updatedFields
                       ? updatedFields[column.id]
                       : defaultValue || ''
                   }
-                  label={column.label}
-                  sx={{ width: '100%' }}
-                  {...props}
+                  init={{
+                    height: 500,
+                    menubar: false,
+                    plugins: [
+                      'advlist',
+                      'autolink',
+                      'lists',
+                      'link',
+                      'image',
+                      'charmap',
+                      'preview',
+                      'anchor',
+                      'searchreplace',
+                      'visualblocks',
+                      'code',
+                      'fullscreen',
+                      'insertdatetime',
+                      'media',
+                      'table',
+                      'code',
+                      'help',
+                      'wordcount',
+                    ],
+                    toolbar:
+                      'undo redo | blocks |' +
+                      'bold italic forecolor | alignleft aligncenter ' +
+                      'alignright alignjustify table tabledelete | bullist numlist outdent indent |' +
+                      'removeformat | help',
+                    content_style:
+                      'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+                  }}
                 />
                 <Button
                   sx={{ width: '100%' }}
-                  onClick={() => setOpenInputMultiline(false)}
+                  onClick={() => richTextUpdate(column.id)}
                 >
                   Ok
                 </Button>
