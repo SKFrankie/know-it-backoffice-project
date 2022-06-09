@@ -8,19 +8,42 @@ async function sendMail({ to, subject, text, html }) {
   let testAccount = await nodemailer.createTestAccount()
 
   // create reusable transporter object using the default SMTP transport
+  // let transporter = nodemailer.createTransport({
+  //   host: 'smtp.ethereal.email',
+  //   port: 587,
+  //   secure: false, // true for 465, false for other ports
+  //   auth: {
+  //     user: testAccount.user, // generated ethereal user
+  //     pass: testAccount.pass, // generated ethereal password
+  //   },
+  // })
+
   let transporter = nodemailer.createTransport({
-    host: 'smtp.ethereal.email',
-    port: 587,
-    secure: false, // true for 465, false for other ports
+    host: 'smtp.ionos.fr',
+    port: 465,
+    secure: true,
     auth: {
-      user: testAccount.user, // generated ethereal user
-      pass: testAccount.pass, // generated ethereal password
+      user: process.env.MAIL_USER,
+      pass: process.env.MAIL_PASSWORD,
     },
+    tls: {
+      // do not fail on invalid certs
+      rejectUnauthorized: false,
+    },
+  })
+
+  // verify connection configuration
+  transporter.verify(function (error, success) {
+    if (error) {
+      console.log(error)
+    } else {
+      console.log('Server is ready to take our messages')
+    }
   })
 
   // send mail with defined transport object
   let info = await transporter.sendMail({
-    from: '"Fred Foo 👻" <foo@example.com>', // sender address
+    from: `"Know It!" <${process.env.MAIL_USER}>`, // sender address
     to, // list of receivers
     subject, // Subject line
     html, // html body
@@ -36,7 +59,6 @@ async function sendMail({ to, subject, text, html }) {
 
 export default sendMail
 export async function sendResetPassword(mail, url) {
-  console.log('reset url', mail, url)
   const html = `<div><p>Hi, <a href=${url}>click here</a> to reset your Know It! password or just copy and paste this url:</p><p>${url}</p></div>`
   const subject = 'Know It! - Reset your password'
   sendMail({ to: mail, html, subject })

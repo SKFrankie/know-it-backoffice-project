@@ -209,7 +209,7 @@ const users = {
           })
           const url = process.env.KNOW_IT_URL + '/reset-password/' + token
           sendResetPassword(mail, url)
-          return token
+          return true
         })
         .catch((err) => {
           session.close()

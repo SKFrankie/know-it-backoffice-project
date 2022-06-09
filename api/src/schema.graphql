@@ -325,7 +325,7 @@ type Mutation {
   inviteSuperUser(mail: String!, rights: Right!): String
 
   # sends mail to the user to reset his password
-  resetPassword(mail: String!): String
+  resetPassword(mail: String!): Boolean
 
   #Users and gifts management
   updateLastSeen(daysInArow: Int): User
