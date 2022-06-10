@@ -58,7 +58,7 @@ async function sendMail({ to, subject, text, html }) {
 }
 
 export async function sendResetPassword(mail, url) {
-  const html = `<div><p>Hi, <a href=${url}>click here</a> to reset your Know It! password or just copy and paste this url:</p><p>${url}</p></div>`
+  const html = `<div><p>Hey there! Please <a href=${url}>CLICK HERE</a> to reset your Know It! password, or just copy and past this url:</p><p>${url}</p><p>Thank you for playing Know It!</p></div>`
   const subject = 'Know It! - Reset your password'
   await sendMail({ to: mail, html, subject })
 }
