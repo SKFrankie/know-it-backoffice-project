@@ -43,9 +43,11 @@ function EnhancedTableHead(props) {
     hasCollapse = false,
     canEdit = false,
   } = props
-  const createSortHandler = (property, type = null) => (event) => {
-    onRequestSort(event, property, type)
-  }
+  const createSortHandler =
+    (property, type = null) =>
+    (event) => {
+      onRequestSort(event, property, type)
+    }
 
   return (
     <TableHead>
@@ -107,13 +109,8 @@ EnhancedTableHead.propTypes = {
 }
 
 const EnhancedTableToolbar = (props) => {
-  const {
-    numSelected,
-    tableName,
-    deleteItems,
-    toolbarOptions,
-    selected,
-  } = props
+  const { numSelected, tableName, deleteItems, toolbarOptions, selected } =
+    props
   const [areYouSure, setAreYouSure] = useState(false)
 
   return (

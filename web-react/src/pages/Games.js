@@ -69,7 +69,11 @@ const Game = ({
   const [isEditing, setIsEditing] = React.useState(false)
   const superCurrentUser = useContext(SuperUserContext)
 
-  const { data, loading, refetch: refetchTimer } = useQuery(GET_GAME, {
+  const {
+    data,
+    loading,
+    refetch: refetchTimer,
+  } = useQuery(GET_GAME, {
     variables: { name: game },
     onError: (e) => console.log('GET_GAME', e),
     onCompleted: (data) => {

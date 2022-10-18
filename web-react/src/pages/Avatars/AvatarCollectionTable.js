@@ -179,9 +179,8 @@ const AvatarCollectionTable = () => {
       return
     }
 
-    const {
-      avatarCollectionId,
-    } = createNewResponse.data.createAvatarCollections.avatarCollections[0]
+    const { avatarCollectionId } =
+      createNewResponse.data.createAvatarCollections.avatarCollections[0]
     const toggleCollectionResponse = await toggleCollection({
       variables: { avatarCollectionId, avatarIds: avatarIds || [] },
       onError(error) {

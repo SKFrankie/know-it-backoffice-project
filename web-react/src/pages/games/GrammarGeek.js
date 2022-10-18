@@ -190,9 +190,8 @@ const GrammarGeek = () => {
       return
     }
 
-    const {
-      grammarId: grammarGeekId,
-    } = createNewResponse.data.createGrammarGeekQuestions.grammarGeekQuestions[0]
+    const { grammarId: grammarGeekId } =
+      createNewResponse.data.createGrammarGeekQuestions.grammarGeekQuestions[0]
     const addModulesToGrammarGeek = await addModules({
       variables: { grammarGeekId, moduleIds: moduleIds || [] },
       onComplete() {
