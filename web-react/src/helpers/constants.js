@@ -11,6 +11,7 @@ import HdrStrongIcon from '@mui/icons-material/HdrStrong'
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto'
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents'
 import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver'
+import LooksOneIcon from '@mui/icons-material/LooksOne'
 
 const SECTIONS = [
   {
@@ -95,6 +96,11 @@ const GAMES = [
     href: '/games/lets-talk',
     icon: RecordVoiceOverIcon,
   },
+  {
+    label: 'Numbers+',
+    href: '/games/numbers-plus',
+    icon: LooksOneIcon,
+  },
 ]
 
 const AVATAR_PAGES = [
@@ -158,4 +164,19 @@ const FIELD_TYPES = {
   AUTOCOMPLETE_MULTIPLE: 'AUTOCOMPLETE_MULTIPLE',
 }
 
-export { SECTIONS, RIGHTS, GAMES, FIELD_TYPES, AVATAR_PAGES, REWARDS }
+const NUMBERS_PLUS_TYPES = [
+  { id: 'Date (US Version)' },
+  { id: 'Time (US Version)' },
+  { id: 'Number' },
+  { id: 'Other' },
+]
+
+export {
+  SECTIONS,
+  RIGHTS,
+  GAMES,
+  FIELD_TYPES,
+  AVATAR_PAGES,
+  REWARDS,
+  NUMBERS_PLUS_TYPES,
+}

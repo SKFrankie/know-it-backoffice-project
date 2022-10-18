@@ -15,6 +15,7 @@ enum GameName {
   ANTONYM_HUNT
   GRAMMAR_GEEK
   LETS_TALK
+  NUMBERS_PLUS
   KNOWLYMPICS
 }
 
@@ -272,6 +273,24 @@ type LetsTalkQuestion
     ]
   ) {
   letsTalkId: ID! @id
+  sentence: String!
+  correctWord: String!
+  wrongWords: [String!]!
+  createdAt: DateTime @timestamp(operations: [CREATE])
+}
+
+type NumbersPlusQuestion
+  @auth(
+    rules: [
+      {
+        operations: [CREATE, UPDATE, DELETE, CONNECT, DISCONNECT]
+        isAuthenticated: true
+        roles: [ADMIN, EDITOR]
+      }
+    ]
+  ) {
+  numbersPlusId: ID! @id
+  type: String
   sentence: String!
   correctWord: String!
   wrongWords: [String!]!
