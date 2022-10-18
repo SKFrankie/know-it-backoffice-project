@@ -21,7 +21,6 @@ you might need to create your own cloudinary account for test purposes
 
 https://cloudinary.com
 
-
 ## BACKOFFICE BACK
 
 First, copy api/.env.example to api/.env and fill up the things you need :
@@ -65,6 +64,19 @@ just run
 
 ```bash
 npm start
+```
+
+if you're having trouble use v16 of node
+
+```bash
+nvm install 16
+nvm use 16
+```
+
+if you're having trouble with prettier run
+
+```bash
+npx prettier --write web-react/src api/src
 ```
 
 # RUN BACK ONLY
