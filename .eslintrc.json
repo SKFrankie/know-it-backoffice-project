@@ -6,8 +6,8 @@
   },
   "extends": [
     "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:prettier/recommended"
+    "plugin:react/recommended"
+    // "plugin:prettier/recommended"
   ],
   "globals": {
     "Atomics": "readonly",
@@ -20,9 +20,9 @@
     "ecmaVersion": 11,
     "sourceType": "module"
   },
-  "plugins": ["react", "prettier"],
+  "plugins": ["react"],
   "rules": {
-    "prettier/prettier": "error",
+    // "prettier/prettier": "error",
     "react/prop-types": "off"
   }
 }
