@@ -10,6 +10,7 @@ import DragIndicatorIcon from '@mui/icons-material/DragIndicator'
 import HdrStrongIcon from '@mui/icons-material/HdrStrong'
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto'
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents'
+import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver'
 
 const SECTIONS = [
   {
@@ -88,6 +89,11 @@ const GAMES = [
     label: 'Knowlympics',
     href: '/games/knowlympics',
     icon: EmojiEventsIcon,
+  },
+  {
+    label: "Let's Talk",
+    href: '/games/lets-talk',
+    icon: RecordVoiceOverIcon,
   },
 ]
 
