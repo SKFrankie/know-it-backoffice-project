@@ -189,6 +189,8 @@ type GrammarModule
   text: String
   grammarGeekQuestions: [GrammarGeekQuestion]
     @relationship(type: "GRAMMAR_MODULE_GRAMMAR_GEEK", direction: OUT)
+  numbersPlusQuestions: [NumbersPlusQuestion]
+    @relationship(type: "GRAMMAR_MODULE_NUMBERS_PLUS", direction: OUT)
   createdAt: DateTime @timestamp(operations: [CREATE])
 }
 
@@ -290,10 +292,11 @@ type NumbersPlusQuestion
     ]
   ) {
   numbersPlusId: ID! @id
-  type: String
   sentence: String!
   correctWord: String!
   wrongWords: [String!]!
+  modules: [GrammarModule]
+    @relationship(type: "GRAMMAR_MODULE_NUMBERS_PLUS", direction: IN)
   createdAt: DateTime @timestamp(operations: [CREATE])
 }
 
@@ -457,6 +460,23 @@ type Mutation {
       WHERE NOT module IS NULL
       MERGE (module)-[:GRAMMAR_MODULE_GRAMMAR_GEEK]->(grammarGeek)
       RETURN grammarGeek
+      """
+    )
+
+  addModulesToNumbersPlus(
+    moduleIds: [ID]
+    numbersPlusId: ID!
+  ): NumbersPlusQuestion
+    @cypher(
+      statement: """
+      MATCH (numbersPlus:NumbersPlusQuestion {numbersPlusId: $numbersPlusId})
+      OPTIONAL MATCH (oldModule)-[oldR:GRAMMAR_MODULE_NUMBERS_PLUS]->(numbersPlus)
+      OPTIONAL MATCH (module:GrammarModule) WHERE module.grammarModuleId IN $moduleIds
+      DELETE oldR
+      WITH module, numbersPlus
+      WHERE NOT module IS NULL
+      MERGE (module)-[:GRAMMAR_MODULE_NUMBERS_PLUS]->(numbersPlus)
+      RETURN numbersPlus
       """
     )
   addNewScore(gameName: GameName!, score: Int!): Score
