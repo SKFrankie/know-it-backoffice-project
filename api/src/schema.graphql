@@ -14,6 +14,8 @@ enum GameName {
   FAB_VOCAB
   ANTONYM_HUNT
   GRAMMAR_GEEK
+  LETS_TALK
+  NUMBERS_PLUS
   KNOWLYMPICS
 }
 
@@ -187,6 +189,8 @@ type GrammarModule
   text: String
   grammarGeekQuestions: [GrammarGeekQuestion]
     @relationship(type: "GRAMMAR_MODULE_GRAMMAR_GEEK", direction: OUT)
+  numbersPlusQuestions: [NumbersPlusQuestion]
+    @relationship(type: "GRAMMAR_MODULE_NUMBERS_PLUS", direction: OUT)
   createdAt: DateTime @timestamp(operations: [CREATE])
 }
 
@@ -257,6 +261,42 @@ type GrammarGeekQuestion
   hint: String
   modules: [GrammarModule]
     @relationship(type: "GRAMMAR_MODULE_GRAMMAR_GEEK", direction: IN)
+  createdAt: DateTime @timestamp(operations: [CREATE])
+}
+
+type LetsTalkQuestion
+  @auth(
+    rules: [
+      {
+        operations: [CREATE, UPDATE, DELETE, CONNECT, DISCONNECT]
+        isAuthenticated: true
+        roles: [ADMIN, EDITOR]
+      }
+    ]
+  ) {
+  letsTalkId: ID! @id
+  sentence: String!
+  correctWord: String!
+  wrongWords: [String!]!
+  createdAt: DateTime @timestamp(operations: [CREATE])
+}
+
+type NumbersPlusQuestion
+  @auth(
+    rules: [
+      {
+        operations: [CREATE, UPDATE, DELETE, CONNECT, DISCONNECT]
+        isAuthenticated: true
+        roles: [ADMIN, EDITOR]
+      }
+    ]
+  ) {
+  numbersPlusId: ID! @id
+  sentence: String!
+  correctWord: String!
+  wrongWords: [String!]!
+  modules: [GrammarModule]
+    @relationship(type: "GRAMMAR_MODULE_NUMBERS_PLUS", direction: IN)
   createdAt: DateTime @timestamp(operations: [CREATE])
 }
 
@@ -422,6 +462,23 @@ type Mutation {
       RETURN grammarGeek
       """
     )
+
+  addModulesToNumbersPlus(
+    moduleIds: [ID]
+    numbersPlusId: ID!
+  ): NumbersPlusQuestion
+    @cypher(
+      statement: """
+      MATCH (numbersPlus:NumbersPlusQuestion {numbersPlusId: $numbersPlusId})
+      OPTIONAL MATCH (oldModule)-[oldR:GRAMMAR_MODULE_NUMBERS_PLUS]->(numbersPlus)
+      OPTIONAL MATCH (module:GrammarModule) WHERE module.grammarModuleId IN $moduleIds
+      DELETE oldR
+      WITH module, numbersPlus
+      WHERE NOT module IS NULL
+      MERGE (module)-[:GRAMMAR_MODULE_NUMBERS_PLUS]->(numbersPlus)
+      RETURN numbersPlus
+      """
+    )
   addNewScore(gameName: GameName!, score: Int!): Score
     @cypher(
       statement: """
@@ -495,6 +552,26 @@ type Query {
       statement: """
       MATCH (gram:GrammarGeekQuestion)
       RETURN gram
+      ORDER BY rand()
+      LIMIT $limit;
+      """
+    )
+  # LetsTalk
+  randomLetsTalk(limit: Int!): [LetsTalkQuestion]
+    @cypher(
+      statement: """
+      MATCH (lets:LetsTalkQuestion)
+      RETURN lets
+      ORDER BY rand()
+      LIMIT $limit;
+      """
+    )
+  # Numbers+
+  randomNumbersPlus(limit: Int!): [NumbersPlusQuestion]
+    @cypher(
+      statement: """
+      MATCH (num:NumbersPlusQuestion)
+      RETURN num
       ORDER BY rand()
       LIMIT $limit;
       """

@@ -21,6 +21,8 @@ import Games from './pages/Games'
 import AntonymHunt from './pages/games/AntonymHunt'
 import SynonymRoll from './pages/games/SynonymRoll'
 import GrammarGeek from './pages/games/GrammarGeek'
+import LetsTalk from './pages/games/LetsTalk'
+import NumbersPlus from './pages/games/NumbersPlus'
 import FabVocab from './pages/games/FabVocab'
 import AvatarTable from './pages/Avatars/AvatarTable'
 import AvatarCollectionTable from './pages/Avatars/AvatarCollectionTable'
@@ -161,6 +163,18 @@ export default function App() {
                   component={GrammarGeek}
                   exact
                   path="/games/grammar-geek"
+                />
+                <PrivateRoute
+                  currentUser={currentUser}
+                  component={LetsTalk}
+                  exact
+                  path="/games/lets-talk"
+                />
+                <PrivateRoute
+                  currentUser={currentUser}
+                  component={NumbersPlus}
+                  exact
+                  path="/games/numbers-plus"
                 />
                 <PrivateRoute
                   currentUser={currentUser}
