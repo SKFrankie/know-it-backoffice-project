@@ -566,6 +566,16 @@ type Query {
       LIMIT $limit;
       """
     )
+  # Numbers+
+  randomNumbersPlus(limit: Int!): [NumbersPlusQuestion]
+    @cypher(
+      statement: """
+      MATCH (num:NumbersPlusQuestion)
+      RETURN num
+      ORDER BY rand()
+      LIMIT $limit;
+      """
+    )
   # Antonym Hunt
   randomAntonyms(limit: Int!): [AntonymHuntAssociation]
     @cypher(
