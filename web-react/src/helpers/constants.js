@@ -97,7 +97,7 @@ const GAMES = [
     icon: RecordVoiceOverIcon,
   },
   {
-    label: 'Numbers+',
+    label: '3-2-1 Go',
     href: '/games/numbers-plus',
     icon: LooksOneIcon,
   },

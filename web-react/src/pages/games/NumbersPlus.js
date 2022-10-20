@@ -169,7 +169,7 @@ const NumbersPlus = () => {
   })
   const [addModules] = useMutation(ADD_MODULES_TO_NUMBERS_PLUS, {
     onError(error) {
-      console.log('add modules to Numbers+ error', error)
+      console.log('add modules to 3-2-1 Go error', error)
     },
   })
   const createMutation = async (variables, onCompleted, setError) => {
@@ -203,7 +203,7 @@ const NumbersPlus = () => {
       onCompleted(addModulesToNumbersPlus.data)
     } else {
       setError(
-        'Numbers+ question has been created but something went wrong with the modules'
+        '3-2-1 Go question has been created but something went wrong with the modules'
       )
     }
   }
@@ -260,18 +260,18 @@ const NumbersPlus = () => {
   const allowed = ['ADMIN', 'EDITOR']
   return (
     <Game
-      title="Numbers+"
+      title="3-2-1 Go"
       game="NUMBERS_PLUS"
       columns={columns}
       refetch={refetch}
-      createText="Create new Numbers+ question"
+      createText="Create new 3-2-1 Go question"
       // QUERY={CREATE_NUMBERS_PLUS_QUESTIONS}
       customMutation={createMutation}
     >
       {loading && <Loading />} {error && 'error'}
       {data && (
         <Table
-          tableName="Numbers+ questions"
+          tableName="3-2-1 Go questions"
           headCells={columns}
           rows={data.numbersPlusQuestions}
           refetch={refetch}
