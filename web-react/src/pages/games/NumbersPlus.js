@@ -58,7 +58,6 @@ const SET_NUMBERS_PLUS_QUESTIONS = gql`
     $sentence: String
     $correctWord: String
     $wrongWords: [String!]
-    $moduleIds: [ID]
   ) {
     updateNumbersPlusQuestions(
       where: { numbersPlusId: $numbersPlusId }
@@ -72,6 +71,11 @@ const SET_NUMBERS_PLUS_QUESTIONS = gql`
         numbersPlusId
       }
     }
+  }
+`
+
+const SET_NUMBERS_PLUS_QUESTIONS_MODULES = gql`
+  mutation setNumbersPlusQuestions($numbersPlusId: ID!, $moduleIds: [ID]) {
     addModulesToNumbersPlus(
       numbersPlusId: $numbersPlusId
       moduleIds: $moduleIds
@@ -142,10 +146,28 @@ const NumbersPlus = () => {
     },
   })
 
+  const [setNumbersPlusQuestionsModules] = useMutation(
+    SET_NUMBERS_PLUS_QUESTIONS_MODULES,
+    {
+      onCompleted() {
+        refetch()
+      },
+      onError(error) {
+        console.log(error)
+      },
+    }
+  )
+
   const setNumbersPlusQuestionsCustom = async ({ variables }) => {
     const { modules, ...updatedVariables } = variables
-    const moduleIds = modules?.map((module) => module.value) || []
-    setNumbersPlusQuestions({ variables: { ...updatedVariables, moduleIds } })
+    const moduleIds = modules?.map((module) => module.value)
+    setNumbersPlusQuestions({ variables: { ...updatedVariables } })
+
+    if (moduleIds) {
+      setNumbersPlusQuestionsModules({
+        variables: { numbersPlusId: updatedVariables.numbersPlusId, moduleIds },
+      })
+    }
   }
   const [deleteNumbersPlusQuestions] = useMutation(
     DELETE_NUMBERS_PLUS_QUESTIONS,

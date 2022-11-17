@@ -60,7 +60,6 @@ const SET_GRAMMAR_GEEK_QUESTIONS = gql`
     $correctWord: String
     $wrongWords: [String!]
     $hint: String
-    $moduleIds: [ID]
   ) {
     updateGrammarGeekQuestions(
       where: { grammarId: $grammarId }
@@ -75,6 +74,11 @@ const SET_GRAMMAR_GEEK_QUESTIONS = gql`
         grammarId
       }
     }
+  }
+`
+
+const SET_GRAMMAR_GEEK_QUESTIONS_MODULES = gql`
+  mutation setGrammarGeekQuestionsModules($grammarId: ID!, $moduleIds: [ID]) {
     addModulesToGrammarGeek(grammarGeekId: $grammarId, moduleIds: $moduleIds) {
       grammarId
       modules {
@@ -144,10 +148,28 @@ const GrammarGeek = () => {
     },
   })
 
+  const [setGrammarGeekQuestionsModules] = useMutation(
+    SET_GRAMMAR_GEEK_QUESTIONS_MODULES,
+    {
+      onCompleted() {
+        refetch()
+      },
+      onError(error) {
+        console.log(error)
+      },
+    }
+  )
+
   const setGrammarGeekQuestionsCustom = async ({ variables }) => {
     const { modules, ...updatedVariables } = variables
-    const moduleIds = modules?.map((module) => module.value) || []
-    setGrammarGeekQuestions({ variables: { ...updatedVariables, moduleIds } })
+    const moduleIds = modules?.map((module) => module.value)
+
+    setGrammarGeekQuestions({ variables: { ...updatedVariables } })
+    if (moduleIds) {
+      setGrammarGeekQuestionsModules({
+        variables: { grammarId: updatedVariables.grammarId, moduleIds },
+      })
+    }
   }
   const [deleteGrammarGeekQuestions] = useMutation(
     DELETE_GRAMMAR_GEEK_QUESTIONS,
